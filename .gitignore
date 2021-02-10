@@ -266,5 +266,8 @@ FakesAssemblies/
 **/[Bb]in/**/*.dll
 **/[Oo]bj/**/*.xml
 **/[Oo]bj/**/*.dll
+**/[Oo]bj/**/*.json
+**/[Oo]bj/**/*.props
+**/[Oo]bj/**/*.targets
 !**/[Bb]in/**/*.refresh
 **/[Bb]in/**
