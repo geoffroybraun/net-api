@@ -53,53 +53,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
         [Fact]
         public void Providing_an_empty_person_sends_as_many_error_messages_using_events_as_required()
         {
-            CheckIfEventIsSent(new Person(), 4);
-        }
-
-        [Fact]
-        public void Providing_a_person_with_an_invalid_ID_when_validating_returns_false()
-        {
-            var person = new Person()
-            {
-                Birthdate = Birthdate,
-                Firstname = Firstname,
-                ID = 0,
-                Lastname = Lastname
-            };
-
-            Validator.IsValid(person, DateTime.Now)
-                .Should()
-                .BeFalse();
-        }
-
-        [Fact]
-        public void Providing_a_person_with_an_invalid_ID_when_unvalidating_returns_true()
-        {
-            var person = new Person()
-            {
-                Birthdate = Birthdate,
-                Firstname = Firstname,
-                ID = 0,
-                Lastname = Lastname
-            };
-
-            Validator.IsNotValid(person, DateTime.Now)
-                .Should()
-                .BeTrue();
-        }
-
-        [Fact]
-        public void Providing_a_person_with_an_invalid_ID_sends_an_error_message_using_an_event()
-        {
-            var person = new Person()
-            {
-                Birthdate = Birthdate,
-                Firstname = Firstname,
-                ID = 0,
-                Lastname = Lastname
-            };
-
-            CheckIfEventIsSent(person, 1);
+            CheckIfEventIsSent(new Person(), 3);
         }
 
         [Fact]

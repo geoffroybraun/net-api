@@ -3,6 +3,7 @@ using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("GB.NetApi.Domain.Services.UnitTests", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("GB.NetApi.Application.Services", AllInternalsVisible = true)]
 namespace GB.NetApi.Domain.Services.Validators
 {
     /// <summary>
@@ -29,7 +30,6 @@ namespace GB.NetApi.Domain.Services.Validators
                 return false;
 
             var result = true;
-            result &= IsSuperiorTo(person.ID, 0, nameof(Person.ID));
             result &= IsNotNullNorEmptyNorWhiteSpace(person.Firstname, nameof(Person.Firstname));
             result &= IsNotNullNorEmptyNorWhiteSpace(person.Lastname, nameof(Person.Lastname));
             result &= IsInferiorOrEqualTo(person.Birthdate, maxBirthdate, nameof(Person.Birthdate));

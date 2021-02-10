@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702:S4457</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GB.NetApi.Domain.Models\GB.NetApi.Domain.Models.csproj" />
+    <ProjectReference Include="..\GB.NetApi.Domain.Services\GB.NetApi.Domain.Services.csproj" />
+  </ItemGroup>
+
+</Project>
