@@ -25,6 +25,11 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
             DummyMock = InitializeDummyMock(new Mock<T>());
         }
 
+        /// <summary>
+        /// Delegate the mock initialization to the deriving class
+        /// </summary>
+        /// <param name="mock">The mock to set up</param>
+        /// <returns>The set up mock</returns>
         protected abstract Mock<T> InitializeDummyMock(Mock<T> mock);
     }
 }

@@ -14,9 +14,20 @@ namespace GB.NetApi.Infrastructure.Libraries.Handlers
     {
         #region Fields
 
+        private static readonly TaskHandlerConfiguration DefaultConfiguration = new TaskHandlerConfiguration()
+        {
+            MaxExceptionsCount = 3,
+            MaxParalellizationCount = 2,
+            MaxQueuedActionsCount = 20,
+            MaxRetriesCount = 5,
+            TimeBetweenBreaksInMilliseconds = 500,
+            TimeoutInMilliseconds = 25000
+        };
         private readonly TaskHandlerConfiguration Configuration;
 
         #endregion
+
+        public TaskHandler() : this(DefaultConfiguration) { }
 
         public TaskHandler(TaskHandlerConfiguration configuration) => Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 

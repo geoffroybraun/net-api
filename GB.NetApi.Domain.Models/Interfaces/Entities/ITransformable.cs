@@ -4,7 +4,7 @@
     /// Represents an entity which can be transformed to a <see cref="T"/> type
     /// </summary>
     /// <typeparam name="T">The type to be transformed to</typeparam>
-    public interface ITransformable<T>
+    public interface ITransformable<out T>
     {
         /// <summary>
         /// Returns the implementing entity to a <see cref="T"/> type

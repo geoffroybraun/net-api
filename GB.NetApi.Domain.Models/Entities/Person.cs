@@ -5,10 +5,8 @@ namespace GB.NetApi.Domain.Models.Entities
     /// <summary>
     /// Represents a person with firstname, lastname, and birthdate
     /// </summary>
-    public sealed record Person
+    public sealed record Person : BaseStorableEntity
     {
-        public int ID { get; init; }
-
         public string Firstname { get; init; }
 
         public string Lastname { get; init; }
