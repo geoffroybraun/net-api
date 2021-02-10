@@ -1,16 +1,15 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
-using GB.NetApi.Domain.Services.Extensions;
 using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("GB.NetApi.Domain.Services.UnitTests", AllInternalsVisible = true)]
 namespace GB.NetApi.Domain.Services.Validators
 {
     /// <summary>
     /// Validate a <see cref="Person"/> entity
     /// </summary>
-    public sealed class PersonValidator
+    internal sealed class PersonValidator : BaseValidator
     {
-        public event Action<string, object[]> SendErrorMessageEvent = delegate { };
-
         /// <summary>
         /// Indicates if the provided <see cref="Person"/> entity is not valid
         /// </summary>
@@ -37,45 +36,5 @@ namespace GB.NetApi.Domain.Services.Validators
 
             return result;
         }
-
-        #region Private methods
-
-        private bool IsSuperiorTo(int value, int other, string propertyName)
-        {
-            if (value.IsInferiorOrEqualTo(other))
-            {
-                SendErrorMessageEvent("IntegerIsSuperiorTo", new object[] { propertyName, other });
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool IsNotNullNorEmptyNorWhiteSpace(string value, string propertyName)
-        {
-            if (value.IsNullOrEmptyOrWhiteSpace())
-            {
-                SendErrorMessageEvent("StringIsNullOrEmptyOrWhiteSpace", new[] { propertyName });
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool IsInferiorOrEqualTo(DateTime value, DateTime other, string propertyName)
-        {
-            if (value.IsSuperiorTo(other))
-            {
-                SendErrorMessageEvent("DateTimeIsSuperiorTo", new object[] { propertyName, other });
-
-                return false;
-            }
-
-            return true;
-        }
-
-        #endregion
     }
 }
