@@ -11,10 +11,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
     /// </summary>
     public sealed class DummyDbContext : BaseDbContext
     {
-        public DummyDbContext() : base(BuildOptions())
-        {
-            Initialize();
-        }
+        public DummyDbContext() : base(BuildOptions()) => Initialize();
 
         #region Private methods
 
