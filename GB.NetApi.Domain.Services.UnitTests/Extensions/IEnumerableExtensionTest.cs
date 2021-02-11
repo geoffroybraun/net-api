@@ -19,5 +19,19 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
                 .Should()
                 .Be(expectedResult);
         }
+
+        [Theory]
+        [InlineData(null, true)]
+        [InlineData("", true)]
+        [InlineData(" ", true)]
+        [InlineData("Value", false)]
+        public void Checking_if_an_enumerable_is_null_or_empty_returns_the_expected_result(string value, bool expectedResult)
+        {
+            var values = value.IsNotNullNorEmptyNorWhiteSpace() ? new[] { value } : default;
+
+            values.IsNullOrEmpty()
+                .Should()
+                .Be(expectedResult);
+        }
     }
 }

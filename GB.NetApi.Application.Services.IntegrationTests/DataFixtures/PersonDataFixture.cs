@@ -1,4 +1,5 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
+using GB.NetApi.Domain.Models.Entities.Filters;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Infrastructure.Database.Repositories;
 using Moq;
@@ -17,6 +18,10 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
                 .ThrowsAsync(new NotImplementedException());
             mock.Setup(m => m.ExistAsync(It.IsAny<Person>()))
                 .ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
+                .ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.ListAsync())
+                .ThrowsAsync(new NotImplementedException());
 
             return mock;
         }
@@ -29,6 +34,10 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
                 .ReturnsAsync(false);
             mock.Setup(m => m.ExistAsync(It.IsAny<Person>()))
                 .ReturnsAsync(false);
+            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
+                .ReturnsAsync(default(Person[]));
+            mock.Setup(m => m.ListAsync())
+                .ReturnsAsync(default(Person[]));
 
             return mock;
         }

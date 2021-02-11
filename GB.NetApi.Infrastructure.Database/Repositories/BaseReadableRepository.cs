@@ -1,11 +1,14 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Interfaces.Libraries;
+using GB.NetApi.Domain.Services.Extensions;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
 using GB.NetApi.Infrastructure.Database.Enums;
+using GB.NetApi.Infrastructure.Database.Extensions;
 using GB.NetApi.Infrastructure.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -84,5 +87,66 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
             return dbSetProperty.GetValue(context) as DbSet<TDao>;
         }
+
+        /// <summary>
+        /// Retrieve all stored <see cref="TEntity"/> entities
+        /// </summary>
+        /// <param name="tracking">The tracking mode to use when querying</param>
+        /// <returns>All stored <see cref="TEntity"/> entities</returns>
+        protected async Task<IEnumerable<TEntity>> ToListAsync() => await ToListAsync(ETracking.Disabled).ConfigureAwait(false);
+
+        /// <summary>
+        /// Retrieve all stored <see cref="TEntity"/> entities
+        /// </summary>
+        /// <param name="tracking">The tracking mode to use when querying</param>
+        /// <returns>All stored <see cref="TEntity"/> entities</returns>
+        protected async Task<IEnumerable<TEntity>> ToListAsync(ETracking tracking)
+        {
+            using (var context = ContextFunction())
+            {
+                Task<List<TDao>> function() => GetQuery(context, tracking)
+                    .ToListAsync();
+
+                var result = await TaskHandler.HandleAsync(function)
+                    .ConfigureAwait(false);
+
+                return Transform(result);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all filtered <see cref="TEntity"/> entities
+        /// </summary>
+        /// <param name="model">The <see cref="WhereManyModel{TDao}"/> to use when filtering</param>
+        /// <returns>All filtered <see cref="TEntity"/> entities</returns>
+        protected async Task<IEnumerable<TEntity>> ToListAsync(WhereManyModel<TDao> model) => await ToListAsync(model, ETracking.Disabled).ConfigureAwait(false);
+
+        /// <summary>
+        /// Retrieves all filtered <see cref="TEntity"/> entities
+        /// </summary>
+        /// <param name="model">The <see cref="WhereManyModel{TDao}"/> to use when filtering</param>
+        /// <param name="tracking">The tracking mode to use when querying</param>
+        /// <returns>All filtered <see cref="TEntity"/> entities</returns>
+        protected async Task<IEnumerable<TEntity>> ToListAsync(WhereManyModel<TDao> model, ETracking tracking)
+        {
+            using (var context = ContextFunction())
+            {
+                Task<List<TDao>> function() => GetQuery(context, tracking)
+                    .WhereMany(model.WhereMany)
+                    .ToListAsync();
+                var result = await TaskHandler.HandleAsync(function)
+                    .ConfigureAwait(false);
+
+                return Transform(result);
+            }
+        }
+
+        #region Private methods
+
+        private static IEnumerable<TEntity> Transform(IEnumerable<TDao> daos) => daos.IsNotNullNorEmpty() ? daos.Select(Transform) : default;
+
+        private static TEntity Transform(TDao dao) => dao.Transform();
+
+        #endregion
     }
 }

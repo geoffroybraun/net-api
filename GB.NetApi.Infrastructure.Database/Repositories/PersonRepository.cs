@@ -2,11 +2,13 @@
 using GB.NetApi.Domain.Models.Entities.Filters;
 using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
+using GB.NetApi.Domain.Services.Extensions;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
 using GB.NetApi.Infrastructure.Database.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Infrastructure.Database.Repositories
@@ -25,16 +27,41 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             return await AnyAsync(model).ConfigureAwait(false);
         }
 
-        public Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)
+        public async Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)
         {
-            throw new NotImplementedException();
+            var model = GetModelFromFilter(filter);
+
+            return await ToListAsync(model).ConfigureAwait(false);
         }
 
-        public Task<IEnumerable<Person>> ListAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<IEnumerable<Person>> ListAsync() => await ToListAsync().ConfigureAwait(false);
 
         async Task<bool> IPersonRepository.CreateAsync(Person person) => await CreateAsync(person).ConfigureAwait(false);
+
+        #region Private methods
+
+        private static WhereManyModel<PersonDao> GetModelFromFilter(PersonFilter filter)
+        {
+            var functions = new List<Expression<Func<PersonDao, bool>>>();
+
+            if (filter.Firstname.IsNotNullNorEmptyNorWhiteSpace())
+                functions.Add((dao) => dao.Firstname == filter.Firstname);
+
+            if (filter.Lastname.IsNotNullNorEmptyNorWhiteSpace())
+                functions.Add((dao) => dao.Lastname == filter.Lastname);
+
+            if (filter.BirthYear.IsSuperiorTo(0))
+                functions.Add((dao) => dao.Birthdate.Year == filter.BirthYear);
+
+            if (filter.BirthMonth.IsSuperiorTo(0))
+                functions.Add((dao) => dao.Birthdate.Month == filter.BirthMonth);
+
+            if (filter.BirthDay.IsSuperiorTo(0))
+                functions.Add((dao) => dao.Birthdate.Day == filter.BirthDay);
+
+            return new WhereManyModel<PersonDao>() { WhereMany = functions };
+        }
+
+        #endregion
     }
 }
