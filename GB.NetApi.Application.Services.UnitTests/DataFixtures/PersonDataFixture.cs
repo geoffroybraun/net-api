@@ -1,6 +1,9 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
+using GB.NetApi.Domain.Models.Entities.Filters;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using Moq;
+using System;
+using System.Collections.Generic;
 
 namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
 {
@@ -15,8 +18,21 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
                 .ReturnsAsync(true);
             mock.Setup(m => m.ExistAsync(It.IsAny<Person>()))
                 .ReturnsAsync(false);
+            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
+                .ReturnsAsync(GetPersons);
+            mock.Setup(m => m.ListAsync())
+                .ReturnsAsync(GetPersons);
 
             return mock;
         }
+
+        #region Private methods
+
+        private static IEnumerable<Person> GetPersons() => new[]
+        {
+            new Person() { ID = 1, Firstname = "Firstname", Lastname = "Lastname", Birthdate = DateTime.Now }
+        };
+
+        #endregion
     }
 }

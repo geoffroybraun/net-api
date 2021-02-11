@@ -1,4 +1,6 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
+using GB.NetApi.Domain.Models.Entities.Filters;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Domain.Models.Interfaces.Repositories
@@ -27,5 +29,18 @@ namespace GB.NetApi.Domain.Models.Interfaces.Repositories
         ///     * <see cref="Person.Birthdate"/>
         /// </remarks>
         Task<bool> ExistAsync(Person person);
+
+        /// <summary>
+        /// Retrieve all matching <see cref="Person"/> entities
+        /// </summary>
+        /// <param name="filter">The <see cref="PersonFilter"/> entity to use when filter</param>
+        /// <returns>All filtered <see cref="Person"/> entities</returns>
+        Task<IEnumerable<Person>> FilterAsync(PersonFilter filter);
+
+        /// <summary>
+        /// Retrieve all stored <see cref="Person"/> entities
+        /// </summary>
+        /// <returns>All stored <see cref="Person"/> entities</returns>
+        Task<IEnumerable<Person>> ListAsync();
     }
 }

@@ -1,4 +1,4 @@
-﻿using GB.NetApi.Application.Services.Formatters;
+﻿using GB.NetApi.Application.WebApi.Formatters;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
