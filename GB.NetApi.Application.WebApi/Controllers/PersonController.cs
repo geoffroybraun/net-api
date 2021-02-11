@@ -1,7 +1,10 @@
 ﻿using GB.NetApi.Application.Services.Commands.Persons;
+using GB.NetApi.Application.Services.DTOs;
+using GB.NetApi.Application.Services.Queries.Persons;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.WebApi.Controllers
@@ -20,5 +23,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
 
         [HttpPut]
         public async Task<bool> CreateAsync(CreatePersonCommand command) => await Mediator.Send(command).ConfigureAwait(false);
+
+        [HttpPost]
+        public async Task<IEnumerable<PersonDto>> FilterAsync(FilterPersonQuery query) => await Mediator.Send(query).ConfigureAwait(false);
     }
 }

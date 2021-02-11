@@ -45,6 +45,34 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         }
 
         /// <summary>
+        /// Deserialize a response content to a <see cref="T"/> type
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the content to</typeparam>
+        /// <param name="content">The response content to deserialize</param>
+        /// <returns>The deserialized content</returns>
+        protected static async Task<T> DeserializeContentAsync<T>(HttpContent content) where T : class
+        {
+            using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+            var result = await Formatter.DeserializeAsync(stream, typeof(T)).ConfigureAwait(false);
+
+            return result as T;
+        }
+
+        /// <summary>
+        /// Executes a <see cref="HttpMethod.Post"/> request to the provided endpoint
+        /// </summary>
+        /// <typeparam name="T">The value type to serialize</typeparam>
+        /// <param name="endpoint">The endpoint to request</param>
+        /// <param name="value">The value to serialize</param>
+        /// <returns>The API response</returns>
+        protected async Task<HttpResponseMessage> PostAsync<T>(string endpoint, T value)
+        {
+            var content = await GetStringContentAsync(value).ConfigureAwait(false);
+            
+            return await Client.PostAsync(endpoint, content).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Executes a <see cref="HttpMethod.Put"/> request to the provided endpoint
         /// </summary>
         /// <typeparam name="T">The value type to serialize</typeparam>
@@ -53,12 +81,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// <returns>The API response</returns>
         protected async Task<HttpResponseMessage> PutAsync<T>(string endpoint, T value)
         {
-            var content = await GetStringContentAsync(value)
-                .ConfigureAwait(false);
-            var response = await Client.PutAsync(endpoint, content)
-                .ConfigureAwait(false);
-
-            return response;
+            var content = await GetStringContentAsync(value).ConfigureAwait(false);
+            
+            return await Client.PutAsync(endpoint, content).ConfigureAwait(false);
         }
 
         #region Private methods
