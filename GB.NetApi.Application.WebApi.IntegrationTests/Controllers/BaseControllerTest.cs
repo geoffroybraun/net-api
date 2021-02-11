@@ -59,6 +59,13 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         }
 
         /// <summary>
+        /// Executes a <see cref="HttpMethod.Get"/> request to the provided endpoint
+        /// </summary>
+        /// <param name="endpoint">The endpoint to request</param>
+        /// <returns>The API response</returns>
+        protected async Task<HttpResponseMessage> GetAsync(string endpoint) => await Client.GetAsync(endpoint).ConfigureAwait(false);
+
+        /// <summary>
         /// Executes a <see cref="HttpMethod.Post"/> request to the provided endpoint
         /// </summary>
         /// <typeparam name="T">The value type to serialize</typeparam>

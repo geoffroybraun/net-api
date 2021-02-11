@@ -118,5 +118,17 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
                 .Should()
                 .Be(0);
         }
+
+        [Fact]
+        public async Task Successfully_listing_all_stored_persons_returns_the_expected_result()
+        {
+            var response = await GetAsync(Endpoint).ConfigureAwait(false);
+            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content);
+
+            result.Should()
+                .NotBeNull()
+                .And
+                .NotBeEmpty();
+        }
     }
 }
