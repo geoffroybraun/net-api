@@ -1,0 +1,91 @@
+﻿using GB.NetApi.Application.Services.Formatters;
+using GB.NetApi.Infrastructure.Database.Contexts;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
+{
+    /// <summary>
+    /// Represents an abstract test controller which provides useful methods to deriving classes
+    /// </summary>
+    public abstract class BaseControllerTest : IDisposable
+    {
+        #region Fields
+
+        private const string ContentType = "application/json";
+        private static readonly Encoding Encoding = Encoding.UTF8;
+        private static readonly JsonTextFormatter Formatter = new JsonTextFormatter();
+        private readonly HttpClient Client;
+        private bool HasDisposed = false;
+
+        #endregion
+
+        protected BaseControllerTest() => Client = GetClient();
+
+        ~BaseControllerTest() => Dispose(false);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool isDisposing)
+        {
+            if (!isDisposing || HasDisposed)
+                return;
+
+            Client.Dispose();
+            HasDisposed = true;
+        }
+
+        /// <summary>
+        /// Executes a <see cref="HttpMethod.Put"/> request to the provided endpoint
+        /// </summary>
+        /// <typeparam name="T">The value type to serialize</typeparam>
+        /// <param name="endpoint">The endpoint to request</param>
+        /// <param name="value">The value to serialize</param>
+        /// <returns>The API response</returns>
+        protected async Task<HttpResponseMessage> PutAsync<T>(string endpoint, T value)
+        {
+            var content = await GetStringContentAsync(value)
+                .ConfigureAwait(false);
+            var response = await Client.PutAsync(endpoint, content)
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        #region Private methods
+
+        private static HttpClient GetClient()
+        {
+            var applicationFactory = new WebApplicationFactory<Startup>()
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureServices(services =>
+                    {
+                        services.RemoveAll(typeof(Func<BaseDbContext>));
+                        services.AddScoped<Func<BaseDbContext>>((provider) => () => new DummyDbContext());
+                    });
+                });
+
+            return applicationFactory.CreateClient();
+        }
+
+        private static async Task<StringContent> GetStringContentAsync<T>(T value)
+        {
+            var serialiedValue = await Formatter.SerializeAsync(value, typeof(T))
+                .ConfigureAwait(false);
+
+            return new StringContent(serialiedValue, Encoding, ContentType);
+        }
+
+        #endregion
+    }
+}
