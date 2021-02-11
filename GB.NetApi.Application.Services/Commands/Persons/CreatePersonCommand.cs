@@ -1,6 +1,6 @@
-﻿using GB.NetApi.Domain.Models.Entities;
+﻿using GB.NetApi.Application.Services.Interfaces.Commands;
+using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Interfaces.Entities;
-using MediatR;
 using System;
 
 namespace GB.NetApi.Application.Services.Commands.Persons
@@ -8,7 +8,7 @@ namespace GB.NetApi.Application.Services.Commands.Persons
     /// <summary>
     /// Represents a command to create a new <see cref="Person"/> entity
     /// </summary>
-    public sealed record CreatePersonCommand : IRequest<bool>, ITransformable<Person>
+    public sealed record CreatePersonCommand : ICommand<bool>, ITransformable<Person>
     {
         #region Properties
 
