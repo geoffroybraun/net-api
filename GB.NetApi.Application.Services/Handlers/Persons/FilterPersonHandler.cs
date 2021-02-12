@@ -1,5 +1,4 @@
 ﻿using GB.NetApi.Application.Services.DTOs;
-using GB.NetApi.Application.Services.Interfaces.Handlers;
 using GB.NetApi.Application.Services.Queries.Persons;
 using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Entities.Filters;
@@ -9,7 +8,6 @@ using GB.NetApi.Domain.Services.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.Services.Handlers.Persons
@@ -17,7 +15,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
     /// <summary>
     /// Handles a <see cref="FilterPersonQuery"/> query
     /// </summary>
-    public sealed class FilterPersonHandler : IQueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
+    public sealed class FilterPersonHandler : QueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
     {
         #region Fields
 
@@ -27,9 +25,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
 
         public FilterPersonHandler(IPersonRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public async Task<IEnumerable<PersonDto>> Handle(FilterPersonQuery query) => await Handle(query, CancellationToken.None).ConfigureAwait(false);
-
-        public async Task<IEnumerable<PersonDto>> Handle(FilterPersonQuery query, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<PersonDto>> ExecuteAsync(FilterPersonQuery query)
         {
             if (query is null)
                 throw new ArgumentNullException(nameof(query));

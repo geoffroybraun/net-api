@@ -33,7 +33,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
             {
                 var handler = new FilterPersonHandler(Fixture.Broken);
 
-                return handler.Handle(new FilterPersonQuery());
+                return handler.ExecuteAsync(new FilterPersonQuery());
             }
             var exception = await Assert.ThrowsAsync<NotImplementedException>(function)
                 .ConfigureAwait(false);
@@ -46,7 +46,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Not_filtering_persons_returns_a_default_value()
         {
             var handler = new FilterPersonHandler(Fixture.Null);
-            var result = await handler.Handle(new FilterPersonQuery())
+            var result = await handler.ExecuteAsync(new FilterPersonQuery())
                 .ConfigureAwait(false);
 
             result.Should()
@@ -57,7 +57,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_filtering_persons_without_any_value_returns_them_all()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery())
+            var result = await handler.ExecuteAsync(new FilterPersonQuery())
                 .ConfigureAwait(false);
 
             result.Should()
@@ -70,7 +70,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_filtering_persons_by_firstname_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery() { Firstname = Firstname })
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = Firstname })
                 .ConfigureAwait(false);
 
             result.Count(r => r.Firstname != Firstname)
@@ -82,7 +82,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_filtering_persons_by_lastname_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery() { Lastname = Lastname })
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Lastname = Lastname })
                 .ConfigureAwait(false);
 
             result.Count(r => r.Lastname != Lastname)
@@ -94,7 +94,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_filtering_persons_by_birth_year_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery() { BirthYear = BirthYear })
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthYear = BirthYear })
                 .ConfigureAwait(false);
 
             result.Count(r => r.Birthdate.Year != BirthYear)
@@ -106,7 +106,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_filtering_persons_by_birth_month_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery() { BirthMonth = BirthMonth })
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthMonth = BirthMonth })
                 .ConfigureAwait(false);
 
             result.Count(r => r.Birthdate.Month != BirthMonth)
@@ -118,7 +118,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_filtering_persons_by_birth_day_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery() { BirthDay = BirthDay })
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthDay = BirthDay })
                 .ConfigureAwait(false);
 
             result.Count(r => r.Birthdate.Day != BirthDay)

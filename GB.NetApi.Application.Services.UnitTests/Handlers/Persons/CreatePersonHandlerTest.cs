@@ -38,7 +38,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         public async Task Providing_a_null_command_throws_an_exception()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null))
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.RunAsync(null))
                 .ConfigureAwait(false);
 
             exception.Should()
@@ -49,7 +49,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         public async Task Providing_an_invalid_command_throws_an_exception()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.Handle(new CreatePersonCommand()))
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(new CreatePersonCommand()))
                 .ConfigureAwait(false);
 
             exception.Should()
@@ -70,7 +70,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
                 Firstname = Firstname,
                 Lastname = Lastname
             };
-            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.Handle(command))
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(command))
                 .ConfigureAwait(false);
 
             exception.Should()
@@ -87,7 +87,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
                 Firstname = Firstname,
                 Lastname = Lastname
             };
-            var result = await handler.Handle(command)
+            var result = await handler.RunAsync(command)
                 .ConfigureAwait(false);
 
             result.Should()

@@ -23,7 +23,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="command">The command to execute</param>
         /// <returns>True if the <see cref="PersonDto"/> has been successfully created, otherwise false</returns>
         [HttpPut]
-        public async Task<bool> CreateAsync(CreatePersonCommand command) => await SendAsync(command).ConfigureAwait(false);
+        public async Task<bool> CreateAsync(CreatePersonCommand command) => await RunAsync(command).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieve all filtered <see cref="PersonDto"/>
@@ -31,13 +31,13 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="query">The query to execute</param>
         /// <returns>All filtered <see cref="PersonDto"/></returns>
         [HttpPost]
-        public async Task<IEnumerable<PersonDto>> FilterAsync(FilterPersonQuery query) => await SendAsync(query).ConfigureAwait(false);
+        public async Task<IEnumerable<PersonDto>> FilterAsync(FilterPersonQuery query) => await ExecuteAsync(query).ConfigureAwait(false);
 
         /// <summary>
         /// Retrieve all stored <see cref="PersonDto"/>
         /// </summary>
         /// <returns>All stored <see cref="PersonDto"/></returns>
         [HttpGet]
-        public async Task<IEnumerable<PersonDto>> ListAsync() => await SendAsync(new FilterPersonQuery()).ConfigureAwait(false);
+        public async Task<IEnumerable<PersonDto>> ListAsync() => await ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
     }
 }

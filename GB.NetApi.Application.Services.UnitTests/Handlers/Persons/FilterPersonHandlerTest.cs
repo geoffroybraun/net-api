@@ -32,7 +32,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         public async Task Providing_a_null_query_throws_an_exception()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(null))
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.ExecuteAsync(null))
                 .ConfigureAwait(false);
 
             exception.Should()
@@ -43,7 +43,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         public async Task Providing_an_empty_query_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery())
+            var result = await handler.ExecuteAsync(new FilterPersonQuery())
                 .ConfigureAwait(false);
 
             result.Should()
@@ -56,7 +56,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         public async Task Providing_a_valid_query_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(new FilterPersonQuery() { Firstname = "Firstname", Lastname = "LAstname" })
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = "Firstname", Lastname = "LAstname" })
                 .ConfigureAwait(false);
 
             result.Should()

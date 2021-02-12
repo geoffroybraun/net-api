@@ -1,11 +1,9 @@
 ﻿using GB.NetApi.Application.Services.Commands.Persons;
-using GB.NetApi.Application.Services.Interfaces.Handlers;
 using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Domain.Services.Validators;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.Services.Handlers.Persons
@@ -13,7 +11,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
     /// <summary>
     /// Handles a <see cref="CreatePersonCommand"/> command
     /// </summary>
-    public sealed class CreatePersonHandler : ICommandHandler<CreatePersonCommand, bool>
+    public sealed class CreatePersonHandler : CommandHandler<CreatePersonCommand, bool>
     {
         #region Fields
 
@@ -28,9 +26,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             Validator = new PersonValidator();
         }
 
-        public async Task<bool> Handle(CreatePersonCommand command) => await Handle(command, CancellationToken.None).ConfigureAwait(false);
-
-        public async Task<bool> Handle(CreatePersonCommand command, CancellationToken cancellationToken)
+        public override async Task<bool> RunAsync(CreatePersonCommand command)
         {
             if (command is null)
                 throw new ArgumentNullException(nameof(command));
