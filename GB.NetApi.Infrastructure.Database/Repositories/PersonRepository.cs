@@ -34,6 +34,16 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             return await ToListAsync(model).ConfigureAwait(false);
         }
 
+        public async Task<Person> GetAsync(int ID)
+        {
+            var model = new SingleModel<PersonDao>()
+            {
+                SingleOrDefault = (dao) => dao.ID == ID
+            };
+
+            return await SingleAsync(model).ConfigureAwait(false);
+        }
+
         public async Task<IEnumerable<Person>> ListAsync() => await ToListAsync().ConfigureAwait(false);
 
         async Task<bool> IPersonRepository.CreateAsync(Person person) => await CreateAsync(person).ConfigureAwait(false);

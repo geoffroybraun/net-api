@@ -89,6 +89,30 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         }
 
         /// <summary>
+        /// Retrieve a single <see cref="TEntity"/> entity based ont the provided function
+        /// </summary>
+        /// <param name="model">The <see cref="SingleModel{TDao}"/> to use when querying</param>
+        /// <returns>The queried <see cref="TEntity"/> entity</returns>
+        protected async Task<TEntity> SingleAsync(SingleModel<TDao> model) => await SingleAsync(model, ETracking.Disabled).ConfigureAwait(false);
+
+        /// <summary>
+        /// Retrieve a single <see cref="TEntity"/> entity based ont the provided function
+        /// </summary>
+        /// <param name="model">The <see cref="SingleModel{TDao}"/> to use when querying</param>
+        /// <param name="tracking">The tracking mode to use when querying</param>
+        /// <returns>The queried <see cref="TEntity"/> entity</returns>
+        protected async Task<TEntity> SingleAsync(SingleModel<TDao> model, ETracking tracking)
+        {
+            using (var context = ContextFunction())
+            {
+                Task<TDao> function() => GetQuery(context, tracking).SingleOrDefaultAsync(model.SingleOrDefault);
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
+
+                return Transform(result);
+            }
+        }
+
+        /// <summary>
         /// Retrieve all stored <see cref="TEntity"/> entities
         /// </summary>
         /// <param name="tracking">The tracking mode to use when querying</param>
@@ -145,7 +169,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         private static IEnumerable<TEntity> Transform(IEnumerable<TDao> daos) => daos.IsNotNullNorEmpty() ? daos.Select(Transform) : default;
 
-        private static TEntity Transform(TDao dao) => dao.Transform();
+        private static TEntity Transform(TDao dao) => dao is not null ? dao.Transform() : default;
 
         #endregion
     }

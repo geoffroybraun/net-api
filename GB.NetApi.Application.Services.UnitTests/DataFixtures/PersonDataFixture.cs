@@ -20,6 +20,8 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
                 .ReturnsAsync(false);
             mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
                 .ReturnsAsync(GetPersons);
+            mock.Setup(m => m.GetAsync(It.IsAny<int>()))
+                .ReturnsAsync(GetPerson);
             mock.Setup(m => m.ListAsync())
                 .ReturnsAsync(GetPersons);
 
@@ -28,10 +30,9 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
 
         #region Private methods
 
-        private static IEnumerable<Person> GetPersons() => new[]
-        {
-            new Person() { ID = 1, Firstname = "Firstname", Lastname = "Lastname", Birthdate = DateTime.Now }
-        };
+        private static IEnumerable<Person> GetPersons() => new[] { GetPerson() };
+
+        private static Person GetPerson() => new Person() { ID = 1, Firstname = "Firstname", Lastname = "Lastname", Birthdate = DateTime.Now };
 
         #endregion
     }

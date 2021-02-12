@@ -38,6 +38,13 @@ namespace GB.NetApi.Domain.Models.Interfaces.Repositories
         Task<IEnumerable<Person>> FilterAsync(PersonFilter filter);
 
         /// <summary>
+        /// Retrieve a <see cref="Person"/> entity using its ID
+        /// </summary>
+        /// <param name="ID">The <see cref="Person"/> entity ID to look for</param>
+        /// <returns>The found <see cref="Person"/> entity</returns>
+        Task<Person> GetAsync(int ID);
+
+        /// <summary>
         /// Retrieve all stored <see cref="Person"/> entities
         /// </summary>
         /// <returns>All stored <see cref="Person"/> entities</returns>

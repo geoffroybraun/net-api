@@ -21,6 +21,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         private const int BirthYear = 1990;
         private const int BirthMonth = 1;
         private const int BirthDay = 1;
+        private const int ID = 1;
 
         #endregion
 
@@ -129,6 +130,27 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
                 .NotBeNull()
                 .And
                 .NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task Not_finding_a_person_using_its_ID_returns_a_not_found_status_code()
+        {
+            var response = await GetAsync($"{Endpoint}/{int.MaxValue}").ConfigureAwait(false);
+
+            response.StatusCode
+                .Should()
+                .Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Successfully_finding_a_persin_using_its_ID_returns_the_expected_result()
+        {
+            var response = await GetAsync($"{Endpoint}/{ID}").ConfigureAwait(false);
+            var result = await DeserializeContentAsync<PersonDto>(response.Content).ConfigureAwait(false);
+
+            result.ID
+                .Should()
+                .Be(ID);
         }
     }
 }

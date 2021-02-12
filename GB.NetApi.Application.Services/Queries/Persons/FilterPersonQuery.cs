@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace GB.NetApi.Application.Services.Queries.Persons
 {
     /// <summary>
-    /// Represents a query to retrieve filtered <see cref="Domain.Models.Entities.Person"/> entities
+    /// Represents a query to retrieve filtered <see cref="PersonDto"/>
     /// </summary>
     public sealed class FilterPersonQuery : IQuery<IEnumerable<PersonDto>>, ITransformable<PersonFilter>
     {

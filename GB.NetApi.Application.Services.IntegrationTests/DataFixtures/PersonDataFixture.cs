@@ -20,6 +20,8 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
                 .ThrowsAsync(new NotImplementedException());
             mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
                 .ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.GetAsync(It.IsAny<int>()))
+                .ThrowsAsync(new NotImplementedException());
             mock.Setup(m => m.ListAsync())
                 .ThrowsAsync(new NotImplementedException());
 
@@ -36,6 +38,8 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
                 .ReturnsAsync(false);
             mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
                 .ReturnsAsync(default(Person[]));
+            mock.Setup(m => m.GetAsync(It.IsAny<int>()))
+                .ReturnsAsync(default(Person));
             mock.Setup(m => m.ListAsync())
                 .ReturnsAsync(default(Person[]));
 

@@ -34,6 +34,20 @@ namespace GB.NetApi.Application.WebApi.Controllers
         public async Task<IEnumerable<PersonDto>> FilterAsync(FilterPersonQuery query) => await ExecuteAsync(query).ConfigureAwait(false);
 
         /// <summary>
+        /// Retrieve a <see cref="PersonDto"/> using its ID
+        /// </summary>
+        /// <param name="query">The query to execute</param>
+        /// <returns>The found <see cref="PersonDto"/></returns>
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult> GetAsync(int id)
+        {
+            var result = await ExecuteAsync(new GetSinglePersonQuery() { ID = id }).ConfigureAwait(false);
+
+            return result is not null ? Ok(result) : NotFound($"No person with ID {id} found.");
+        }
+
+        /// <summary>
         /// Retrieve all stored <see cref="PersonDto"/>
         /// </summary>
         /// <returns>All stored <see cref="PersonDto"/></returns>

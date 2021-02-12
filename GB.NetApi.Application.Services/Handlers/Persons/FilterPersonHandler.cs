@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace GB.NetApi.Application.Services.Handlers.Persons
 {
     /// <summary>
-    /// Handles a <see cref="FilterPersonQuery"/> query
+    /// Executes a <see cref="FilterPersonQuery"/> query
     /// </summary>
     public sealed class FilterPersonHandler : QueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
     {
