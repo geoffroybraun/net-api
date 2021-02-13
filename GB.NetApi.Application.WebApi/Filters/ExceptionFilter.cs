@@ -31,7 +31,15 @@ namespace GB.NetApi.Application.WebApi.Filters
                 return new BadRequestObjectResult(validationException.Errors);
             }
 
-            return new InternalServerErrorObjectResult(exception.Message);
+            return new InternalServerErrorObjectResult(GetMessageFromInnerException(exception));
+        }
+
+        private static string GetMessageFromInnerException(Exception exception)
+        {
+            if (exception.InnerException is not null)
+                return GetMessageFromInnerException(exception.InnerException);
+
+            return exception.Message;
         }
 
         #endregion

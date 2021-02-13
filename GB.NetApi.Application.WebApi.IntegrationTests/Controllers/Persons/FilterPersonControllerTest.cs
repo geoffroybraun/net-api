@@ -1,54 +1,27 @@
 ﻿using FluentAssertions;
-using GB.NetApi.Application.Services.Commands.Persons;
 using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.Persons;
 using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
+namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
 {
-    public sealed class PersonControllerTest : BaseControllerTest
+    public sealed class FilterPersonControllerTest : BasePersonControllerTest
     {
-        #region Fields
-
-        private const string Endpoint = "persons";
-        private const string Firstname = "Firstname";
-        private const string Lastname = "Lastname";
-        private const int BirthYear = 1990;
-        private const int BirthMonth = 1;
-        private const int BirthDay = 1;
-        private const int ID = 1;
-
-        #endregion
-
-        public PersonControllerTest(FuncBaseDbContextDataFixture fixture) : base(fixture) { }
+        public FilterPersonControllerTest(FuncBaseDbContextDataFixture fixture) : base(fixture) { }
 
         [Fact]
-        public async Task Providing_an_invalid_person_to_create_returns_a_bad_request_status_code()
+        public async Task Throwing_an_exception_when_filtering_returns_an_internal_server_error_status_code()
         {
-            var result = await PutAsync(Client, Endpoint, new CreatePersonCommand())
-                .ConfigureAwait(false);
+            var result = await PostAsync(BrokenClient, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
 
             result.StatusCode
                 .Should()
-                .Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task Successfully_creating_a_person_returns_a_no_content_status_code()
-        {
-            var command = new CreatePersonCommand() { Birthdate = DateTime.Now, Firstname = "New firstname", Lastname = "New lastname" };
-            var result = await PutAsync(Client, Endpoint, command)
-                .ConfigureAwait(false);
-
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NoContent);
+                .Be(HttpStatusCode.InternalServerError);
         }
 
         [Fact]
@@ -121,39 +94,6 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
             result.Count(r => r.Birthdate.Day != BirthDay)
                 .Should()
                 .Be(0);
-        }
-
-        [Fact]
-        public async Task Successfully_listing_all_stored_persons_returns_the_expected_result()
-        {
-            var response = await GetAsync(Client, Endpoint).ConfigureAwait(false);
-            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content);
-
-            result.Should()
-                .NotBeNull()
-                .And
-                .NotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Not_finding_a_person_using_its_ID_returns_a_not_found_status_code()
-        {
-            var response = await GetAsync(Client, $"{Endpoint}/{int.MaxValue}").ConfigureAwait(false);
-
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Successfully_finding_a_persin_using_its_ID_returns_the_expected_result()
-        {
-            var response = await GetAsync(Client, $"{Endpoint}/{ID}").ConfigureAwait(false);
-            var result = await DeserializeContentAsync<PersonDto>(response.Content).ConfigureAwait(false);
-
-            result.ID
-                .Should()
-                .Be(ID);
         }
     }
 }
