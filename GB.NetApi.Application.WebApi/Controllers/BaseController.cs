@@ -1,9 +1,11 @@
 ﻿using GB.NetApi.Application.Services.Interfaces.Commands;
 using GB.NetApi.Application.Services.Interfaces.Queries;
+using GB.NetApi.Application.WebApi.Models.ObjectResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace GB.NetApi.Application.WebApi.Controllers
 {
@@ -27,6 +29,12 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="query">The <see cref="IQuery{TResult}"/> to execute</param>
         /// <returns>The query result</returns>
         protected async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query) => await Mediator.Send(query).ConfigureAwait(false);
+
+        /// <summary>
+        /// Creates a <see cref="InternalServerErrorResult"/> object that produces a <see cref="StatusCodes.Status500InternalServerError"/> response
+        /// </summary>
+        /// <returns>The created <see cref="InternalServerErrorResult"/> response</returns>
+        protected InternalServerErrorResult InternalServerError() => new InternalServerErrorResult();
 
         /// <summary>
         /// Run the provided <see cref="ICommand{TResult}"/> to retrieve its result

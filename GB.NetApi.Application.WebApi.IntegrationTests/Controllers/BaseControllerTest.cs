@@ -1,4 +1,5 @@
 ﻿using GB.NetApi.Application.WebApi.Formatters;
+using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,25 +8,41 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 {
     /// <summary>
     /// Represents an abstract test controller which provides useful methods to deriving classes
     /// </summary>
-    public abstract class BaseControllerTest : IDisposable
+    public abstract class BaseControllerTest : IClassFixture<FuncBaseDbContextDataFixture>, IDisposable
     {
         #region Fields
 
         private const string ContentType = "application/json";
         private static readonly Encoding Encoding = Encoding.UTF8;
         private static readonly JsonTextFormatter Formatter = new JsonTextFormatter();
-        private readonly HttpClient Client;
         private bool HasDisposed = false;
 
         #endregion
 
-        protected BaseControllerTest() => Client = GetClient();
+        #region Properties
+
+        protected readonly HttpClient BrokenClient;
+        protected readonly HttpClient NullClient;
+        protected readonly HttpClient Client;
+
+        #endregion
+
+        protected BaseControllerTest(FuncBaseDbContextDataFixture fixture)
+        {
+            if (fixture is null)
+                throw new ArgumentNullException(nameof(fixture));
+
+            BrokenClient = InitializeClient(fixture.Broken);
+            NullClient = InitializeClient(fixture.Null);
+            Client = InitializeClient(fixture.Dummy);
+        }
 
         ~BaseControllerTest() => Dispose(false);
 
@@ -40,6 +57,8 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
             if (!isDisposing || HasDisposed)
                 return;
 
+            BrokenClient.Dispose();
+            NullClient.Dispose();
             Client.Dispose();
             HasDisposed = true;
         }
@@ -63,7 +82,10 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// </summary>
         /// <param name="endpoint">The endpoint to request</param>
         /// <returns>The API response</returns>
-        protected async Task<HttpResponseMessage> GetAsync(string endpoint) => await Client.GetAsync(endpoint).ConfigureAwait(false);
+        protected static async Task<HttpResponseMessage> GetAsync(HttpClient client, string endpoint)
+        {
+            return await client.GetAsync(endpoint).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Executes a <see cref="HttpMethod.Post"/> request to the provided endpoint
@@ -72,11 +94,11 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// <param name="endpoint">The endpoint to request</param>
         /// <param name="value">The value to serialize</param>
         /// <returns>The API response</returns>
-        protected async Task<HttpResponseMessage> PostAsync<T>(string endpoint, T value)
+        protected static async Task<HttpResponseMessage> PostAsync<T>(HttpClient client, string endpoint, T value)
         {
             var content = await GetStringContentAsync(value).ConfigureAwait(false);
             
-            return await Client.PostAsync(endpoint, content).ConfigureAwait(false);
+            return await client.PostAsync(endpoint, content).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -86,16 +108,16 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// <param name="endpoint">The endpoint to request</param>
         /// <param name="value">The value to serialize</param>
         /// <returns>The API response</returns>
-        protected async Task<HttpResponseMessage> PutAsync<T>(string endpoint, T value)
+        protected static async Task<HttpResponseMessage> PutAsync<T>(HttpClient client, string endpoint, T value)
         {
             var content = await GetStringContentAsync(value).ConfigureAwait(false);
             
-            return await Client.PutAsync(endpoint, content).ConfigureAwait(false);
+            return await client.PutAsync(endpoint, content).ConfigureAwait(false);
         }
 
         #region Private methods
 
-        private static HttpClient GetClient()
+        private static HttpClient InitializeClient(Func<BaseDbContext> contextFunction)
         {
             var applicationFactory = new WebApplicationFactory<Startup>()
                 .WithWebHostBuilder(builder =>
@@ -103,7 +125,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
                     builder.ConfigureServices(services =>
                     {
                         services.RemoveAll(typeof(Func<BaseDbContext>));
-                        services.AddScoped<Func<BaseDbContext>>((provider) => () => new DummyDbContext());
+                        services.AddScoped((provider) => contextFunction);
                     });
                 });
 
