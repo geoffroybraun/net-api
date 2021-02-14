@@ -10,9 +10,11 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
     {
         #region Properties
 
-        public DbSet<PersonDao> Persons { get; set; }
+        public virtual DbSet<PersonDao> Persons { get; set; }
 
         #endregion
+
+        protected BaseDbContext() { }
 
         protected BaseDbContext(DbContextOptions options) : base(options) { }
     }

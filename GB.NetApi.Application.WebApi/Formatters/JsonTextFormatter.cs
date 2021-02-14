@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GB.NetApi.Application.Services.Formatters
+namespace GB.NetApi.Application.WebApi.Formatters
 {
     /// <summary>
     /// Deserializes an input text or serializes an output text

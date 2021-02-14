@@ -31,7 +31,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
             {
                 var handler = new CreatePersonHandler(Fixture.Broken);
 
-                return handler.Handle(Command);
+                return handler.RunAsync(Command);
             }
 
             var exception = await Assert.ThrowsAsync<NotImplementedException>(function)
@@ -45,7 +45,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Not_handling_a_command_returns_false()
         {
             var handler = new CreatePersonHandler(Fixture.Null);
-            var result = await handler.Handle(Command)
+            var result = await handler.RunAsync(Command)
                 .ConfigureAwait(false);
 
             result.Should()
@@ -56,7 +56,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public async Task Successfully_handling_a_command_returns_true()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
-            var result = await handler.Handle(Command)
+            var result = await handler.RunAsync(Command)
                 .ConfigureAwait(false);
 
             result.Should()

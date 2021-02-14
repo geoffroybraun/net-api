@@ -5,7 +5,7 @@ using GB.NetApi.Infrastructure.Database.Repositories;
 using Moq;
 using System;
 
-namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
+namespace GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures
 {
     /// <summary>
     /// Represents a dummy <see cref="IPersonRepository"/> implementation

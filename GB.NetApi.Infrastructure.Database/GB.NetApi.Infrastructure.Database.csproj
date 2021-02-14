@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GB.NetApi.Domain.Models\GB.NetApi.Domain.Models.csproj" />
+    <ProjectReference Include="..\GB.NetApi.Domain.Services\GB.NetApi.Domain.Services.csproj" />
   </ItemGroup>
 
 </Project>

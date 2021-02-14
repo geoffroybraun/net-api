@@ -1,5 +1,4 @@
-﻿using GB.NetApi.Application.Services.Formatters;
-using Microsoft.AspNetCore.Mvc.Formatters;
+﻿using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Text;
