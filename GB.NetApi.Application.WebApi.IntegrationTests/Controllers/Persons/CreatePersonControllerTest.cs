@@ -20,7 +20,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         };
 
         #endregion
-        public CreatePersonControllerTest(FuncBaseDbContextDataFixture fixture) : base(fixture) { }
+        public CreatePersonControllerTest(PersonDataFixture fixture) : base(fixture) { }
 
         [Fact]
         public async Task Throwing_an_exception_when_creating_a_person_returns_an_internal_server_error_status_code()

@@ -8,14 +8,13 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 {
     /// <summary>
     /// Represents an abstract test controller which provides useful methods to deriving classes
     /// </summary>
-    public abstract class BaseControllerTest : IClassFixture<FuncBaseDbContextDataFixture>, IDisposable
+    public abstract class BaseControllerTest<T> : IDisposable where T : class
     {
         #region Fields
 
@@ -34,7 +33,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 
         #endregion
 
-        protected BaseControllerTest(FuncBaseDbContextDataFixture fixture)
+        protected BaseControllerTest(BaseDataFixture<T> fixture)
         {
             if (fixture is null)
                 throw new ArgumentNullException(nameof(fixture));
@@ -117,7 +116,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 
         #region Private methods
 
-        private static HttpClient InitializeClient(Func<BaseDbContext> contextFunction)
+        private static HttpClient InitializeClient(T mock)
         {
             var applicationFactory = new WebApplicationFactory<Startup>()
                 .WithWebHostBuilder(builder =>
@@ -125,7 +124,10 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
                     builder.ConfigureServices(services =>
                     {
                         services.RemoveAll(typeof(Func<BaseDbContext>));
-                        services.AddScoped((provider) => contextFunction);
+                        services.AddScoped<Func<BaseDbContext>>((provider) => () => new DummyDbContext());
+
+                        services.RemoveAll(typeof(T));
+                        services.AddScoped((provider) => mock);
                     });
                 });
 

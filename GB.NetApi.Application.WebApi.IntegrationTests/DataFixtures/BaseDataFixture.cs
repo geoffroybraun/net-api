@@ -1,4 +1,8 @@
-﻿using Moq;
+﻿using GB.NetApi.Domain.Models.Interfaces.Libraries;
+using GB.NetApi.Infrastructure.Database.Contexts;
+using GB.NetApi.Infrastructure.Libraries.Handlers;
+using Moq;
+using System;
 
 namespace GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures
 {
@@ -17,6 +21,10 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures
 
         #region Properties
 
+        protected readonly Func<BaseDbContext> ContextFunction;
+
+        protected readonly ITaskHandler TaskHandler;
+
         public T Broken => BrokenMock.Object;
 
         public T Null => NullMock.Object;
@@ -29,6 +37,8 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures
         {
             BrokenMock = InitializeBrokenMock(new Mock<T>());
             NullMock = InitializeNullMock(new Mock<T>());
+            ContextFunction = () => new DummyDbContext();
+            TaskHandler = new TaskHandler();
         }
 
         /// <summary>

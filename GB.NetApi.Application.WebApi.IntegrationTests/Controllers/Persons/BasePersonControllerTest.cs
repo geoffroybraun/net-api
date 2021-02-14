@@ -1,8 +1,10 @@
 ﻿using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
+using GB.NetApi.Domain.Models.Interfaces.Repositories;
+using Xunit;
 
 namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
 {
-    public abstract class BasePersonControllerTest : BaseControllerTest
+    public abstract class BasePersonControllerTest : BaseControllerTest<IPersonRepository>, IClassFixture<PersonDataFixture>
     {
         #region Properties
 
@@ -16,6 +18,6 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
 
         #endregion
 
-        protected BasePersonControllerTest(FuncBaseDbContextDataFixture fixture) : base(fixture) { }
+        protected BasePersonControllerTest(PersonDataFixture fixture) : base(fixture) { }
     }
 }

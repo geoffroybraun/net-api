@@ -10,7 +10,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
 {
     public sealed class ListPersonControllerTest : BasePersonControllerTest
     {
-        public ListPersonControllerTest(FuncBaseDbContextDataFixture fixture) : base(fixture) { }
+        public ListPersonControllerTest(PersonDataFixture fixture) : base(fixture) { }
 
         [Fact]
         public async Task Throwing_an_exception_when_listing_persons_returns_an_internal_server_error_status_code()
@@ -20,6 +20,16 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             result.StatusCode
                 .Should()
                 .Be(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
+        public async Task Not_finding_persons_returns_a_not_found_status_code()
+        {
+            var result = await GetAsync(NullClient, Endpoint).ConfigureAwait(false);
+
+            result.StatusCode
+                .Should()
+                .Be(HttpStatusCode.NotFound);
         }
 
         [Fact]

@@ -12,7 +12,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
 {
     public sealed class FilterPersonControllerTest : BasePersonControllerTest
     {
-        public FilterPersonControllerTest(FuncBaseDbContextDataFixture fixture) : base(fixture) { }
+        public FilterPersonControllerTest(PersonDataFixture fixture) : base(fixture) { }
 
         [Fact]
         public async Task Throwing_an_exception_when_filtering_returns_an_internal_server_error_status_code()
@@ -34,6 +34,17 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
                 .NotBeNull()
                 .And
                 .NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task Not_filtering_persons_returns_a_not_found_status_code()
+        {
+            var query = new FilterPersonQuery() { BirthDay = BirthDay };
+            var result = await PostAsync(NullClient, Endpoint, query).ConfigureAwait(false);
+
+            result.StatusCode
+                .Should()
+                .Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
