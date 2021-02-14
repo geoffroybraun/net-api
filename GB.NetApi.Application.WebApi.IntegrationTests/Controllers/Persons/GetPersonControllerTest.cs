@@ -22,9 +22,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var response = await GetAsync(BrokenClient, GetPersonEndpoint).ConfigureAwait(false);
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.InternalServerError);
+            response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         }
 
         [Fact]
@@ -32,9 +30,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var result = await GetAsync(NullClient, GetPersonEndpoint).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NotFound);
+            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -43,9 +39,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var response = await GetAsync(Client, GetPersonEndpoint).ConfigureAwait(false);
             var result = await DeserializeContentAsync<PersonDto>(response.Content).ConfigureAwait(false);
 
-            result.ID
-                .Should()
-                .Be(ID);
+            result.ID.Should().Be(ID);
         }
     }
 }

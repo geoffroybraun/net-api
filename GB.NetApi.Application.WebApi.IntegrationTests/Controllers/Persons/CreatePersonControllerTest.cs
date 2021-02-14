@@ -27,9 +27,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var result = await PutAsync(BrokenClient, Endpoint, Command).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.InternalServerError);
+            result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         }
 
         [Fact]
@@ -37,9 +35,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var result = await PutAsync(NullClient, Endpoint, Command).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.InternalServerError);
+            result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         }
 
         [Fact]
@@ -47,9 +43,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var result = await PutAsync(Client, Endpoint, new CreatePersonCommand()).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.BadRequest);
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -57,9 +51,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var result = await PutAsync(Client, Endpoint, Command).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NoContent);
+            result.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
     }
 }

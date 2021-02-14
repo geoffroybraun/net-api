@@ -33,34 +33,27 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
 
                 return handler.RunAsync(Command);
             }
+            var exception = await Assert.ThrowsAsync<NotImplementedException>(function).ConfigureAwait(false);
 
-            var exception = await Assert.ThrowsAsync<NotImplementedException>(function)
-                .ConfigureAwait(false);
-
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Not_handling_a_command_returns_false()
         {
             var handler = new CreatePersonHandler(Fixture.Null);
-            var result = await handler.RunAsync(Command)
-                .ConfigureAwait(false);
+            var result = await handler.RunAsync(Command).ConfigureAwait(false);
 
-            result.Should()
-                .BeFalse();
+            result.Should().BeFalse();
         }
 
         [Fact]
         public async Task Successfully_handling_a_command_returns_true()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
-            var result = await handler.RunAsync(Command)
-                .ConfigureAwait(false);
+            var result = await handler.RunAsync(Command).ConfigureAwait(false);
 
-            result.Should()
-                .BeTrue();
+            result.Should().BeTrue();
         }
     }
 }

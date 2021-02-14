@@ -27,8 +27,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// Creates a <see cref="InternalServerErrorResult"/> object that produces a <see cref="StatusCodes.Status500InternalServerError"/> response
         /// </summary>
         /// <returns>The created <see cref="InternalServerErrorResult"/> response</returns>
-        [NonAction]
-        public virtual InternalServerErrorResult InternalServerError() => new InternalServerErrorResult();
+        protected InternalServerErrorResult InternalServerError() => new InternalServerErrorResult();
 
         /// <summary>
         /// Execute the provided <see cref="IQuery{TResult}"/> to retrieve its result

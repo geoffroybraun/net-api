@@ -19,21 +19,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         {
             var result = await PostAsync(BrokenClient, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.InternalServerError);
-        }
-
-        [Fact]
-        public async Task Providing_an_empty_filter_query_returns_all_stored_persons()
-        {
-            var response = await PostAsync(Client, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
-            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content);
-
-            result.Should()
-                .NotBeNull()
-                .And
-                .NotBeEmpty();
+            result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         }
 
         [Fact]
@@ -42,9 +28,16 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var query = new FilterPersonQuery() { BirthDay = BirthDay };
             var result = await PostAsync(NullClient, Endpoint, query).ConfigureAwait(false);
 
-            result.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NotFound);
+            result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Providing_an_empty_filter_query_returns_all_stored_persons()
+        {
+            var response = await PostAsync(Client, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
+            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content);
+
+            result.Should().NotBeNull().And.NotBeEmpty();
         }
 
         [Fact]
@@ -54,9 +47,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
 
-            result.Count(r => r.Firstname != Firstname)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Firstname != Firstname).Should().Be(0);
         }
 
         [Fact]
@@ -66,9 +57,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
 
-            result.Count(r => r.Lastname != Lastname)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Lastname != Lastname).Should().Be(0);
         }
 
         [Fact]
@@ -78,9 +67,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
 
-            result.Count(r => r.Birthdate.Year != BirthYear)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Birthdate.Year != BirthYear).Should().Be(0);
         }
 
         [Fact]
@@ -90,9 +77,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
 
-            result.Count(r => r.Birthdate.Month != BirthMonth)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Birthdate.Month != BirthMonth).Should().Be(0);
         }
 
         [Fact]
@@ -102,9 +87,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
 
-            result.Count(r => r.Birthdate.Day != BirthDay)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Birthdate.Day != BirthDay).Should().Be(0);
         }
     }
 }

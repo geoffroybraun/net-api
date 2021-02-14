@@ -21,33 +21,25 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
         [Fact]
         public void Providing_a_null_person_when_validating_returns_false()
         {
-            Validator.IsValid(null, DateTime.Now)
-                .Should()
-                .BeFalse();
+            Validator.IsValid(null, DateTime.Now).Should().BeFalse();
         }
 
         [Fact]
         public void Providing_a_null_person_when_unvalidating_returns_true()
         {
-            Validator.IsNotValid(null, DateTime.Now)
-                .Should()
-                .BeTrue();
+            Validator.IsNotValid(null, DateTime.Now).Should().BeTrue();
         }
 
         [Fact]
         public void Providing_an_empty_person_when_validating_returns_false()
         {
-            Validator.IsValid(new Person(), DateTime.Now)
-                .Should()
-                .BeFalse();
+            Validator.IsValid(new Person(), DateTime.Now).Should().BeFalse();
         }
 
         [Fact]
         public void Providing_an_empty_person_when_unvalidating_returns_true()
         {
-            Validator.IsNotValid(new Person(), DateTime.Now)
-                .Should()
-                .BeTrue();
+            Validator.IsNotValid(new Person(), DateTime.Now).Should().BeTrue();
         }
 
         [Fact]
@@ -67,9 +59,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = Lastname
             };
 
-            Validator.IsValid(person, DateTime.Now)
-                .Should()
-                .BeFalse();
+            Validator.IsValid(person, DateTime.Now).Should().BeFalse();
         }
 
         [Fact]
@@ -83,9 +73,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = Lastname
             };
 
-            Validator.IsNotValid(person, DateTime.Now)
-                .Should()
-                .BeTrue();
+            Validator.IsNotValid(person, DateTime.Now).Should().BeTrue();
         }
 
         [Fact]
@@ -113,9 +101,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = null
             };
 
-            Validator.IsValid(person, DateTime.Now)
-                .Should()
-                .BeFalse();
+            Validator.IsValid(person, DateTime.Now).Should().BeFalse();
         }
 
         [Fact]
@@ -129,9 +115,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = null
             };
 
-            Validator.IsNotValid(person, DateTime.Now)
-                .Should()
-                .BeTrue();
+            Validator.IsNotValid(person, DateTime.Now).Should().BeTrue();
         }
 
         [Fact]
@@ -159,9 +143,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = Lastname
             };
 
-            Validator.IsValid(person, DateTime.Now)
-                .Should()
-                .BeFalse();
+            Validator.IsValid(person, DateTime.Now).Should().BeFalse();
         }
 
         [Fact]
@@ -175,9 +157,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = Lastname
             };
 
-            Validator.IsNotValid(person, DateTime.Now)
-                .Should()
-                .BeTrue();
+            Validator.IsNotValid(person, DateTime.Now).Should().BeTrue();
         }
 
         [Fact]
@@ -205,9 +185,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = Lastname
             };
 
-            Validator.IsValid(person, DateTime.Now)
-                .Should()
-                .BeTrue();
+            Validator.IsValid(person, DateTime.Now).Should().BeTrue();
         }
 
         [Fact]
@@ -221,9 +199,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
                 Lastname = Lastname
             };
 
-            Validator.IsNotValid(person, DateTime.Now)
-                .Should()
-                .BeFalse();
+            Validator.IsNotValid(person, DateTime.Now).Should().BeFalse();
         }
 
         #region Private methods
@@ -235,8 +211,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             validator.SendErrorMessageEvent += (message, parameters) => eventCallsCount++;
             _ = validator.IsValid(person, DateTime.Now);
 
-            eventCallsCount.Should()
-                .Be(expectedEventCallsCount);
+            eventCallsCount.Should().Be(expectedEventCallsCount);
         }
 
         #endregion

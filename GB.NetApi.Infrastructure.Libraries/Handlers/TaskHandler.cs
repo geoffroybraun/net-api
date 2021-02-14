@@ -35,8 +35,7 @@ namespace GB.NetApi.Infrastructure.Libraries.Handlers
         {
             var wrapper = GetPoliciesWrapper<TResult>(Configuration);
 
-            return await wrapper.ExecuteAsync(taskFunction)
-                .ConfigureAwait(false);
+            return await wrapper.ExecuteAsync(taskFunction).ConfigureAwait(false);
         }
 
         #region Private methods

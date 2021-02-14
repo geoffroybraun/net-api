@@ -51,11 +51,9 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         {
             using (var context = ContextFunction())
             {
-                Task<bool> function() => GetQuery(context, tracking)
-                    .AnyAsync(model.Any);
+                Task<bool> function() => GetQuery(context, tracking).AnyAsync(model.Any);
 
-                return await TaskHandler.HandleAsync(function)
-                    .ConfigureAwait(false);
+                return await TaskHandler.HandleAsync(function).ConfigureAwait(false);
             }
         }
 
@@ -128,11 +126,8 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         {
             using (var context = ContextFunction())
             {
-                Task<List<TDao>> function() => GetQuery(context, tracking)
-                    .ToListAsync();
-
-                var result = await TaskHandler.HandleAsync(function)
-                    .ConfigureAwait(false);
+                Task<List<TDao>> function() => GetQuery(context, tracking).ToListAsync();
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
 
                 return Transform(result);
             }
@@ -158,8 +153,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                 Task<List<TDao>> function() => GetQuery(context, tracking)
                     .WhereMany(model.WhereMany)
                     .ToListAsync();
-                var result = await TaskHandler.HandleAsync(function)
-                    .ConfigureAwait(false);
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
 
                 return Transform(result);
             }

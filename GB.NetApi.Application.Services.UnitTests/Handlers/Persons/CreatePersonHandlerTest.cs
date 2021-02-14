@@ -30,38 +30,32 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new CreatePersonHandler(null));
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Providing_a_null_command_throws_an_exception()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.RunAsync(null))
-                .ConfigureAwait(false);
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.RunAsync(null)).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Providing_an_invalid_command_throws_an_exception()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(new CreatePersonCommand()))
-                .ConfigureAwait(false);
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(new CreatePersonCommand())).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Providing_valid_but_existing_command_values_throws_an_exception()
         {
             var mock = new Mock<IPersonRepository>();
-            mock.Setup(m => m.ExistAsync(It.IsAny<Person>()))
-                .ReturnsAsync(true);
+            mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ReturnsAsync(true);
             var handler = new CreatePersonHandler(mock.Object);
 
             var command = new CreatePersonCommand()
@@ -70,11 +64,9 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
                 Firstname = Firstname,
                 Lastname = Lastname
             };
-            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(command))
-                .ConfigureAwait(false);
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(command)).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
@@ -87,11 +79,9 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
                 Firstname = Firstname,
                 Lastname = Lastname
             };
-            var result = await handler.RunAsync(command)
-                .ConfigureAwait(false);
+            var result = await handler.RunAsync(command).ConfigureAwait(false);
 
-            result.Should()
-                .BeTrue();
+            result.Should().BeTrue();
         }
     }
 }

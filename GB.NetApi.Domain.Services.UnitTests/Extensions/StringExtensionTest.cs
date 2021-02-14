@@ -13,9 +13,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
         [InlineData("Value", false)]
         public void Checking_if_a_string_value_is_null_or_empty_or_white_space_returns_the_expected_result(string value, bool expectedResult)
         {
-            value.IsNullOrEmptyOrWhiteSpace()
-                .Should()
-                .Be(expectedResult);
+            value.IsNullOrEmptyOrWhiteSpace().Should().Be(expectedResult);
         }
 
         [Theory]
@@ -25,9 +23,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
         [InlineData("Value", true)]
         public void Checking_if_a_string_value_is_not_null_nor_empty_nor_white_space_returns_the_expected_result(string value, bool expectedResult)
         {
-            value.IsNotNullNorEmptyNorWhiteSpace()
-                .Should()
-                .Be(expectedResult);
+            value.IsNotNullNorEmptyNorWhiteSpace().Should().Be(expectedResult);
         }
     }
 }

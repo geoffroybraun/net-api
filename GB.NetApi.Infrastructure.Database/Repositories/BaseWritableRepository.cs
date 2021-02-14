@@ -34,8 +34,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             using (var context = ContextFunction())
             {
                 Task<int> function() => AddAsync(context, entity);
-                var result = await TaskHandler.HandleAsync(function)
-                    .ConfigureAwait(false);
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
 
                 return result == expectedSaveChangesCount;
             }

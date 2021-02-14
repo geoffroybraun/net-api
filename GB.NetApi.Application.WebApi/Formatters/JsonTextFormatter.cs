@@ -24,8 +24,7 @@ namespace GB.NetApi.Application.WebApi.Formatters
 
         public async Task<object> DeserializeAsync(Stream stream, Type outputType)
         {
-            var result = await JsonSerializer.DeserializeAsync(stream, outputType, Options)
-                .ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync(stream, outputType, Options).ConfigureAwait(false);
 
             return result;
         }
@@ -34,8 +33,7 @@ namespace GB.NetApi.Application.WebApi.Formatters
         {
             var result = JsonSerializer.Serialize(value, inputType, Options);
 
-            return await Task.FromResult(result)
-                .ConfigureAwait(false);
+            return await Task.FromResult(result).ConfigureAwait(false);
         }
     }
 }

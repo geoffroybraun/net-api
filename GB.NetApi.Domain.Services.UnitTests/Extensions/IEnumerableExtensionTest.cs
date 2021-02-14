@@ -15,9 +15,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
         {
             var values = value.IsNotNullNorEmptyNorWhiteSpace() ? new[] { value } : default;
 
-            values.IsNotNullNorEmpty()
-                .Should()
-                .Be(expectedResult);
+            values.IsNotNullNorEmpty().Should().Be(expectedResult);
         }
 
         [Theory]
@@ -29,9 +27,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
         {
             var values = value.IsNotNullNorEmptyNorWhiteSpace() ? new[] { value } : default;
 
-            values.IsNullOrEmpty()
-                .Should()
-                .Be(expectedResult);
+            values.IsNullOrEmpty().Should().Be(expectedResult);
         }
     }
 }

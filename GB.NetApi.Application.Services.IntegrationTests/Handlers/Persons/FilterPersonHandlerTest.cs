@@ -35,95 +35,72 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
 
                 return handler.ExecuteAsync(new FilterPersonQuery());
             }
-            var exception = await Assert.ThrowsAsync<NotImplementedException>(function)
-                .ConfigureAwait(false);
+            var exception = await Assert.ThrowsAsync<NotImplementedException>(function).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Not_filtering_persons_returns_a_default_value()
         {
             var handler = new FilterPersonHandler(Fixture.Null);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery())
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
 
-            result.Should()
-                .BeNull();
+            result.Should().BeNull();
         }
 
         [Fact]
         public async Task Successfully_filtering_persons_without_any_value_returns_them_all()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery())
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
 
-            result.Should()
-                .NotBeNull()
-                .And
-                .NotBeEmpty();
+            result.Should().NotBeNull().And.NotBeEmpty();
         }
 
         [Fact]
         public async Task Successfully_filtering_persons_by_firstname_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = Firstname })
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = Firstname }).ConfigureAwait(false);
 
-            result.Count(r => r.Firstname != Firstname)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Firstname != Firstname).Should().Be(0);
         }
 
         [Fact]
         public async Task Successfully_filtering_persons_by_lastname_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Lastname = Lastname })
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Lastname = Lastname }).ConfigureAwait(false);
 
-            result.Count(r => r.Lastname != Lastname)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Lastname != Lastname).Should().Be(0);
         }
 
         [Fact]
         public async Task Successfully_filtering_persons_by_birth_year_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthYear = BirthYear })
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthYear = BirthYear }).ConfigureAwait(false);
 
-            result.Count(r => r.Birthdate.Year != BirthYear)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Birthdate.Year != BirthYear).Should().Be(0);
         }
 
         [Fact]
         public async Task Successfully_filtering_persons_by_birth_month_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthMonth = BirthMonth })
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthMonth = BirthMonth }).ConfigureAwait(false);
 
-            result.Count(r => r.Birthdate.Month != BirthMonth)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Birthdate.Month != BirthMonth).Should().Be(0);
         }
 
         [Fact]
         public async Task Successfully_filtering_persons_by_birth_day_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthDay = BirthDay })
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthDay = BirthDay }).ConfigureAwait(false);
 
-            result.Count(r => r.Birthdate.Day != BirthDay)
-                .Should()
-                .Be(0);
+            result.Count(r => r.Birthdate.Day != BirthDay).Should().Be(0);
         }
     }
 }

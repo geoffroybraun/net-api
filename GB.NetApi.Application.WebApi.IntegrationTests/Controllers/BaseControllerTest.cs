@@ -136,8 +136,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 
         private static async Task<StringContent> GetStringContentAsync<T>(T value)
         {
-            var serialiedValue = await Formatter.SerializeAsync(value, typeof(T))
-                .ConfigureAwait(false);
+            var serialiedValue = await Formatter.SerializeAsync(value, typeof(T)).ConfigureAwait(false);
 
             return new StringContent(serialiedValue, Encoding, ContentType);
         }

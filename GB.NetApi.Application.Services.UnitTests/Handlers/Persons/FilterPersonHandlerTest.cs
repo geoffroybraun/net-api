@@ -23,46 +23,34 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         {
             static void action() => _ = new FilterPersonHandler(null);
 
-            Assert.Throws<ArgumentNullException>(action)
-                .Should()
-                .NotBeNull();
+            Assert.Throws<ArgumentNullException>(action).Should().NotBeNull();
         }
 
         [Fact]
         public async Task Providing_a_null_query_throws_an_exception()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.ExecuteAsync(null))
-                .ConfigureAwait(false);
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.ExecuteAsync(null)).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Providing_an_empty_query_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery())
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
 
-            result.Should()
-                .NotBeNull()
-                .And
-                .NotBeEmpty();
+            result.Should().NotBeNull().And.NotBeEmpty();
         }
 
         [Fact]
         public async Task Providing_a_valid_query_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = "Firstname", Lastname = "LAstname" })
-                .ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = "Firstname", Lastname = "LAstname" }).ConfigureAwait(false);
 
-            result.Should()
-                .NotBeNull()
-                .And
-                .NotBeEmpty();
+            result.Should().NotBeNull().And.NotBeEmpty();
         }
     }
 }

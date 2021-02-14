@@ -32,14 +32,12 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
                 throw new ArgumentNullException(nameof(command));
 
             var person = command.Transform();
-            var result = await IsValid(person, DateTime.Now)
-                .ConfigureAwait(false);
+            var result = await IsValid(person, DateTime.Now).ConfigureAwait(false);
 
             if (!result)
                 throw new EntityValidationException();
 
-            return await Repository.CreateAsync(person)
-                .ConfigureAwait(false);
+            return await Repository.CreateAsync(person).ConfigureAwait(false);
         }
 
         #region Private methods
@@ -48,8 +46,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         {
             var result = true;
             result &= Validator.IsValid(person, maxBirthdate);
-            result &= !await Repository.ExistAsync(person)
-                .ConfigureAwait(false);
+            result &= !await Repository.ExistAsync(person).ConfigureAwait(false);
 
             return result;
         }
