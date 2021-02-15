@@ -31,6 +31,13 @@ namespace GB.NetApi.Domain.Models.Interfaces.Repositories
         Task<bool> ExistAsync(Person person);
 
         /// <summary>
+        /// Indicates if a <see cref="Person"/> entity exists using its ID
+        /// </summary>
+        /// <param name="ID">The <see cref="Person"/> entity ID</param>
+        /// <returns>True if a <see cref="Person"/> entity has been found using its ID, otherwise false</returns>
+        Task<bool> ExistAsync(int ID);
+
+        /// <summary>
         /// Retrieve all matching <see cref="Person"/> entities
         /// </summary>
         /// <param name="filter">The <see cref="PersonFilter"/> entity to use when filter</param>
@@ -49,5 +56,12 @@ namespace GB.NetApi.Domain.Models.Interfaces.Repositories
         /// </summary>
         /// <returns>All stored <see cref="Person"/> entities</returns>
         Task<IEnumerable<Person>> ListAsync();
+
+        /// <summary>
+        /// Update an existing <see cref="Person"/> entity
+        /// </summary>
+        /// <param name="person">The <see cref="Person"/> entity to update</param>
+        /// <returns>True if the provided <see cref="Person"/> entity has been successfully updated, otherwise false</returns>
+        Task<bool> UpdateAsync(Person person);
     }
 }

@@ -40,6 +40,11 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             }
         }
 
+        protected Task<bool> UpdateAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
         #region Private methods
 
         private async Task<int> AddAsync(BaseDbContext context, TEntity entity)

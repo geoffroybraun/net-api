@@ -10,7 +10,7 @@ namespace GB.NetApi.Application.Services.Handlers
     /// </summary>
     /// <typeparam name="TQuery">The query type to execute</typeparam>
     /// <typeparam name="TResult">The query result type to return</typeparam>
-    public abstract class QueryHandler<TQuery, TResult> : IRequestHandler<TQuery, TResult> where TQuery : IQuery<TResult>
+    public abstract class BaseQueryHandler<TQuery, TResult> : IRequestHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {
         public async Task<TResult> Handle(TQuery request, CancellationToken cancellationToken)
         {

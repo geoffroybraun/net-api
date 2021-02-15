@@ -15,7 +15,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
     /// <summary>
     /// Executes a <see cref="FilterPersonQuery"/> query
     /// </summary>
-    public sealed class FilterPersonHandler : QueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
+    public sealed class FilterPersonHandler : BaseQueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
     {
         #region Fields
 

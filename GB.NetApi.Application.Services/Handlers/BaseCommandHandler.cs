@@ -10,7 +10,7 @@ namespace GB.NetApi.Application.Services.Handlers
     /// </summary>
     /// <typeparam name="TCommand">The command type to run</typeparam>
     /// <typeparam name="TResult">The command result type to return</typeparam>
-    public abstract class CommandHandler<TCommand, TResult> : IRequestHandler<TCommand, TResult> where TCommand : ICommand<TResult>
+    public abstract class BaseCommandHandler<TCommand, TResult> : IRequestHandler<TCommand, TResult> where TCommand : ICommand<TResult>
     {
         public async Task<TResult> Handle(TCommand request, CancellationToken cancellationToken)
         {

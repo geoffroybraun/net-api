@@ -16,9 +16,11 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
         {
             mock.Setup(m => m.CreateAsync(It.IsAny<Person>())).ReturnsAsync(true);
             mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ReturnsAsync(false);
+            mock.Setup(m => m.ExistAsync(It.IsAny<int>())).ReturnsAsync(true);
             mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>())).ReturnsAsync(GetPersons);
             mock.Setup(m => m.GetAsync(It.IsAny<int>())).ReturnsAsync(GetPerson);
             mock.Setup(m => m.ListAsync()).ReturnsAsync(GetPersons);
+            mock.Setup(m => m.UpdateAsync(It.IsAny<Person>())).ReturnsAsync(true);
 
             return mock;
         }

@@ -13,7 +13,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
         private const int ID = 1;
         private const string Firstname = "Firstname";
         private const string Lastname = "Lastname";
-        private static readonly DateTime Birthdate = DateTime.Now;
+        private static readonly DateTime Birthdate = DateTime.Now.AddHours(-1);
         private static readonly PersonValidator Validator = new PersonValidator();
 
         #endregion
@@ -55,7 +55,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = null,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -69,7 +68,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = null,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -83,7 +81,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = null,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -97,7 +94,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = null
             };
 
@@ -111,7 +107,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = null
             };
 
@@ -125,7 +120,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = null
             };
 
@@ -139,7 +133,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = DateTime.MaxValue,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -153,7 +146,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = DateTime.MaxValue,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -167,7 +159,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = DateTime.MaxValue,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -181,7 +172,6 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = Lastname
             };
 
@@ -195,21 +185,125 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
             {
                 Birthdate = Birthdate,
                 Firstname = Firstname,
-                ID = ID,
                 Lastname = Lastname
             };
 
             Validator.IsNotValid(person, DateTime.Now).Should().BeFalse();
         }
 
+        [Fact]
+        public void Providing_a_null_person_when_validating_with_its_ID_returns_false()
+        {
+            Validator.IsValidWithID(null, DateTime.UtcNow).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Providing_a_null_person_when_unvalidating_with_its_ID_returns_true()
+        {
+            Validator.IsNotValidWithID(null, DateTime.UtcNow).Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(int.MinValue)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void Providing_an_invalid_ID_when_validating_with_its_ID_returns_false(int id)
+        {
+            var person = new Person()
+            {
+                Birthdate = Birthdate,
+                Firstname = Firstname,
+                ID = id,
+                Lastname = Lastname
+            };
+
+            Validator.IsValidWithID(person, DateTime.UtcNow).Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(int.MinValue)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void Providing_an_invalid_ID_when_unvalidating_with_its_ID_returns_true(int id)
+        {
+            var person = new Person()
+            {
+                Birthdate = Birthdate,
+                Firstname = Firstname,
+                ID = id,
+                Lastname = Lastname
+            };
+
+            Validator.IsNotValidWithID(person, DateTime.UtcNow).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Providing_an_invalid_ID_when_validating_with_its_ID_sends_an_error_message_using_an_event()
+        {
+            var person = new Person()
+            {
+                Birthdate = Birthdate,
+                Firstname = Firstname,
+                ID = int.MinValue,
+                Lastname = Lastname
+            };
+
+            CheckIfEventIsSent(person, 1, true);
+        }
+
+        [Fact]
+        public void Providing_only_a_valid_ID_when_validating_with_its_ID_returns_false()
+        {
+            Validator.IsValidWithID(new Person() { ID = ID }, DateTime.UtcNow).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Providing_only_a_valid_ID_when_unvalidating_with_its_ID_returns_true()
+        {
+            Validator.IsNotValid(new Person() { ID = ID }, DateTime.UtcNow).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Providing_a_valid_person_when_validating_with_its_ID_returns_true()
+        {
+            var person = new Person()
+            {
+                Birthdate = Birthdate,
+                Firstname = Firstname,
+                ID = ID,
+                Lastname = Lastname
+            };
+
+            Validator.IsValidWithID(person, DateTime.UtcNow).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Providing_a_valid_person_when_unvalidating_with_its_ID_returns_false()
+        {
+            var person = new Person()
+            {
+                Birthdate = Birthdate,
+                Firstname = Firstname,
+                ID = ID,
+                Lastname = Lastname
+            };
+
+            Validator.IsNotValidWithID(person, DateTime.UtcNow).Should().BeFalse();
+        }
+
         #region Private methods
 
-        private static void CheckIfEventIsSent(Person person, int expectedEventCallsCount)
+        private static void CheckIfEventIsSent(Person person, int expectedEventCallsCount, bool includeID = false)
         {
             int eventCallsCount = 0;
             var validator = new PersonValidator();
             validator.SendErrorMessageEvent += (message, parameters) => eventCallsCount++;
-            _ = validator.IsValid(person, DateTime.Now);
+
+            if (!includeID)
+                _ = validator.IsValid(person, DateTime.UtcNow);
+
+            if (includeID)
+                _ = validator.IsValidWithID(person, DateTime.UtcNow);
 
             eventCallsCount.Should().Be(expectedEventCallsCount);
         }

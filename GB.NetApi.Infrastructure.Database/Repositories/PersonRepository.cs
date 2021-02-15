@@ -27,6 +27,11 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             return await AnyAsync(model).ConfigureAwait(false);
         }
 
+        public Task<bool> ExistAsync(int ID)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)
         {
             var model = GetModelFromFilter(filter);
@@ -47,6 +52,8 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         public async Task<IEnumerable<Person>> ListAsync() => await ToListAsync().ConfigureAwait(false);
 
         async Task<bool> IPersonRepository.CreateAsync(Person person) => await CreateAsync(person).ConfigureAwait(false);
+
+        async Task<bool> IPersonRepository.UpdateAsync(Person person) => await UpdateAsync(person).ConfigureAwait(false);
 
         #region Private methods
 
