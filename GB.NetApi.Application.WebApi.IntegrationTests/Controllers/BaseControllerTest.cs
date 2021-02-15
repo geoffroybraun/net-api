@@ -63,6 +63,17 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         }
 
         /// <summary>
+        /// Executes a <see cref="HttpMethod.Delete"/> request to the provided endpoint
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/> to use when executing the request</param>
+        /// <param name="endpoint">The endpoint to request</param>
+        /// <returns>The API response</returns>
+        protected static async Task<HttpResponseMessage> DeleteAsync(HttpClient client, string endpoint)
+        {
+            return await client.DeleteAsync(endpoint).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Deserialize a response content to a <see cref="T"/> type
         /// </summary>
         /// <typeparam name="T">The type to deserialize the content to</typeparam>
