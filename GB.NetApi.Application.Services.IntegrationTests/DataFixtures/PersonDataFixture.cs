@@ -15,6 +15,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
         protected override Mock<IPersonRepository> InitializeBrokenMock(Mock<IPersonRepository> mock)
         {
             mock.Setup(m => m.CreateAsync(It.IsAny<Person>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.DeleteAsync(It.IsAny<int>())).ThrowsAsync(new NotImplementedException());
             mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ThrowsAsync(new NotImplementedException());
             mock.Setup(m => m.ExistAsync(It.IsAny<int>())).ThrowsAsync(new NotImplementedException());
             mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>())).ThrowsAsync(new NotImplementedException());
@@ -30,6 +31,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
         protected override Mock<IPersonRepository> InitializeNullMock(Mock<IPersonRepository> mock)
         {
             mock.Setup(m => m.CreateAsync(It.IsAny<Person>())).ReturnsAsync(false);
+            mock.Setup(m => m.DeleteAsync(It.IsAny<int>())).ReturnsAsync(false);
             mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ReturnsAsync(false);
             mock.Setup(m => m.ExistAsync(It.IsAny<int>())).ReturnsAsync(true);
             mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>())).ReturnsAsync(default(Person[]));

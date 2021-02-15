@@ -2,7 +2,6 @@
 using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -41,13 +40,43 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             }
         }
 
-        protected Task<bool> DeleteAsync(int ID)
+        /// <summary>
+        /// Delete the stored <see cref="TEntity"/> entity using its ID
+        /// </summary>
+        /// <param name="ID">The <see cref="TEntity"/> entity ID to delete</param>
+        /// <returns>True if the stored <see cref="TEntity"/> entity has been successfully deleted using its iD, otherwise false</returns>
+        protected async Task<bool> DeleteAsync(int ID) => await DeleteAsync(ID, 1).ConfigureAwait(false);
+
+        /// <summary>
+        /// Delete the stored <see cref="TEntity"/> entity using its ID
+        /// </summary>
+        /// <param name="ID">The <see cref="TEntity"/> entity ID to delete</param>
+        /// <param name="expectedSavedChangesCount">The expected changes count when deleting the <see cref="TEntity"/> entity</param>
+        /// <returns>True if all expected changes have been saved when deleting the <see cref="TEntity"/> entity, otherwise false</returns>
+        protected async Task<bool> DeleteAsync(int ID, int expectedSavedChangesCount)
         {
-            throw new NotImplementedException();
+            using (var context = ContextFunction())
+            {
+                Task<int> function() => DeleteAsync(context, ID);
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
+
+                return result == expectedSavedChangesCount;
+            }
         }
 
+        /// <summary>
+        /// Update the stored <see cref="TEntity"/> using the provided one
+        /// </summary>
+        /// <param name="entity">The <see cref="TEntity"/> entity to update</param>
+        /// <returns>True if the stored <see cref="TEntity"/> entity has been successfully updated using the provided one, otherwise false</returns>
         protected async Task<bool> UpdateAsync(TEntity entity) => await UpdateAsync(entity, 1).ConfigureAwait(false);
 
+        /// <summary>
+        /// Update the stored <see cref="TEntity"/> entity using the provided one
+        /// </summary>
+        /// <param name="entity">The <see cref="TEntity"/> entity to update</param>
+        /// <param name="expectedSavedChangesCount">The expected saved changes count when updating the <see cref="TEntity"/> entity</param>
+        /// <returns>True if all expected changes have been saved, otherwise false</returns>
         protected async Task<bool> UpdateAsync(TEntity entity, int expectedSavedChangesCount)
         {
             using (var context = ContextFunction())
@@ -68,6 +97,15 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
             var dbSet = GetDbSet(context);
             _ = dbSet.Add(dao);
+
+            return await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private async Task<int> DeleteAsync(BaseDbContext context, int ID)
+        {
+            var dbSet = GetDbSet(context);
+            var dao = await dbSet.FindAsync(ID).ConfigureAwait(false);
+            _ = dbSet.Remove(dao);
 
             return await context.SaveChangesAsync().ConfigureAwait(false);
         }

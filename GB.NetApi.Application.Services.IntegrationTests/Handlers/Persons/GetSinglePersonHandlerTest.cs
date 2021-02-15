@@ -44,7 +44,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task SUccessfully_getting_a_person_returns_the_expected_result()
+        public async Task Successfully_getting_a_person_returns_the_expected_result()
         {
             var handler = new GetSinglePersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
