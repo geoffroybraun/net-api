@@ -41,6 +41,11 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             }
         }
 
+        protected Task<bool> DeleteAsync(int ID)
+        {
+            throw new NotImplementedException();
+        }
+
         protected async Task<bool> UpdateAsync(TEntity entity) => await UpdateAsync(entity, 1).ConfigureAwait(false);
 
         protected async Task<bool> UpdateAsync(TEntity entity, int expectedSavedChangesCount)

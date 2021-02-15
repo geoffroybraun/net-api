@@ -8,6 +8,7 @@ namespace GB.NetApi.Application.Services.Commands.Persons
     /// <summary>
     /// Represents a command to create a new <see cref="Person"/> entity
     /// </summary>
+    [Serializable]
     public sealed record CreatePersonCommand : ICommand<bool>, ITransformable<Person>
     {
         #region Properties

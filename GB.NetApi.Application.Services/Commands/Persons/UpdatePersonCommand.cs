@@ -8,6 +8,7 @@ namespace GB.NetApi.Application.Services.Commands.Persons
     /// <summary>
     /// Represents a command to update an existing <see cref="Person"/> entity
     /// </summary>
+    [Serializable]
     public sealed record UpdatePersonCommand : ICommand<bool>, ITransformable<Person>
     {
         #region Properties

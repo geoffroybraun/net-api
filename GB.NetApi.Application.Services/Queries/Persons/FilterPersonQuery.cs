@@ -2,6 +2,7 @@
 using GB.NetApi.Application.Services.Interfaces.Queries;
 using GB.NetApi.Domain.Models.Entities.Filters;
 using GB.NetApi.Domain.Models.Interfaces.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace GB.NetApi.Application.Services.Queries.Persons
@@ -9,6 +10,7 @@ namespace GB.NetApi.Application.Services.Queries.Persons
     /// <summary>
     /// Represents a query to retrieve filtered <see cref="PersonDto"/>
     /// </summary>
+    [Serializable]
     public sealed class FilterPersonQuery : IQuery<IEnumerable<PersonDto>>, ITransformable<PersonFilter>
     {
         #region Properties

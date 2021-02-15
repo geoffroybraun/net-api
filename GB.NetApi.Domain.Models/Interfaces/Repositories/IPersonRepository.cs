@@ -18,6 +18,13 @@ namespace GB.NetApi.Domain.Models.Interfaces.Repositories
         Task<bool> CreateAsync(Person person);
 
         /// <summary>
+        /// Delete a <see cref="Person"/> entity using its ID
+        /// </summary>
+        /// <param name="ID">The <see cref="Person"/> entity ID</param>
+        /// <returns>True if the <see cref="Person"/> entity has been successfully deleted using its ID, otherwise false</returns>
+        Task<bool> DeleteAsync(int ID);
+
+        /// <summary>
         /// Indicates if a <see cref="Person"/> entity already exists
         /// </summary>
         /// <param name="person">The <see cref="Person"/> entity to check</param>
