@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;S4457;S927</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GB.NetApi.Domain.Models\GB.NetApi.Domain.Models.csproj" />
+    <ProjectReference Include="..\GB.NetApi.Domain.Services\GB.NetApi.Domain.Services.csproj" />
+  </ItemGroup>
+
+</Project>
