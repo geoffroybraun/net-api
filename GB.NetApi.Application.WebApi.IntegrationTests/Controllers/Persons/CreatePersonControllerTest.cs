@@ -14,7 +14,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
 
         private static readonly CreatePersonCommand Command = new CreatePersonCommand()
         {
-            Birthdate = DateTime.Now,
+            Birthdate = DateTime.UtcNow,
             Firstname = "New firstname",
             Lastname = "New lastname"
         };
