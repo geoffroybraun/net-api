@@ -21,7 +21,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public GetSinglePersonHandlerTest(PersonDataFixture fixture) => Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
         [Fact]
-        public async Task Throwing_an_exception_let_it_be_thrown()
+        public async Task Throwing_an_exception_when_getting_a_person_let_it_be_thrown()
         {
             Task<PersonDto> function()
             {
