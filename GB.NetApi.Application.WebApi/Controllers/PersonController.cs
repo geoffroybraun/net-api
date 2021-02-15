@@ -30,6 +30,20 @@ namespace GB.NetApi.Application.WebApi.Controllers
         }
 
         /// <summary>
+        /// Delete a <see cref="PersonDto"/> using its ID
+        /// </summary>
+        /// <param name="ID">The <see cref="PersonDto"/> ID to delete</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> DeleteAsync(int ID)
+        {
+            var result = await RunAsync(new DeletePersonCommand() { ID = ID }).ConfigureAwait(false);
+
+            return result ? NoContent() : InternalServerError();
+        }
+
+        /// <summary>
         /// Retrieve all filtered <see cref="PersonDto"/>
         /// </summary>
         /// <param name="query">The query to execute</param>
@@ -45,7 +59,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <summary>
         /// Retrieve a <see cref="PersonDto"/> using its ID
         /// </summary>
-        /// <param name="query">The query to execute</param>
+        /// <param name="query">The <see cref="PersonDto"/> ID to look for</param>
         /// <returns>The found <see cref="PersonDto"/></returns>
         [HttpGet]
         [Route("{id}")]
@@ -71,7 +85,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <summary>
         /// Update an existing <see cref="PersonDto"/>
         /// </summary>
-        /// <param name="id">The <see cref="PersonDto"/> to update</param>
+        /// <param name="id">The <see cref="PersonDto"/> ID to update</param>
         /// <param name="command">The command to run</param>
         /// <returns>True if the <see cref="PersonDto"/> has been successfully updated, otherwise false</returns>
         [HttpPut]

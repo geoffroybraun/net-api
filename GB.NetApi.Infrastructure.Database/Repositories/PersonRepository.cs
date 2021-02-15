@@ -60,6 +60,8 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         async Task<bool> IPersonRepository.UpdateAsync(Person person) => await UpdateAsync(person).ConfigureAwait(false);
 
+        async Task<bool> IPersonRepository.DeleteAsync(int ID) => await DeleteAsync(ID).ConfigureAwait(false);
+
         #region Private methods
 
         private static WhereManyModel<PersonDao> GetModelFromFilter(PersonFilter filter)

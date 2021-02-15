@@ -25,7 +25,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public CreatePersonHandlerTest(PersonDataFixture fixture) => Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
         [Fact]
-        public async Task Throwing_an_exception_let_it_be_thrown()
+        public async Task Throwing_an_exception_when_creating_a_person_let_it_be_thrown()
         {
             Task<bool> function()
             {
@@ -39,7 +39,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Not_handling_a_command_returns_false()
+        public async Task Not_creating_a_person_returns_false()
         {
             var handler = new CreatePersonHandler(Fixture.Null);
             var result = await handler.RunAsync(Command).ConfigureAwait(false);
@@ -48,7 +48,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_handling_a_command_returns_true()
+        public async Task Successfully_creating_a_person_returns_true()
         {
             var handler = new CreatePersonHandler(Fixture.Dummy);
             var result = await handler.RunAsync(Command).ConfigureAwait(false);

@@ -21,7 +21,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         }
 
         [Fact]
-        public async Task Not_finding_persons_returns_a_not_found_status_code()
+        public async Task Not_listing_persons_returns_a_not_found_status_code()
         {
             var result = await GetAsync(NullClient, Endpoint).ConfigureAwait(false);
 
