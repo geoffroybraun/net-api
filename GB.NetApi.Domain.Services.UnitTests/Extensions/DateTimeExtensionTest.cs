@@ -23,8 +23,7 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
             foreach (var value in values)
                 result &= value.Item1.IsSuperiorTo(value.Item2) == value.Item3;
 
-            result.Should()
-                .BeTrue();
+            result.Should().BeTrue();
         }
     }
 }

@@ -14,16 +14,13 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
     {
         protected override Mock<IPersonRepository> InitializeBrokenMock(Mock<IPersonRepository> mock)
         {
-            mock.Setup(m => m.CreateAsync(It.IsAny<Person>()))
-                .ThrowsAsync(new NotImplementedException());
-            mock.Setup(m => m.ExistAsync(It.IsAny<Person>()))
-                .ThrowsAsync(new NotImplementedException());
-            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
-                .ThrowsAsync(new NotImplementedException());
-            mock.Setup(m => m.GetAsync(It.IsAny<int>()))
-                .ThrowsAsync(new NotImplementedException());
-            mock.Setup(m => m.ListAsync())
-                .ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.CreateAsync(It.IsAny<Person>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.ExistAsync(It.IsAny<int>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.GetAsync(It.IsAny<int>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.ListAsync()).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.UpdateAsync(It.IsAny<Person>())).ThrowsAsync(new NotImplementedException());
 
             return mock;
         }
@@ -32,16 +29,13 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
 
         protected override Mock<IPersonRepository> InitializeNullMock(Mock<IPersonRepository> mock)
         {
-            mock.Setup(m => m.CreateAsync(It.IsAny<Person>()))
-                .ReturnsAsync(false);
-            mock.Setup(m => m.ExistAsync(It.IsAny<Person>()))
-                .ReturnsAsync(false);
-            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>()))
-                .ReturnsAsync(default(Person[]));
-            mock.Setup(m => m.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(default(Person));
-            mock.Setup(m => m.ListAsync())
-                .ReturnsAsync(default(Person[]));
+            mock.Setup(m => m.CreateAsync(It.IsAny<Person>())).ReturnsAsync(false);
+            mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ReturnsAsync(false);
+            mock.Setup(m => m.ExistAsync(It.IsAny<int>())).ReturnsAsync(true);
+            mock.Setup(m => m.FilterAsync(It.IsAny<PersonFilter>())).ReturnsAsync(default(Person[]));
+            mock.Setup(m => m.GetAsync(It.IsAny<int>())).ReturnsAsync(default(Person));
+            mock.Setup(m => m.ListAsync()).ReturnsAsync(default(Person[]));
+            mock.Setup(m => m.UpdateAsync(It.IsAny<Person>())).ReturnsAsync(false);
 
             return mock;
         }

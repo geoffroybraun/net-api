@@ -25,8 +25,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
             static void action() => _ = new GetSinglePersonHandler(null);
             var exception = Assert.Throws<ArgumentNullException>(action);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
@@ -40,8 +39,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
             }
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(function).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Theory]
@@ -58,8 +56,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
             }
             var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(function).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
@@ -68,8 +65,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
             var handler = new GetSinglePersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new GetSinglePersonQuery() { ID = 1 }).ConfigureAwait(false);
 
-            result.Should()
-                .NotBeNull();
+            result.Should().NotBeNull();
         }
     }
 }

@@ -36,5 +36,31 @@ namespace GB.NetApi.Domain.Services.Validators
 
             return result;
         }
+
+        /// <summary>
+        /// Indicates if the provided <see cref="Person"/> entity is valid, including its <see cref="Person.ID"/> property, or not
+        /// </summary>
+        /// <param name="person">The <see cref="Person"/> entity to validate</param>
+        /// <param name="maxBirthdate">The <see cref="DateTime"/> to be inferior or equal to</param>
+        /// <returns>True if the provided <see cref="Person"/> entity is not valid, including its <see cref="Person.ID"/> property, otherwise false</returns>
+        public bool IsNotValidWithID(Person person, DateTime maxBirthdate) => !IsValidWithID(person, maxBirthdate);
+
+        /// <summary>
+        /// Indicates if the provided <see cref="Person"/> entity is valid, including its <see cref="Person.ID"/> property
+        /// </summary>
+        /// <param name="person">The <see cref="Person"/> entity to validate</param>
+        /// <param name="maxBirthdate">The <see cref="DateTime"/> to be inferior or equal to</param>
+        /// <returns>True if the provided <see cref="Person"/> entity is valid, including its <see cref="Person.ID"/> property, otherwise false</returns>
+        public bool IsValidWithID(Person person, DateTime maxBirthdate)
+        {
+            if (person is null)
+                return false;
+
+            var result = true;
+            result &= IsSuperiorTo(person.ID, 0, nameof(Person.ID));
+            result &= IsValid(person, maxBirthdate);
+
+            return result;
+        }
     }
 }

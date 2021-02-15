@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace GB.NetApi.Application.Services.Handlers.Persons
 {
     /// <summary>
-    /// Handles a <see cref="CreatePersonCommand"/> command
+    /// Handles a <see cref="UpdatePersonCommand"/> command
     /// </summary>
-    public sealed class CreatePersonHandler : BaseCommandHandler<CreatePersonCommand, bool>
+    public sealed class UpdatePersonHandler : BaseCommandHandler<UpdatePersonCommand, bool>
     {
         #region Fields
 
@@ -20,32 +20,33 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
 
         #endregion
 
-        public CreatePersonHandler(IPersonRepository repository)
+        public UpdatePersonHandler(IPersonRepository repository)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Validator = new PersonValidator();
         }
 
-        public override async Task<bool> RunAsync(CreatePersonCommand command)
+        public override async Task<bool> RunAsync(UpdatePersonCommand command)
         {
             if (command is null)
                 throw new ArgumentNullException(nameof(command));
 
             var person = command.Transform();
-            var canBeCreated = await IsValidForCreateAsync(person, DateTime.Now).ConfigureAwait(false);
+            var canBeUpdated = await IsValidForUpdateAsync(person).ConfigureAwait(false);
 
-            if (!canBeCreated)
+            if (!canBeUpdated)
                 throw new EntityValidationException();
 
-            return await Repository.CreateAsync(person).ConfigureAwait(false);
+            return await Repository.UpdateAsync(person).ConfigureAwait(false);
         }
 
         #region Private methods
 
-        private async Task<bool> IsValidForCreateAsync(Person person, DateTime maxBirthdate)
+        private async Task<bool> IsValidForUpdateAsync(Person person)
         {
             var result = true;
-            result &= Validator.IsValid(person, maxBirthdate);
+            result &= Validator.IsValidWithID(person, DateTime.UtcNow);
+            result &= await Repository.ExistAsync(person.ID).ConfigureAwait(false);
             result &= !await Repository.ExistAsync(person).ConfigureAwait(false);
 
             return result;

@@ -2,6 +2,7 @@
 using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -34,10 +35,22 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             using (var context = ContextFunction())
             {
                 Task<int> function() => AddAsync(context, entity);
-                var result = await TaskHandler.HandleAsync(function)
-                    .ConfigureAwait(false);
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
 
                 return result == expectedSaveChangesCount;
+            }
+        }
+
+        protected async Task<bool> UpdateAsync(TEntity entity) => await UpdateAsync(entity, 1).ConfigureAwait(false);
+
+        protected async Task<bool> UpdateAsync(TEntity entity, int expectedSavedChangesCount)
+        {
+            using (var context = ContextFunction())
+            {
+                Task<int> function() => UpdateAsync(context, entity);
+                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
+
+                return result == expectedSavedChangesCount;
             }
         }
 
@@ -51,7 +64,19 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             var dbSet = GetDbSet(context);
             _ = dbSet.Add(dao);
 
-            return await context.SaveChangesAsync();
+            return await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private async Task<int> UpdateAsync(BaseDbContext context, TEntity entity)
+        {
+            var dao = new TDao();
+            dao.Fill(entity);
+
+            var dbSet = GetDbSet(context);
+            var entry = await dbSet.FindAsync(entity.ID).ConfigureAwait(false);
+            context.Entry(entry).CurrentValues.SetValues(dao);
+
+            return await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         #endregion

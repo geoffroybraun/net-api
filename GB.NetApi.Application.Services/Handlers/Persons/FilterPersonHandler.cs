@@ -15,7 +15,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
     /// <summary>
     /// Executes a <see cref="FilterPersonQuery"/> query
     /// </summary>
-    public sealed class FilterPersonHandler : QueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
+    public sealed class FilterPersonHandler : BaseQueryHandler<FilterPersonQuery, IEnumerable<PersonDto>>
     {
         #region Fields
 
@@ -30,8 +30,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
 
-            var result = await FilterAsync(query.Transform())
-                .ConfigureAwait(false);
+            var result = await FilterAsync(query.Transform()).ConfigureAwait(false);
 
             return Transform(result);
         }
@@ -41,11 +40,9 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         private async Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)
         {
             if (PersonFilterValidator.IsNotValid(filter))
-                return await Repository.ListAsync()
-                    .ConfigureAwait(false);
+                return await Repository.ListAsync().ConfigureAwait(false);
 
-            return await Repository.FilterAsync(filter)
-                .ConfigureAwait(false);
+            return await Repository.FilterAsync(filter).ConfigureAwait(false);
         }
 
         private static IEnumerable<PersonDto> Transform(IEnumerable<Person> persons) => persons.IsNotNullNorEmpty() ? persons.Select(Transform) : default;

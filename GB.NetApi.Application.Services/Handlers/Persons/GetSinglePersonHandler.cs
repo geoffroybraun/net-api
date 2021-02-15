@@ -11,7 +11,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
     /// <summary>
     /// Executes a <see cref="GetSinglePersonQuery"/> query
     /// </summary>
-    public sealed class GetSinglePersonHandler : QueryHandler<GetSinglePersonQuery, PersonDto>
+    public sealed class GetSinglePersonHandler : BaseQueryHandler<GetSinglePersonQuery, PersonDto>
     {
         #region Fields
 

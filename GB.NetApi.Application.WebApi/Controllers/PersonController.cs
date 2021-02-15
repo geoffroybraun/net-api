@@ -19,7 +19,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <summary>
         /// Create a <see cref="PersonDto"/>
         /// </summary>
-        /// <param name="command">The command to execute</param>
+        /// <param name="command">The command to run</param>
         /// <returns>True if the <see cref="PersonDto"/> has been successfully created, otherwise false</returns>
         [HttpPut]
         public async Task<ActionResult> CreateAsync(CreatePersonCommand command)
@@ -66,6 +66,24 @@ namespace GB.NetApi.Application.WebApi.Controllers
             var result = await ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
 
             return result is not null ? Ok(result) : NotFound("No person found");
+        }
+
+        /// <summary>
+        /// Update an existing <see cref="PersonDto"/>
+        /// </summary>
+        /// <param name="id">The <see cref="PersonDto"/> to update</param>
+        /// <param name="command">The command to run</param>
+        /// <returns>True if the <see cref="PersonDto"/> has been successfully updated, otherwise false</returns>
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult> UpdateAsync(int id, [FromBody] UpdatePersonCommand command)
+        {
+            if (id != command.ID)
+                return BadRequest("Command ID does not match the URI");
+
+            var result = await RunAsync(command).ConfigureAwait(false);
+
+            return result ? NoContent() : InternalServerError();
         }
     }
 }

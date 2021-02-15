@@ -30,15 +30,12 @@ namespace GB.NetApi.Application.WebApi.Formatters
 
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
         {
-            var result = await Formatter.DeserializeAsync(context.HttpContext.Request.Body, context.ModelType)
-                .ConfigureAwait(false);
+            var result = await Formatter.DeserializeAsync(context.HttpContext.Request.Body, context.ModelType).ConfigureAwait(false);
 
             if (result != null)
-                return await InputFormatterResult.SuccessAsync(result)
-                .ConfigureAwait(false);
+                return await InputFormatterResult.SuccessAsync(result).ConfigureAwait(false);
 
-            return await InputFormatterResult.FailureAsync()
-                .ConfigureAwait(false);
+            return await InputFormatterResult.FailureAsync().ConfigureAwait(false);
         }
     }
 }

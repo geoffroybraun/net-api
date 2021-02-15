@@ -31,8 +31,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
             }
             var exception = await Assert.ThrowsAsync<NotImplementedException>(function).ConfigureAwait(false);
 
-            exception.Should()
-                .NotBeNull();
+            exception.Should().NotBeNull();
         }
 
         [Fact]
@@ -41,8 +40,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
             var handler = new GetSinglePersonHandler(Fixture.Null);
             var result = await handler.ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
 
-            result.Should()
-                .BeNull();
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -51,9 +49,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
             var handler = new GetSinglePersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
 
-            result.ID
-                .Should()
-                .Be(ID);
+            result.ID.Should().Be(ID);
         }
     }
 }

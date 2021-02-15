@@ -34,13 +34,8 @@ namespace GB.NetApi.Application.WebApi.Formatters
             if (context.Object is null || context.ObjectType is null)
                 return;
 
-            var result = await Formatter.SerializeAsync(context.Object, context.ObjectType)
-                .ConfigureAwait(false);
-            await context.HttpContext
-                .Response
-                .Body
-                .WriteAsync(selectedEncoding.GetBytes(result))
-                .ConfigureAwait(false);
+            var result = await Formatter.SerializeAsync(context.Object, context.ObjectType).ConfigureAwait(false);
+            await context.HttpContext.Response.Body.WriteAsync(selectedEncoding.GetBytes(result)).ConfigureAwait(false);
         }
     }
 }
