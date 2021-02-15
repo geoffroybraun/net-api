@@ -27,9 +27,14 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             return await AnyAsync(model).ConfigureAwait(false);
         }
 
-        public Task<bool> ExistAsync(int ID)
+        public async Task<bool> ExistAsync(int ID)
         {
-            throw new NotImplementedException();
+            var model = new AnyModel<PersonDao>()
+            {
+                Any = (dao) => dao.ID == ID
+            };
+
+            return await AnyAsync(model).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)
