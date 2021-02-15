@@ -63,11 +63,11 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <returns>The found <see cref="PersonDto"/></returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> GetAsync(int id)
+        public async Task<ActionResult> GetAsync(int ID)
         {
-            var result = await ExecuteAsync(new GetSinglePersonQuery() { ID = id }).ConfigureAwait(false);
+            var result = await ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
 
-            return result is not null ? Ok(result) : NotFound($"No person with ID {id} found.");
+            return result is not null ? Ok(result) : NotFound($"No person with ID {ID} found.");
         }
 
         /// <summary>
@@ -85,14 +85,14 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <summary>
         /// Update an existing <see cref="PersonDto"/>
         /// </summary>
-        /// <param name="id">The <see cref="PersonDto"/> ID to update</param>
+        /// <param name="ID">The <see cref="PersonDto"/> ID to update</param>
         /// <param name="command">The command to run</param>
         /// <returns>True if the <see cref="PersonDto"/> has been successfully updated, otherwise false</returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> UpdateAsync(int id, [FromBody] UpdatePersonCommand command)
+        public async Task<ActionResult> UpdateAsync(int ID, [FromBody] UpdatePersonCommand command)
         {
-            if (id != command.ID)
+            if (ID != command.ID)
                 return BadRequest("Command ID does not match the URI");
 
             var result = await RunAsync(command).ConfigureAwait(false);
