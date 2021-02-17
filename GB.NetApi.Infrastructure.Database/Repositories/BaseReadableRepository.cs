@@ -19,20 +19,9 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
     /// </summary>
     /// <typeparam name="TDao">The DAO type to query</typeparam>
     /// <typeparam name="TEntity">The tntity type the DAO can be transformed to</typeparam>
-    public abstract class BaseReadableRepository<TDao, TEntity> where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+    public abstract class BaseReadableRepository<TDao, TEntity> : BaseRepository where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
     {
-        #region Properties
-
-        protected readonly Func<BaseDbContext> ContextFunction;
-        protected readonly ITaskHandler TaskHandler;
-
-        #endregion
-
-        protected BaseReadableRepository(Func<BaseDbContext> contextFunction, ITaskHandler taskHandler)
-        {
-            ContextFunction = contextFunction ?? throw new ArgumentNullException(nameof(contextFunction));
-            TaskHandler = taskHandler ?? throw new ArgumentNullException(nameof(taskHandler));
-        }
+        protected BaseReadableRepository(Func<BaseDbContext> contextFunction, ITaskHandler taskHandler) : base(contextFunction, taskHandler) { }
 
         /// <summary>
         /// Indicates if any <see cref="TDao"/> matches the provided model function
@@ -51,39 +40,10 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         {
             using (var context = ContextFunction())
             {
-                Task<bool> function() => GetQuery(context, tracking).AnyAsync(model.Any);
+                Task<bool> function() => GetQuery<TDao>(context, tracking).AnyAsync(model.Any);
 
                 return await TaskHandler.HandleAsync(function).ConfigureAwait(false);
             }
-        }
-
-        /// <summary>
-        /// Returns the related <see cref="DbSet{TDao}"/> property from the provided <see cref="BaseDbContext"/> implementation based on the required <see cref="ETracking"/> mode
-        /// </summary>
-        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to find a <see cref="DbSet{TDao}"/> property</param>
-        /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>The found <see cref="DbSet{TDao}"/> property</returns>
-        protected IQueryable<TDao> GetQuery(BaseDbContext context, ETracking tracking)
-        {
-            var dbSet = GetDbSet(context);
-
-            return tracking == ETracking.Disabled ? dbSet.AsNoTracking() : dbSet;
-        }
-
-        /// <summary>
-        /// Returns the related <see cref="DbSet{TDao}"/> property from the provided <see cref="BaseDbContext"/> implementation
-        /// </summary>
-        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to find a <see cref="DbSet{TDao}"/> property</param>
-        /// <returns>The found <see cref="DbSet{TDao}"/> property</returns>
-        protected DbSet<TDao> GetDbSet(BaseDbContext context)
-        {
-            var properties = typeof(BaseDbContext).GetProperties();
-            var dbSetProperty = properties.SingleOrDefault(p => p.PropertyType == typeof(DbSet<TDao>));
-
-            if (dbSetProperty is null)
-                throw new ArgumentException($"No property of '{typeof(DbSet<TDao>).Name}' has been found in context '{context.GetType().Name}'...");
-
-            return dbSetProperty.GetValue(context) as DbSet<TDao>;
         }
 
         /// <summary>
@@ -103,7 +63,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         {
             using (var context = ContextFunction())
             {
-                Task<TDao> function() => GetQuery(context, tracking).SingleOrDefaultAsync(model.SingleOrDefault);
+                Task<TDao> function() => GetQuery<TDao>(context, tracking).SingleOrDefaultAsync(model.SingleOrDefault);
                 var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
 
                 return Transform(result);
@@ -126,7 +86,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         {
             using (var context = ContextFunction())
             {
-                Task<List<TDao>> function() => GetQuery(context, tracking).ToListAsync();
+                Task<List<TDao>> function() => GetQuery<TDao>(context, tracking).ToListAsync();
                 var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
 
                 return Transform(result);
@@ -150,7 +110,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
         {
             using (var context = ContextFunction())
             {
-                Task<List<TDao>> function() => GetQuery(context, tracking)
+                Task<List<TDao>> function() => GetQuery<TDao>(context, tracking)
                     .WhereMany(model.WhereMany)
                     .ToListAsync();
                 var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);

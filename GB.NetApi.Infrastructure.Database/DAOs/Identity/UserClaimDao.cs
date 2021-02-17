@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GB.NetApi.Domain.Models.Interfaces.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
 {
@@ -7,8 +9,10 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
     /// Represents an identity user claim as stored within a database
     /// </summary>
     [Table("USER_CLAIMS")]
-    public sealed class UserClaimDao : IdentityUserClaim<string>
+    public sealed class UserClaimDao : IdentityUserClaim<string>, ITransformable<Claim>
     {
+        #region Properties
+
         [Column("id")]
         public override int Id { get => base.Id; set => base.Id = value; }
 
@@ -22,5 +26,9 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
         public override string UserId { get => base.UserId; set => base.UserId = value; }
 
         public UserDao User { get; set; }
+
+        #endregion
+
+        public Claim Transform() => new Claim(ClaimType, ClaimValue);
     }
 }

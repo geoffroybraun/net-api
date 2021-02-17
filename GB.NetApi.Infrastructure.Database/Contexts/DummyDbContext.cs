@@ -96,7 +96,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new UserDao()
             {
                 Id = "writer",
-                UserName = "wWiter",
+                UserName = "Writer",
                 NormalizedUserName = "WRITER",
                 PasswordHash = PasswordHasher.HashPassword(null, "writer"),
                 Email = "writer@localhost.com",

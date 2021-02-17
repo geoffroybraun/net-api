@@ -95,7 +95,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             var dao = new TDao();
             dao.Fill(entity);
 
-            var dbSet = GetDbSet(context);
+            var dbSet = GetDbSet<TDao>(context);
             _ = dbSet.Add(dao);
 
             return await context.SaveChangesAsync().ConfigureAwait(false);
@@ -103,7 +103,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         private async Task<int> DeleteAsync(BaseDbContext context, int ID)
         {
-            var dbSet = GetDbSet(context);
+            var dbSet = GetDbSet<TDao>(context);
             var dao = await dbSet.FindAsync(ID).ConfigureAwait(false);
             _ = dbSet.Remove(dao);
 
@@ -115,7 +115,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             var dao = new TDao();
             dao.Fill(entity);
 
-            var dbSet = GetDbSet(context);
+            var dbSet = GetDbSet<TDao>(context);
             var entry = await dbSet.FindAsync(entity.ID).ConfigureAwait(false);
             context.Entry(entry).CurrentValues.SetValues(dao);
 

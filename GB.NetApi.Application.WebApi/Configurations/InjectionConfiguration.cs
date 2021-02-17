@@ -31,6 +31,7 @@ namespace GB.NetApi.Application.WebApi.Configurations
         private static void ConfigureRepositories(IServiceCollection services)
         {
             services.AddScoped<Func<BaseDbContext>>((provider) => () => new InMemoryDbContext());
+            services.AddScoped<IAuthenticateUserRepository, AuthenticateUserRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
         }
 

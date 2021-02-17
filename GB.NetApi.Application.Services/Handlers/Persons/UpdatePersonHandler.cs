@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace GB.NetApi.Application.Services.Handlers.Persons
 {
     /// <summary>
-    /// Handles a <see cref="UpdatePersonCommand"/> command
+    /// Run a <see cref="UpdatePersonCommand"/> command
     /// </summary>
     public sealed class UpdatePersonHandler : BaseCommandHandler<UpdatePersonCommand, bool>
     {
