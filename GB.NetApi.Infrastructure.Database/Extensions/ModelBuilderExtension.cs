@@ -41,7 +41,7 @@ namespace GB.NetApi.Infrastructure.Database.Extensions
         /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
         public static void OnPermissionDaoCreating(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PermissionDao>().HasKey(e => new { e.OperationID, e.ResourceID });
+            modelBuilder.Entity<PermissionDao>().HasIndex(e => new { e.ResourceID, e.OperationID }).IsUnique();
             modelBuilder.Entity<PermissionDao>()
                 .HasMany(e => e.RolePermissions)
                 .WithOne(e => e.Permission)
@@ -105,7 +105,7 @@ namespace GB.NetApi.Infrastructure.Database.Extensions
         /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
         public static void OnRolePermissionDaoCreating(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RolePermissionDao>().HasKey(e => new { e.RoleID, e.PermissionID });
+            modelBuilder.Entity<RolePermissionDao>().HasIndex(e => new { e.RoleID, e.PermissionID }).IsUnique();
         }
 
         /// <summary>

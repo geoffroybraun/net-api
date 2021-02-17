@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
@@ -9,6 +10,7 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
     public sealed class PermissionDao
     {
         [Column("id")]
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 

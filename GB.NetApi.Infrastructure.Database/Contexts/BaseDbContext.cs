@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GB.NetApi.Infrastructure.Database.Contexts
 {
@@ -14,6 +16,8 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
     public abstract class BaseDbContext : IdentityDbContext<IdentityUser>
     {
         #region Properties
+
+        protected static readonly IPasswordHasher<UserDao> PasswordHasher = new PasswordHasher<UserDao>();
 
         public DbSet<OperationDao> Operations { get; set; }
 
@@ -43,23 +47,33 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
 
         protected BaseDbContext(DbContextOptions options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            if (modelBuilder is null)
-                throw new ArgumentNullException(nameof(modelBuilder));
+            if (builder is null)
+                throw new ArgumentNullException(nameof(builder));
 
-            modelBuilder.OnOperationDaoCreating();
-            modelBuilder.OnPermissionDaoCreating();
-            modelBuilder.OnResourceDaoCreating();
-            modelBuilder.OnRoleClaimDaoCreating();
-            modelBuilder.OnRoleDaoCreating();
-            modelBuilder.OnRolePermissionDaoCreating();
-            modelBuilder.OnUserClaimDaoCreating();
-            modelBuilder.OnUserDaoCreating();
-            modelBuilder.OnUserLoginDaoCreating();
-            modelBuilder.OnUserRoleDaoCreating();
-            modelBuilder.OnUserTokenDaoCreating();
-            modelBuilder.DeactivateDeleteBehavior();
+            builder.OnOperationDaoCreating();
+            builder.OnPermissionDaoCreating();
+            builder.OnResourceDaoCreating();
+            builder.OnRoleClaimDaoCreating();
+            builder.OnRoleDaoCreating();
+            builder.OnRolePermissionDaoCreating();
+            builder.OnUserClaimDaoCreating();
+            builder.OnUserDaoCreating();
+            builder.OnUserLoginDaoCreating();
+            builder.OnUserRoleDaoCreating();
+            builder.OnUserTokenDaoCreating();
+            builder.DeactivateDeleteBehavior();
+        }
+
+        protected static bool TryAddDao<TDao>(DbSet<TDao> dbSet, IEnumerable<TDao> daos) where TDao : class
+        {
+            if (dbSet.Any())
+                return false;
+
+            dbSet.AddRange(daos);
+
+            return true;
         }
     }
 }
