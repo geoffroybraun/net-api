@@ -23,6 +23,46 @@ namespace GB.NetApi.Infrastructure.Database.Extensions
         }
 
         /// <summary>
+        /// Configure the <see cref="OperationDao"/> within the extended <see cref="ModelBuilder"/>
+        /// </summary>
+        /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
+        public static void OnOperationDaoCreating(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OperationDao>()
+                .HasMany(e => e.Permissions)
+                .WithOne(e => e.Operation)
+                .HasForeignKey(e => e.OperationID)
+                .IsRequired();
+        }
+
+        /// <summary>
+        /// Configure the <see cref="PermissionDao"/> within the extended <see cref="ModelBuilder"/>
+        /// </summary>
+        /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
+        public static void OnPermissionDaoCreating(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PermissionDao>().HasKey(e => new { e.OperationID, e.ResourceID });
+            modelBuilder.Entity<PermissionDao>()
+                .HasMany(e => e.RolePermissions)
+                .WithOne(e => e.Permission)
+                .HasForeignKey(e => e.PermissionID)
+                .IsRequired();
+        }
+
+        /// <summary>
+        /// Configure the <see cref="ResourceDao"/> within the extended <see cref="ModelBuilder"/>
+        /// </summary>
+        /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
+        public static void OnResourceDaoCreating(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ResourceDao>()
+                .HasMany(e => e.Permissions)
+                .WithOne(e => e.Resource)
+                .HasForeignKey(e => e.ResourceID)
+                .IsRequired();
+        }
+
+        /// <summary>
         /// Configure the <see cref="RoleClaimDao"/> within the extended <see cref="ModelBuilder"/>
         /// </summary>
         /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
@@ -52,6 +92,20 @@ namespace GB.NetApi.Infrastructure.Database.Extensions
                 .WithOne(e => e.Role)
                 .HasForeignKey(e => e.RoleId)
                 .IsRequired();
+            modelBuilder.Entity<RoleDao>()
+                .HasMany(e => e.RolePermissions)
+                .WithOne(e => e.Role)
+                .HasForeignKey(e => e.RoleID)
+                .IsRequired();
+        }
+
+        /// <summary>
+        /// Configure the <see cref="RolePermissionDao"/> within the extended <see cref="ModelBuilder"/>
+        /// </summary>
+        /// <param name="modelBuilder">The extended <see cref="ModelBuilder"/> to configure</param>
+        public static void OnRolePermissionDaoCreating(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RolePermissionDao>().HasKey(e => new { e.RoleID, e.PermissionID });
         }
 
         /// <summary>

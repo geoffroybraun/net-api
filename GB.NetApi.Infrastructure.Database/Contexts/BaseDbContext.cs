@@ -15,11 +15,19 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
     {
         #region Properties
 
+        public DbSet<OperationDao> Operations { get; set; }
+
+        public DbSet<PermissionDao> Permissions { get; set; }
+
         public DbSet<PersonDao> Persons { get; set; }
+
+        public DbSet<ResourceDao> Resources { get; set; }
 
         public new DbSet<RoleDao> Roles { get; set; }
 
         public new DbSet<RoleClaimDao> RoleClaims { get; set; }
+
+        public DbSet<RolePermissionDao> RolePermissions { get; set; }
 
         public new DbSet<UserDao> Users { get; set; }
 
@@ -40,8 +48,12 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             if (modelBuilder is null)
                 throw new ArgumentNullException(nameof(modelBuilder));
 
+            modelBuilder.OnOperationDaoCreating();
+            modelBuilder.OnPermissionDaoCreating();
+            modelBuilder.OnResourceDaoCreating();
             modelBuilder.OnRoleClaimDaoCreating();
             modelBuilder.OnRoleDaoCreating();
+            modelBuilder.OnRolePermissionDaoCreating();
             modelBuilder.OnUserClaimDaoCreating();
             modelBuilder.OnUserDaoCreating();
             modelBuilder.OnUserLoginDaoCreating();

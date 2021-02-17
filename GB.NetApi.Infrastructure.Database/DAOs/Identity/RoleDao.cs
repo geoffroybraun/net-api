@@ -24,6 +24,8 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
 
         public ICollection<RoleClaimDao> RoleClaims { get; set; }
 
+        public ICollection<RolePermissionDao> RolePermissions { get; set; }
+
         public ICollection<UserRoleDao> UserRoles { get; set; }
     }
 }
