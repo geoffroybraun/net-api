@@ -36,6 +36,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             hasCHangesToSave |= TryAddDao(Resources, ResourceDaos);
             hasCHangesToSave |= TryAddDao(Permissions, PermissionDaos);
             hasCHangesToSave |= TryAddDao(Roles, RoleDaos);
+            hasCHangesToSave |= TryAddDao(RoleClaims, RoleClaimDaos);
             hasCHangesToSave |= TryAddDao(RolePermissions, RolePermissionDaos);
             hasCHangesToSave |= TryAddDao(Users, UserDaos);
             hasCHangesToSave |= TryAddDao(UserRoles, UserRoleDaos);
@@ -73,6 +74,13 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new RoleDao() { Id = "guests", Name = "Guests", NormalizedName = "GUESTS" },
             new RoleDao() { Id = "readers", Name = "Readers", NormalizedName = "READERS" },
             new RoleDao() { Id = "writers", Name = "Writers", NormalizedName = "WRITERS" },
+        };
+
+        private static IEnumerable<RoleClaimDao> RoleClaimDaos => new[]
+        {
+            new RoleClaimDao() { Id = 1, ClaimType = ClaimTypes.Role, ClaimValue = "Guests", RoleId = "guests" },
+            new RoleClaimDao() { Id = 2, ClaimType = ClaimTypes.Role, ClaimValue = "Readers", RoleId = "readers" },
+            new RoleClaimDao() { Id = 3, ClaimType = ClaimTypes.Role, ClaimValue = "Writers", RoleId = "writers" },
         };
 
         private static IEnumerable<RolePermissionDao> RolePermissionDaos => new[]

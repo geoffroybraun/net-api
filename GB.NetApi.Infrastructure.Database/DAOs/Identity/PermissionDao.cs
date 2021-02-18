@@ -24,8 +24,6 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
 
         public OperationDao Operation { get; set; }
 
-        public string Name => $"{Operation.Name}{Resource.Name}";
-
         public ICollection<RolePermissionDao> RolePermissions { get; set; }
     }
 }
