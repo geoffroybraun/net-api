@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace GB.NetApi.Infrastructure.Database.Contexts
 {
@@ -38,6 +39,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             hasCHangesToSave |= TryAddDao(RolePermissions, RolePermissionDaos);
             hasCHangesToSave |= TryAddDao(Users, UserDaos);
             hasCHangesToSave |= TryAddDao(UserRoles, UserRoleDaos);
+            hasCHangesToSave |= TryAddDao(UserClaims, UserClaimDaos);
             hasCHangesToSave |= TryAddDao(Persons, PersonDaos);
 
             if (hasCHangesToSave)
@@ -75,10 +77,10 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
 
         private static IEnumerable<RolePermissionDao> RolePermissionDaos => new[]
         {
-            new RolePermissionDao() { ID = 1, RoleID = "Guests", PermissionID = 1 },
-            new RolePermissionDao() { ID = 2, RoleID = "Readers", PermissionID = 2 },
-            new RolePermissionDao() { ID = 5, RoleID = "Writers", PermissionID = 3 },
-            new RolePermissionDao() { ID = 6, RoleID = "Writers", PermissionID = 4 },
+            new RolePermissionDao() { ID = 1, RoleID = "guests", PermissionID = 1 },
+            new RolePermissionDao() { ID = 2, RoleID = "readers", PermissionID = 2 },
+            new RolePermissionDao() { ID = 5, RoleID = "writers", PermissionID = 3 },
+            new RolePermissionDao() { ID = 6, RoleID = "writers", PermissionID = 4 },
         };
 
         private static IEnumerable<UserDao> UserDaos => new[]
@@ -112,6 +114,12 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new UserRoleDao() { UserId = "writer", RoleId = "guests" },
             new UserRoleDao() { UserId = "writer", RoleId = "readers" },
             new UserRoleDao() { UserId = "writer", RoleId = "writers" },
+        };
+
+        private static IEnumerable<UserClaimDao> UserClaimDaos => new[]
+        {
+            new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Reader", UserId = "reader" },
+            new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Writer", UserId = "writer" },
         };
 
         private static IEnumerable<PersonDao> PersonDaos => new[]
