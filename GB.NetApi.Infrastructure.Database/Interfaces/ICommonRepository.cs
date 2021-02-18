@@ -27,25 +27,28 @@ namespace GB.NetApi.Infrastructure.Database.Interfaces
         BaseDbContext InstanciateContext();
 
         /// <summary>
-        /// Returns the related <see cref="DbSet{TDao}"/> property from the provided <see cref="BaseDbContext"/> implementation based on the required <see cref="ETracking"/> mode
+        /// Returns the related <see cref="IQueryable{T}"/> implementation from the provided <see cref="BaseDbContext"/> one
         /// </summary>
-        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to find a <see cref="DbSet{TDao}"/> property</param>
-        /// <returns>The found <see cref="DbSet{TDao}"/> property</returns>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to look for the <see cref="IQueryable{T}"/> implementation</param>
+        /// <returns>The found <see cref="IQueryable{T}"/> implementation</returns>
         IQueryable<TDao> GetQuery<TDao>(BaseDbContext context) where TDao : class;
 
         /// <summary>
-        /// Returns the related <see cref="DbSet{TDao}"/> property from the provided <see cref="BaseDbContext"/> implementation based on the required <see cref="ETracking"/> mode
+        /// Returns the related <see cref="IQueryable{T}"/> implementation from the provided <see cref="BaseDbContext"/> one
         /// </summary>
-        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to find a <see cref="DbSet{TDao}"/> property</param>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to look for the <see cref="IQueryable{T}"/> implementation</param>
         /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>The found <see cref="DbSet{TDao}"/> property</returns>
+        /// <returns>The found <see cref="IQueryable{T}"/> implementation</returns>
         IQueryable<TDao> GetQuery<TDao>(BaseDbContext context, ETracking tracking) where TDao : class;
 
         /// <summary>
-        /// Returns the related <see cref="DbSet{TDao}"/> property from the provided <see cref="BaseDbContext"/> implementation
+        /// Returns the related <see cref="DbSet{T}"/> implementation from the provided <see cref="BaseDbContext"/> one
         /// </summary>
-        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to find a <see cref="DbSet{TDao}"/> property</param>
-        /// <returns>The found <see cref="DbSet{TDao}"/> property</returns>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <param name="context">The <see cref="BaseDbContext"/> implementation where to look for the <see cref="DbSet{T}"/> implementation</param>
+        /// <returns>The found <see cref="DbSet{T}"/> implementation</returns>
         DbSet<TDao> GetDbSet<TDao>(BaseDbContext context) where TDao : class;
     }
 }

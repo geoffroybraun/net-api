@@ -42,7 +42,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
             NullMock = InitializeNullMock(new Mock<T>());
             CommonRepository = new CommonRepository(() => new DummyDbContext(), new TaskHandler());
             CommonReadableRepository = new CommonReadableRepository(CommonRepository);
-            CommonWritableRepository = new CommonWritableRepository(CommonReadableRepository);
+            CommonWritableRepository = new CommonWritableRepository(CommonRepository);
         }
 
         /// <summary>

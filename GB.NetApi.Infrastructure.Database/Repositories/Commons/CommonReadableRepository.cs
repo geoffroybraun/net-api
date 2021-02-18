@@ -1,6 +1,5 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Services.Extensions;
-using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
 using GB.NetApi.Infrastructure.Database.Enums;
 using GB.NetApi.Infrastructure.Database.Extensions;
@@ -31,23 +30,13 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
         {
-            using (var context = InstanciateContext())
+            using (var context = Repository.InstanciateContext())
             {
-                Task<bool> function() => GetQuery<TDao>(context, tracking).AnyAsync(model.Any);
+                Task<bool> function() => Repository.GetQuery<TDao>(context, tracking).AnyAsync(model.Any);
 
-                return await ExecuteAsync(function).ConfigureAwait(false);
+                return await Repository.ExecuteAsync(function).ConfigureAwait(false);
             }
         }
-
-        public async Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunction) => await Repository.ExecuteAsync(taskFunction).ConfigureAwait(false);
-
-        public DbSet<TDao> GetDbSet<TDao>(BaseDbContext context) where TDao : class => Repository.GetDbSet<TDao>(context);
-
-        public IQueryable<TDao> GetQuery<TDao>(BaseDbContext context) where TDao : class => Repository.GetQuery<TDao>(context);
-
-        public IQueryable<TDao> GetQuery<TDao>(BaseDbContext context, ETracking tracking) where TDao : class => Repository.GetQuery<TDao>(context, tracking);
-
-        public BaseDbContext InstanciateContext() => Repository.InstanciateContext();
 
         public async Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
         {
@@ -56,10 +45,10 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public async Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
         {
-            using (var context = InstanciateContext())
+            using (var context = Repository.InstanciateContext())
             {
-                Task<TDao> function() => GetQuery<TDao>(context, tracking).SingleOrDefaultAsync(model.SingleOrDefault);
-                var result = await ExecuteAsync(function).ConfigureAwait(false);
+                Task<TDao> function() => Repository.GetQuery<TDao>(context, tracking).SingleOrDefaultAsync(model.SingleOrDefault);
+                var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return Transform<TDao, TEntity>(result);
             }
@@ -72,10 +61,10 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
         {
-            using (var context = InstanciateContext())
+            using (var context = Repository.InstanciateContext())
             {
-                Task<List<TDao>> function() => GetQuery<TDao>(context, tracking).ToListAsync();
-                var result = await ExecuteAsync(function).ConfigureAwait(false);
+                Task<List<TDao>> function() => Repository.GetQuery<TDao>(context, tracking).ToListAsync();
+                var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return Transform<TDao, TEntity>(result);
             }
@@ -88,12 +77,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
         {
-            using (var context = InstanciateContext())
+            using (var context = Repository.InstanciateContext())
             {
-                Task<List<TDao>> function() => GetQuery<TDao>(context, tracking)
+                Task<List<TDao>> function() => Repository.GetQuery<TDao>(context, tracking)
                     .WhereMany(model.WhereMany)
                     .ToListAsync();
-                var result = await ExecuteAsync(function).ConfigureAwait(false);
+                var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return Transform<TDao, TEntity>(result);
             }

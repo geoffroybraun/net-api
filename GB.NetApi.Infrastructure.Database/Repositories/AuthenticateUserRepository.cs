@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Infrastructure.Database.Repositories
@@ -41,17 +42,35 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
                 var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
-                return new AuthenticateUser()
-                {
-                    ID = result.Id,
-                    Name = result.UserName,
-                    Claims = result.UserClaims.Select(e => e.ToClaim()),
-                    PermissionNames = GetPermissionNames(result.UserRoles)
-                };
+                return Transform(result);
             }
         }
 
         #region Private methods
+
+        private static AuthenticateUser Transform(UserDao user)
+        {
+            if (user is null)
+                return default;
+
+            return new AuthenticateUser()
+            {
+                ID = user.Id,
+                Name = user.UserName,
+                Claims = GetClaims(user.UserClaims),
+                PermissionNames = GetPermissionNames(user.UserRoles)
+            };
+        }
+
+        private static IEnumerable<Claim> GetClaims(IEnumerable<UserClaimDao> userClaims)
+        {
+            return userClaims.IsNotNullNorEmpty() ? userClaims.Select(GetClaim) : default;
+        }
+
+        private static Claim GetClaim(UserClaimDao userClaim)
+        {
+            return userClaim is not null ? userClaim.ToClaim() : default;
+        }
 
         private static IEnumerable<string> GetPermissionNames(IEnumerable<UserRoleDao> userRoles)
         {

@@ -10,65 +10,80 @@ namespace GB.NetApi.Infrastructure.Database.Interfaces
     /// <summary>
     /// Represents a common repository which provides 'read-only' methods
     /// </summary>
-    public interface ICommonReadableRepository : ICommonRepository
+    public interface ICommonReadableRepository
     {
         /// <summary>
-        /// Indicates if any <see cref="TDao"/> matches the provided model function
+        /// Indicates if at least one DAO matches the provided function
         /// </summary>
-        /// <param name="model">The model to use when looking for matching <see cref="TDao"/></param>
-        /// <returns>True if at least one <see cref="TDao"/> matches the provided model function, otherwise false</returns>
+        /// <typeparam name="TDao">The DAO to query</typeparam>
+        /// <typeparam name="TEntity">The entity type the DAO is coupled to</typeparam>
+        /// <param name="model">The <see cref="AnyModel{TDao}"/> model to use when querying</param>
+        /// <returns>True if at least one DAO matches the provided function, otherwise false</returns>
         Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Indicates if any <see cref="TDao"/> matches the provided model function
+        /// Indicates if at least one DAO matches the provided function
         /// </summary>
-        /// <param name="model">The model to use when looking for matching <see cref="TDao"/></param>
+        /// <typeparam name="TDao">The DAO to query</typeparam>
+        /// <typeparam name="TEntity">The entity type the DAO is coupled to</typeparam>
+        /// <param name="model">The <see cref="AnyModel{TDao}"/> model to use when querying</param>
         /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>True if at least one <see cref="TDao"/> matches the provided model function, otherwise false</returns>
+        /// <returns>True if at least one DAO matches the provided function, otherwise false</returns>
         Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Retrieve a single <see cref="TEntity"/> entity based ont the provided function
+        /// Retrieve an entity using the provided matching function
         /// </summary>
-        /// <param name="model">The <see cref="SingleModel{TDao}"/> to use when querying</param>
-        /// <returns>The queried <see cref="TEntity"/> entity</returns>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <typeparam name="TEntity">The entity to retrieve</typeparam>
+        /// <param name="model">The <see cref="SingleModel{TDao}"/> model to use when querying</param>
+        /// <returns>The found entity</returns>
         Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Retrieve a single <see cref="TEntity"/> entity based ont the provided function
+        /// Retrieve an entity using the provided matching function
         /// </summary>
-        /// <param name="model">The <see cref="SingleModel{TDao}"/> to use when querying</param>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <typeparam name="TEntity">The entity to retrieve</typeparam>
+        /// <param name="model">The <see cref="SingleModel{TDao}"/> model to use when querying</param>
         /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>The queried <see cref="TEntity"/> entity</returns>
+        /// <returns>The found entity</returns>
         Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Retrieve all stored <see cref="TEntity"/> entities
+        /// Retrieve all stored entities
         /// </summary>
-        /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>All stored <see cref="TEntity"/> entities</returns>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <typeparam name="TEntity">The entity type to retrieve</typeparam>
+        /// <returns>All stored entities</returns>
         Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>() where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Retrieve all stored <see cref="TEntity"/> entities
+        /// Retrieve all stored entities
         /// </summary>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <typeparam name="TEntity">The entity type to retrieve</typeparam>
         /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>All stored <see cref="TEntity"/> entities</returns>
+        /// <returns>All stored entities</returns>
         Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Retrieves all filtered <see cref="TEntity"/> entities
+        /// Retrieve all entities while filtering using multiple functions
         /// </summary>
-        /// <param name="model">The <see cref="WhereManyModel{TDao}"/> to use when filtering</param>
-        /// <returns>All filtered <see cref="TEntity"/> entities</returns>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <typeparam name="TEntity">The entity type to retrieve</typeparam>
+        /// <param name="model">The <see cref="WhereManyModel{TDao}"/> model to use when filtering</param>
+        /// <returns>All filtered entities</returns>
         Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
 
         /// <summary>
-        /// Retrieves all filtered <see cref="TEntity"/> entities
+        /// Retrieve all entities while filtering using multiple functions
         /// </summary>
-        /// <param name="model">The <see cref="WhereManyModel{TDao}"/> to use when filtering</param>
+        /// <typeparam name="TDao">The DAO type to query</typeparam>
+        /// <typeparam name="TEntity">The entity type to retrieve</typeparam>
+        /// <param name="model">The <see cref="WhereManyModel{TDao}"/> model to use when filtering</param>
         /// <param name="tracking">The tracking mode to use when querying</param>
-        /// <returns>All filtered <see cref="TEntity"/> entities</returns>
+        /// <returns>All filtered entities</returns>
         Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity;
     }
 }
