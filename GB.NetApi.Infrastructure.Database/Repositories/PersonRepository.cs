@@ -1,10 +1,9 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Entities.Filters;
-using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Domain.Services.Extensions;
-using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
+using GB.NetApi.Infrastructure.Database.Interfaces;
 using GB.NetApi.Infrastructure.Database.Models;
 using System;
 using System.Collections.Generic;
@@ -13,9 +12,15 @@ using System.Threading.Tasks;
 
 namespace GB.NetApi.Infrastructure.Database.Repositories
 {
-    public sealed class PersonRepository : BaseWritableRepository<PersonDao, Person>, IPersonRepository
+    public sealed class PersonRepository : IPersonRepository
     {
-        public PersonRepository(Func<BaseDbContext> contextFunction, ITaskHandler taskHandler) : base(contextFunction, taskHandler) { }
+        #region Fields
+
+        private readonly ICommonWritableRepository Repository;
+
+        #endregion
+
+        public PersonRepository(ICommonWritableRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
         public async Task<bool> ExistAsync(Person person)
         {
@@ -24,7 +29,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                 Any = (dao) => dao.Birthdate == person.Birthdate && dao.Firstname == person.Firstname && dao.Lastname == person.Lastname
             };
 
-            return await AnyAsync(model).ConfigureAwait(false);
+            return await Repository.AnyAsync<PersonDao, Person>(model).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistAsync(int ID)
@@ -34,14 +39,14 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                 Any = (dao) => dao.ID == ID
             };
 
-            return await AnyAsync(model).ConfigureAwait(false);
+            return await Repository.AnyAsync<PersonDao, Person>(model).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)
         {
             var model = GetModelFromFilter(filter);
 
-            return await ToListAsync(model).ConfigureAwait(false);
+            return await Repository.ToListAsync<PersonDao, Person>(model).ConfigureAwait(false);
         }
 
         public async Task<Person> GetAsync(int ID)
@@ -51,16 +56,16 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                 SingleOrDefault = (dao) => dao.ID == ID
             };
 
-            return await SingleAsync(model).ConfigureAwait(false);
+            return await Repository.SingleAsync<PersonDao, Person>(model).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Person>> ListAsync() => await ToListAsync().ConfigureAwait(false);
+        public async Task<IEnumerable<Person>> ListAsync() => await Repository.ToListAsync<PersonDao, Person>().ConfigureAwait(false);
 
-        async Task<bool> IPersonRepository.CreateAsync(Person person) => await CreateAsync(person).ConfigureAwait(false);
+        public async Task<bool> CreateAsync(Person person) => await Repository.CreateAsync<Person, PersonDao>(person).ConfigureAwait(false);
 
-        async Task<bool> IPersonRepository.UpdateAsync(Person person) => await UpdateAsync(person).ConfigureAwait(false);
+        public async Task<bool> UpdateAsync(Person person) => await Repository.UpdateAsync<Person, PersonDao>(person).ConfigureAwait(false);
 
-        async Task<bool> IPersonRepository.DeleteAsync(int ID) => await DeleteAsync(ID).ConfigureAwait(false);
+        public async Task<bool> DeleteAsync(int ID) => await Repository.DeleteAsync<Person, PersonDao>(ID).ConfigureAwait(false);
 
         #region Private methods
 

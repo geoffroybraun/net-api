@@ -2,7 +2,9 @@
 using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Infrastructure.Database.Contexts;
+using GB.NetApi.Infrastructure.Database.Interfaces;
 using GB.NetApi.Infrastructure.Database.Repositories;
+using GB.NetApi.Infrastructure.Database.Repositories.Commons;
 using GB.NetApi.Infrastructure.Libraries.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,9 @@ namespace GB.NetApi.Application.WebApi.Configurations
         private static void ConfigureRepositories(IServiceCollection services)
         {
             services.AddScoped<Func<BaseDbContext>>((provider) => () => new InMemoryDbContext());
+            services.AddScoped<ICommonRepository, CommonRepository>();
+            services.AddScoped<ICommonReadableRepository, CommonReadableRepository>();
+            services.AddScoped<ICommonWritableRepository, CommonWritableRepository>();
             services.AddScoped<IAuthenticateUserRepository, AuthenticateUserRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
         }

@@ -1,9 +1,8 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
-using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Domain.Services.Extensions;
-using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs.Identity;
+using GB.NetApi.Infrastructure.Database.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,15 +11,21 @@ using System.Threading.Tasks;
 
 namespace GB.NetApi.Infrastructure.Database.Repositories
 {
-    public sealed class AuthenticateUserRepository : BaseRepository, IAuthenticateUserRepository
+    public sealed class AuthenticateUserRepository : IAuthenticateUserRepository
     {
-        public AuthenticateUserRepository(Func<BaseDbContext> contextFunction, ITaskHandler taskHandler) : base(contextFunction, taskHandler) { }
+        #region Fields
+
+        private readonly ICommonRepository Repository;
+
+        #endregion
+
+        public AuthenticateUserRepository(ICommonRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
         public async Task<AuthenticateUser> GetAsync(string userName)
         {
-            using (var context = ContextFunction())
+            using (var context = Repository.InstanciateContext())
             {
-                Task<UserDao> function() => GetQuery<UserDao>(context)
+                Task<UserDao> function() => Repository.GetQuery<UserDao>(context)
                     .Include(e => e.UserClaims)
                     .Include(e => e.UserRoles)
                     .ThenInclude(e => e.Role)
@@ -34,7 +39,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                     .ThenInclude(e => e.Resource)
                     .SingleOrDefaultAsync(e => e.UserName == userName);
 
-                var result = await TaskHandler.HandleAsync(function).ConfigureAwait(false);
+                var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return new AuthenticateUser()
                 {

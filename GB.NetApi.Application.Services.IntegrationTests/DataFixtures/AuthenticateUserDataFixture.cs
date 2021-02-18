@@ -18,7 +18,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
             return mock;
         }
 
-        protected override IAuthenticateUserRepository InitializeDummy() => new AuthenticateUserRepository(ContextFunction, TaskHandler);
+        protected override IAuthenticateUserRepository InitializeDummy() => new AuthenticateUserRepository(CommonRepository);
 
         protected override Mock<IAuthenticateUserRepository> InitializeNullMock(Mock<IAuthenticateUserRepository> mock)
         {

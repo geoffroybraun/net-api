@@ -1,8 +1,8 @@
-﻿using GB.NetApi.Domain.Models.Interfaces.Libraries;
-using GB.NetApi.Infrastructure.Database.Contexts;
+﻿using GB.NetApi.Infrastructure.Database.Contexts;
+using GB.NetApi.Infrastructure.Database.Interfaces;
+using GB.NetApi.Infrastructure.Database.Repositories.Commons;
 using GB.NetApi.Infrastructure.Libraries.Handlers;
 using Moq;
-using System;
 
 namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
 {
@@ -21,9 +21,12 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
 
         #region Properties
 
-        protected readonly Func<BaseDbContext> ContextFunction;
 
-        protected readonly ITaskHandler TaskHandler;
+        protected readonly ICommonRepository CommonRepository;
+
+        protected readonly ICommonReadableRepository CommonReadableRepository;
+
+        protected readonly ICommonWritableRepository CommonWritableRepository;
 
         public T Broken => BrokenMock.Object;
 
@@ -37,8 +40,9 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
         {
             BrokenMock = InitializeBrokenMock(new Mock<T>());
             NullMock = InitializeNullMock(new Mock<T>());
-            ContextFunction = () => new DummyDbContext();
-            TaskHandler = new TaskHandler();
+            CommonRepository = new CommonRepository(() => new DummyDbContext(), new TaskHandler());
+            CommonReadableRepository = new CommonReadableRepository(CommonRepository);
+            CommonWritableRepository = new CommonWritableRepository(CommonReadableRepository);
         }
 
         /// <summary>
