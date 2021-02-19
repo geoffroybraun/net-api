@@ -95,6 +95,16 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
         {
             new UserDao()
             {
+                Id = "guest",
+                UserName = "Guest",
+                NormalizedUserName = "GUEST",
+                PasswordHash = PasswordHasher.HashPassword(null, "guest"),
+                Email = "guest@localhost.com",
+                NormalizedEmail = "GUEST@LOCALHOST.COM",
+                EmailConfirmed = true
+            },
+            new UserDao()
+            {
                 Id = "reader",
                 UserName = "Reader",
                 NormalizedUserName = "READER",
@@ -117,6 +127,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
 
         private static IEnumerable<UserRoleDao> UserRoleDaos => new[]
         {
+            new UserRoleDao() { UserId = "guest", RoleId = "guests" },
             new UserRoleDao() { UserId = "reader", RoleId = "guests" },
             new UserRoleDao() { UserId = "reader", RoleId = "readers" },
             new UserRoleDao() { UserId = "writer", RoleId = "guests" },
@@ -126,6 +137,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
 
         private static IEnumerable<UserClaimDao> UserClaimDaos => new[]
         {
+            new UserClaimDao() { ClaimType = ClaimTypes.NameIdentifier, ClaimValue = "Guest", UserId = "guest" },
             new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Reader", UserId = "reader" },
             new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Writer", UserId = "writer" },
         };
