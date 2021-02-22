@@ -1,4 +1,4 @@
-﻿using GB.NetApi.Domain.Models.Entities;
+﻿using GB.NetApi.Domain.Models.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;

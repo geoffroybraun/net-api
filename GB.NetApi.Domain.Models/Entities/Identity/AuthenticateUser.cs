@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace GB.NetApi.Domain.Models.Entities
+namespace GB.NetApi.Domain.Models.Entities.Identity
 {
     /// <summary>
     /// Represents a user with both its claims and permission names lists

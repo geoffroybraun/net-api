@@ -1,4 +1,4 @@
-﻿using GB.NetApi.Domain.Models.Entities;
+﻿using GB.NetApi.Domain.Models.Entities.Identity;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs.Identity;

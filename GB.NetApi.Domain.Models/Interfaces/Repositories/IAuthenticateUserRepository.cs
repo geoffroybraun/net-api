@@ -1,4 +1,4 @@
-﻿using GB.NetApi.Domain.Models.Entities;
+﻿using GB.NetApi.Domain.Models.Entities.Identity;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Domain.Models.Interfaces.Repositories
