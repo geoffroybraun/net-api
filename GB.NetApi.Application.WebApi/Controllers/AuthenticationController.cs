@@ -49,7 +49,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
             if (!await IsValidAsync(request))
                 throw new EntityValidationException(new[] { $"Request invalid" });
 
-            var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserName = request.UserName }).ConfigureAwait(false);
+            var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
             var token = GenerateToken(GetClaimsFromUser(user));
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -60,7 +60,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
 
         private async Task<bool> IsValidAsync(LoginRequest request)
         {
-            var user = await Manager.FindByNameAsync(request.UserName).ConfigureAwait(false);
+            var user = await Manager.FindByEmailAsync(request.Email).ConfigureAwait(false);
 
             return user is not null && await Manager.CheckPasswordAsync(user, request.Password).ConfigureAwait(false);
         }

@@ -56,7 +56,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
             {
                 var handler = new GetSingleAuthenticateUserHandler(Fixture.Dummy);
 
-                return handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserName = userName });
+                return handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = userName });
             }
             var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
 
@@ -67,7 +67,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         public async Task Successfully_executing_a_query_returns_the_expected_result()
         {
             var handler = new GetSingleAuthenticateUserHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserName = "Name" }).ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = "Email" }).ConfigureAwait(false);
 
             result.Should().NotBeNull();
         }

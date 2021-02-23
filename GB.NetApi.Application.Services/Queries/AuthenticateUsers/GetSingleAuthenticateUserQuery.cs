@@ -10,6 +10,6 @@ namespace GB.NetApi.Application.Services.Queries.AuthenticateUsers
     [Serializable]
     public sealed record GetSingleAuthenticateUserQuery : IQuery<AuthenticateUserDto>
     {
-        public string UserName { get; init; }
+        public string UserEmail { get; init; }
     }
 }

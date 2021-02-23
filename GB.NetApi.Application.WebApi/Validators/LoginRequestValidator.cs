@@ -10,7 +10,7 @@ namespace GB.NetApi.Application.WebApi.Validators
     {
         public LoginRequestValidator()
         {
-            RuleFor(e => e.UserName).NotNull().NotEmpty();
+            RuleFor(e => e.Email).NotNull().NotEmpty();
             RuleFor(e => e.Password).NotNull().NotEmpty();
         }
     }

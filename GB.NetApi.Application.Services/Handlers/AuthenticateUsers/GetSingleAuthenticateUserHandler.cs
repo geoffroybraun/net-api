@@ -29,10 +29,10 @@ namespace GB.NetApi.Application.Services.Handlers.AuthenticateUsers
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
 
-            if (query.UserName.IsNullOrEmptyOrWhiteSpace())
+            if (query.UserEmail.IsNullOrEmptyOrWhiteSpace())
                 throw new EntityValidationException(new[] { "User name is not valid." });
 
-            return (AuthenticateUserDto)await Repository.GetAsync(query.UserName).ConfigureAwait(false);
+            return (AuthenticateUserDto)await Repository.GetAsync(query.UserEmail).ConfigureAwait(false);
         }
     }
 }

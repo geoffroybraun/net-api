@@ -138,8 +138,11 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
         private static IEnumerable<UserClaimDao> UserClaimDaos => new[]
         {
             new UserClaimDao() { ClaimType = ClaimTypes.NameIdentifier, ClaimValue = "Guest", UserId = "guest" },
+            new UserClaimDao() { ClaimType = ClaimTypes.Email, ClaimValue = "guest@localhost.com", UserId = "guest" },
             new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Reader", UserId = "reader" },
+            new UserClaimDao() { ClaimType = ClaimTypes.Email, ClaimValue = "reader@localhost.com", UserId = "reader" },
             new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Writer", UserId = "writer" },
+            new UserClaimDao() { ClaimType = ClaimTypes.Email, ClaimValue = "writer@localhost.com", UserId = "writer" },
         };
 
         private static IEnumerable<PersonDao> PersonDaos => new[]

@@ -4,7 +4,6 @@ using GB.NetApi.Application.Services.Handlers.AuthenticateUsers;
 using GB.NetApi.Application.Services.IntegrationTests.DataFixtures;
 using GB.NetApi.Application.Services.Queries.AuthenticateUsers;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,7 +13,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.AuthenticateU
     {
         #region Fields
 
-        private static readonly GetSingleAuthenticateUserQuery Query = new GetSingleAuthenticateUserQuery() { UserName = "Reader" };
+        private static readonly GetSingleAuthenticateUserQuery Query = new GetSingleAuthenticateUserQuery() { UserEmail = "reader@localhost.com" };
         private readonly AuthenticateUserDataFixture Fixture;
 
         #endregion
