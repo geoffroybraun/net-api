@@ -15,8 +15,26 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         public FilterPersonControllerTest(PersonDataFixture fixture) : base(fixture) { }
 
         [Fact]
+        public async Task Filtering_persons_without_being_authenticated_returns_an_unauthorized_status_code()
+        {
+            var response = await PostAsync(Client, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
+
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task Filtering_persons_without_being_allowed_to_returns_a_forbidden_status_code()
+        {
+            await AuthenticateAsync(Client, GuestRequest).ConfigureAwait(false);
+            var response = await PostAsync(Client, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
+
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task Throwing_an_exception_when_filtering_returns_an_internal_server_error_status_code()
         {
+            await AuthenticateAsync(BrokenClient, ReaderRequest).ConfigureAwait(false);
             var result = await PostAsync(BrokenClient, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
 
             result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -25,6 +43,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Not_filtering_persons_returns_a_not_found_status_code()
         {
+            await AuthenticateAsync(NullClient, ReaderRequest).ConfigureAwait(false);
             var query = new FilterPersonQuery() { BirthDay = BirthDay };
             var result = await PostAsync(NullClient, Endpoint, query).ConfigureAwait(false);
 
@@ -34,6 +53,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Providing_an_empty_filter_query_returns_all_stored_persons()
         {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var response = await PostAsync(Client, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content);
 
@@ -43,6 +63,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Successfully_filtering_by_firstname_returns_the_expected_result()
         {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var query = new FilterPersonQuery() { Firstname = Firstname };
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
@@ -53,6 +74,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Successfully_filtering_by_lastname_returns_the_expected_result()
         {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var query = new FilterPersonQuery() { Lastname = Lastname };
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
@@ -63,6 +85,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Successfully_filtering_by_birth_year_returns_the_expected_result()
         {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var query = new FilterPersonQuery() { BirthYear = BirthYear };
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
@@ -73,6 +96,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Successfully_filtering_by_birth_month_returns_the_expected_result()
         {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var query = new FilterPersonQuery() { BirthMonth = BirthMonth };
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
@@ -83,6 +107,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         [Fact]
         public async Task Successfully_filtering_by_birth_day_returns_the_expected_result()
         {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var query = new FilterPersonQuery() { BirthDay = BirthDay };
             var response = await PostAsync(Client, Endpoint, query).ConfigureAwait(false);
             var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);

@@ -58,9 +58,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Authenticati
         public async Task Successfully_logging_in_returns_an_authentication_token()
         {
             var response = await PostAsync(Client, Endpoint, Request).ConfigureAwait(false);
-            var result = await DeserializeContentAsync<LoginResponse>(response.Content).ConfigureAwait(false);
+            var result = await DeserializeContentAsync<string>(response.Content).ConfigureAwait(false);
 
-            result.Should().NotBeNull();
+            result.Should().NotBeNull().And.NotBeEmpty();
         }
     }
 }

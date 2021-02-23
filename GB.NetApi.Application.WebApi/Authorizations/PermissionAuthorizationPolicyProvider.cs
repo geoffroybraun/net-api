@@ -7,7 +7,7 @@ namespace GB.NetApi.Application.WebApi.Authorizations
     /// <summary>
     /// Represents a policy provider which uses permissions
     /// </summary>
-    public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
+    public sealed class PermissionAuthorizationPolicyProvider : IAuthorizationPolicyProvider
     {
         #region Fields
 

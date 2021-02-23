@@ -4,6 +4,7 @@ using GB.NetApi.Application.WebApi.Models;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Infrastructure.Database.DAOs.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +13,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.WebApi.Controllers
@@ -22,6 +22,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
     /// </summary>
     [Route("")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthenticationController : BaseController
     {
         #region Fields
@@ -51,9 +52,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
 
             var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
             var token = GenerateToken(GetClaimsFromUser(user));
-            var tokenHandler = new JwtSecurityTokenHandler();
 
-            return Ok(new LoginResponse() { Token = tokenHandler.WriteToken(token), ExpirationDateTime = token.ValidTo });
+            return Ok(token);
         }
 
         #region Private methods
@@ -73,17 +73,24 @@ namespace GB.NetApi.Application.WebApi.Controllers
             return claims;
         }
 
-        private JwtSecurityToken GenerateToken(IEnumerable<Claim> claims)
+        private string GenerateToken(IEnumerable<Claim> claims)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.Key));
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            
-            return new JwtSecurityToken(
-                audience: Configuration.Audience,
-                issuer: Configuration.Issuer,
-                expires: DateTime.Now.AddHours(1),
-                claims: claims,
-                signingCredentials: signingCredentials);
+            var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(Configuration.Key));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+            var expirationDateTime = DateTime.UtcNow.AddHours(Configuration.ValidityLifeTimeInHours);
+
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Audience = Configuration.Audience,
+                Expires = expirationDateTime,
+                Issuer = Configuration.Issuer,
+                Subject = new ClaimsIdentity(claims),
+                SigningCredentials = signingCredentials
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(securityToken);
         }
 
         #endregion

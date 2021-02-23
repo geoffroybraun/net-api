@@ -1,11 +1,14 @@
 ﻿using GB.NetApi.Application.WebApi.Formatters;
 using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
+using GB.NetApi.Application.WebApi.Models;
 using GB.NetApi.Infrastructure.Database.Contexts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +30,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 
         #region Properties
 
+        protected static readonly LoginRequest GuestRequest = new LoginRequest() { Email = "guest@localhost.com", Password = "guest" };
+        protected static readonly LoginRequest ReaderRequest = new LoginRequest() { Email = "reader@localhost.com", Password = "reader" };
+        protected static readonly LoginRequest WriterRequest = new LoginRequest() { Email = "writer@localhost.com", Password = "writer" };
         protected readonly HttpClient BrokenClient;
         protected readonly HttpClient NullClient;
         protected readonly HttpClient Client;
@@ -60,6 +66,20 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
             NullClient.Dispose();
             Client.Dispose();
             HasDisposed = true;
+        }
+
+        /// <summary>
+        /// Register an authentication token to the provided <see cref="HttpClient"/> using the provided <see cref="LoginRequest"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/> to give an authentication token</param>
+        /// <param name="request">The <see cref="LoginRequest"/> to send when requesting an authentication token</param>
+        protected static async Task AuthenticateAsync(HttpClient client, LoginRequest request)
+        {
+            var content = await GetStringContentAsync(request).ConfigureAwait(false);
+            var response = await client.PostAsync("login", content).ConfigureAwait(false);
+            var token = await DeserializeContentAsync<string>(response.Content).ConfigureAwait(false);
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace GB.NetApi.Application.WebApi.Authorizations
 {
@@ -13,10 +14,12 @@ namespace GB.NetApi.Application.WebApi.Authorizations
 
         #endregion
 
-        public string Name
+        public PermissionAttribute(string permissionName)
         {
-            get => Policy.Replace(POLICY_PREFIXE, string.Empty);
-            set => Policy = $"{POLICY_PREFIXE}{value}";
+            if (string.IsNullOrEmpty(permissionName) || string.IsNullOrWhiteSpace(permissionName))
+                throw new ArgumentNullException(permissionName);
+
+            Policy = $"{POLICY_PREFIXE}{permissionName}";
         }
     }
 }

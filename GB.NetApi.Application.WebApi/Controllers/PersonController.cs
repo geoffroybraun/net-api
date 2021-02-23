@@ -1,6 +1,7 @@
 ﻿using GB.NetApi.Application.Services.Commands.Persons;
 using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.Persons;
+using GB.NetApi.Application.WebApi.Authorizations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
     /// </summary>
     [Route("persons")]
     [ApiController]
+    [Permission("ReadPerson")]
     public sealed class PersonController : BaseController
     {
         public PersonController(IMediator mediator) : base(mediator) { }
@@ -22,6 +24,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="command">The command to run</param>
         /// <returns>True if the <see cref="PersonDto"/> has been successfully created, otherwise false</returns>
         [HttpPut]
+        [Permission("WritePerson")]
         public async Task<ActionResult> CreateAsync(CreatePersonCommand command)
         {
             var result = await RunAsync(command).ConfigureAwait(false);
@@ -36,6 +39,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Route("{id}")]
+        [Permission("WritePerson")]
         public async Task<ActionResult> DeleteAsync(int ID)
         {
             var result = await RunAsync(new DeletePersonCommand() { ID = ID }).ConfigureAwait(false);
@@ -90,6 +94,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <returns>True if the <see cref="PersonDto"/> has been successfully updated, otherwise false</returns>
         [HttpPut]
         [Route("{id}")]
+        [Permission("WritePerson")]
         public async Task<ActionResult> UpdateAsync(int ID, [FromBody] UpdatePersonCommand command)
         {
             if (ID != command.ID)
