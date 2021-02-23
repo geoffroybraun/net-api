@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GB.NetApi.Application.WebApi.Filters
 {
     /// <summary>
-    /// Represents a filter which handles exception by formatting and logging them
+    /// Represents a filter which handles exception by formatting and returning them within the appropriated <see cref="ObjectResult"/> implementation
     /// </summary>
     public sealed class ExceptionFilter : IAsyncExceptionFilter, IExceptionFilter
     {

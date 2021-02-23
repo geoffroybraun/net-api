@@ -25,7 +25,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures
             return mock;
         }
 
-        protected override IPersonRepository InitializeDummy() => new PersonRepository(ContextFunction, TaskHandler);
+        protected override IPersonRepository InitializeDummy() => new PersonRepository(CommonReadableRepository, CommonWritableRepository);
 
         protected override Mock<IPersonRepository> InitializeNullMock(Mock<IPersonRepository> mock)
         {

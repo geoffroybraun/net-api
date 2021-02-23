@@ -12,7 +12,11 @@ namespace GB.NetApi.Application.WebApi.Configurations
     {
         public void Configure(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddMvc(options => options.Filters.Add(new ExceptionFilter()));
+            services.AddMvc((options) =>
+            {
+                options.Filters.Add(new ExceptionFilter());
+                options.Filters.Add(new ValidationFilter());
+            });
         }
     }
 }
