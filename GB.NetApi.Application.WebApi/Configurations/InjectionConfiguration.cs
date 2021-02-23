@@ -38,7 +38,6 @@ namespace GB.NetApi.Application.WebApi.Configurations
             services.AddScoped<ICommonWritableRepository, CommonWritableRepository>();
 
             services.AddScoped<IAuthenticateUserRepository, AuthenticateUserRepository>();
-            services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
         }
 
