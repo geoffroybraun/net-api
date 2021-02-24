@@ -9,7 +9,7 @@ namespace GB.NetApi.Infrastructure.Database.Extensions
     /// <summary>
     /// Extends an <see cref="IEnumerable{UserClaimDao}"/> implementation
     /// </summary>
-    public static class UserClaimDaoExtension
+    public static class IEnumerableUserClaimDaoExtension
     {
         /// <summary>
         /// Retrieve the extended <see cref="IEnumerable{UserClaimDao}"/> implementation as <see cref="IEnumerable{Claim}"/>
