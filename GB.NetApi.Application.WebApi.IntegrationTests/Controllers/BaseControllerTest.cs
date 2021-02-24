@@ -30,9 +30,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 
         #region Properties
 
-        protected static readonly LoginRequest GuestRequest = new LoginRequest() { Email = "guest@localhost.com", Password = "guest" };
-        protected static readonly LoginRequest ReaderRequest = new LoginRequest() { Email = "reader@localhost.com", Password = "reader" };
-        protected static readonly LoginRequest WriterRequest = new LoginRequest() { Email = "writer@localhost.com", Password = "writer" };
+        protected static readonly LoginRequest GuestRequest = new LoginRequest() { Name = "Guest", Email = "guest@localhost.com", Password = "guest" };
+        protected static readonly LoginRequest ReaderRequest = new LoginRequest() { Name = "Reader", Email = "reader@localhost.com", Password = "reader" };
+        protected static readonly LoginRequest WriterRequest = new LoginRequest() { Name = "Writer", Email = "writer@localhost.com", Password = "writer" };
         protected readonly HttpClient BrokenClient;
         protected readonly HttpClient NullClient;
         protected readonly HttpClient Client;

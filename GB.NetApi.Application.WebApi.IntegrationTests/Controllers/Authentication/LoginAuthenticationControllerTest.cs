@@ -13,9 +13,10 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Authenticati
         #region Fields
 
         private const string Endpoint = "login";
+        private const string UserName = "Reader";
         private const string UserEmail = "reader@localhost.com";
         private const string Password = "reader";
-        private static readonly LoginRequest Request = new() { Email = UserEmail, Password = Password };
+        private static readonly LoginRequest Request = new() { Name = UserName, Email = UserEmail, Password = Password };
 
         #endregion
 
@@ -38,17 +39,20 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Authenticati
         }
 
         [Theory]
-        [InlineData(null, Password)]
-        [InlineData("", Password)]
-        [InlineData(" ", Password)]
-        [InlineData(UserEmail, null)]
-        [InlineData(UserEmail, "")]
-        [InlineData(UserEmail, " ")]
-        [InlineData("InvalidUserEmail", Password)]
-        [InlineData(UserEmail, "InvalidPassword")]
-        public async Task Providing_an_invalid_request_when_loging_in_returns_a_bad_request_status_code(string username, string password)
+        [InlineData(null, UserEmail, Password)]
+        [InlineData("", UserEmail, Password)]
+        [InlineData(" ", UserEmail, Password)]
+        [InlineData(UserName, null, Password)]
+        [InlineData(UserName, "", Password)]
+        [InlineData(UserName, " ", Password)]
+        [InlineData(UserName, UserEmail, null)]
+        [InlineData(UserName, UserEmail, "")]
+        [InlineData(UserName, UserEmail, " ")]
+        [InlineData(UserName, "InvalidUserEmail", Password)]
+        [InlineData(UserName, UserEmail, "InvalidPassword")]
+        public async Task Providing_an_invalid_request_when_loging_in_returns_a_bad_request_status_code(string userName, string userEmail, string password)
         {
-            var request = new LoginRequest() { Email = username, Password = password };
+            var request = new LoginRequest() { Name = userName, Email = userEmail, Password = password };
             var result = await PostAsync(Client, Endpoint, request).ConfigureAwait(false);
 
             result.StatusCode.Should().Be(HttpStatusCode.BadRequest);

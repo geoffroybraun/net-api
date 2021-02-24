@@ -13,7 +13,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
     {
         protected override Mock<IAuthenticateUserRepository> InitializeBrokenMock(Mock<IAuthenticateUserRepository> mock)
         {
-            mock.Setup(m => m.GetAsync(It.IsAny<string>())).ThrowsAsync(new NotImplementedException());
+            mock.Setup(m => m.GetAsync(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new NotImplementedException());
 
             return mock;
         }
@@ -22,7 +22,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.DataFixtures
 
         protected override Mock<IAuthenticateUserRepository> InitializeNullMock(Mock<IAuthenticateUserRepository> mock)
         {
-            mock.Setup(m => m.GetAsync(It.IsAny<string>())).ReturnsAsync(default(AuthenticateUser));
+            mock.Setup(m => m.GetAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(default(AuthenticateUser));
 
             return mock;
         }

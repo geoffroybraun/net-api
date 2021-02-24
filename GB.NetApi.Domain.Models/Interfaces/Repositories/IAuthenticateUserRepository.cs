@@ -11,8 +11,9 @@ namespace GB.NetApi.Domain.Models.Interfaces.Repositories
         /// <summary>
         /// Retrieve an <see cref="AuthenticateUser"/> entity using its name
         /// </summary>
+        /// <param name="userName">The <see cref="AuthenticateUser"/> name to look for</param>
         /// <param name="userEmail">The <see cref="AuthenticateUser"/> email address to look for</param>
         /// <returns>The found <see cref="AuthenticateUser"/> entity</returns>
-        Task<AuthenticateUser> GetAsync(string userEmail);
+        Task<AuthenticateUser> GetAsync(string userName, string userEmail);
     }
 }

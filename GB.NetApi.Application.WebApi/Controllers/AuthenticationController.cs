@@ -50,7 +50,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
             if (!await IsValidAsync(request))
                 throw new EntityValidationException(new[] { $"Request invalid" });
 
-            var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
+            var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserName = request.Name, UserEmail = request.Email }).ConfigureAwait(false);
             var token = GenerateToken(GetClaimsFromUser(user));
 
             return Ok(token);
