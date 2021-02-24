@@ -11,5 +11,7 @@ namespace GB.NetApi.Application.Services.Queries.AuthenticateUsers
     public sealed record GetSingleAuthenticateUserQuery : IQuery<AuthenticateUserDto>
     {
         public string UserEmail { get; init; }
+
+        public string UserName { get; init; }
     }
 }
