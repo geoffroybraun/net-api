@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
@@ -24,6 +25,7 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
         public override bool EmailConfirmed { get => base.EmailConfirmed; set => base.EmailConfirmed = value; }
 
         [Column("id")]
+        [Key]
         public override string Id { get => base.Id; set => base.Id = value; }
 
         [Column("lockout_enabled")]
