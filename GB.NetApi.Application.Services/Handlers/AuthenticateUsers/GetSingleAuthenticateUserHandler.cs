@@ -2,7 +2,7 @@
 using GB.NetApi.Application.Services.Queries.AuthenticateUsers;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
-using GB.NetApi.Domain.Services.Validators;
+using GB.NetApi.Domain.Services.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -16,14 +16,12 @@ namespace GB.NetApi.Application.Services.Handlers.AuthenticateUsers
         #region Fields
 
         private readonly IAuthenticateUserRepository Repository;
-        private readonly AuthenticateUserValidator Validator;
 
         #endregion
 
         public GetSingleAuthenticateUserHandler(IAuthenticateUserRepository repository)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            Validator = new AuthenticateUserValidator();
         }
 
         public override async Task<AuthenticateUserDto> ExecuteAsync(GetSingleAuthenticateUserQuery query)
@@ -31,10 +29,10 @@ namespace GB.NetApi.Application.Services.Handlers.AuthenticateUsers
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
 
-            if (Validator.IsNotValid(query.UserName, query.UserEmail))
+            if (query.UserEmail.IsNullOrEmptyOrWhiteSpace())
                 throw new EntityValidationException();
 
-            return (AuthenticateUserDto)await Repository.GetAsync(query.UserName, query.UserEmail).ConfigureAwait(false);
+            return (AuthenticateUserDto)await Repository.GetAsync(query.UserEmail).ConfigureAwait(false);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
 
         protected override Mock<IAuthenticateUserRepository> InitializeDummyMock(Mock<IAuthenticateUserRepository> mock)
         {
-            mock.Setup(m => m.GetAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(User);
+            mock.Setup(m => m.GetAsync(It.IsAny<string>())).ReturnsAsync(User);
 
             return mock;
         }

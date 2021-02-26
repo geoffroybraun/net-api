@@ -14,7 +14,6 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
     {
         #region Fields
 
-        private const string UserName = "UserName";
         private const string UserEmail = "UserEmail";
         private readonly AuthenticateUserDataFixture Fixture;
 
@@ -49,19 +48,16 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         }
 
         [Theory]
-        [InlineData(null, UserEmail)]
-        [InlineData("", UserEmail)]
-        [InlineData(" ", UserEmail)]
-        [InlineData(UserName, null)]
-        [InlineData(UserName, "")]
-        [InlineData(UserName, " ")]
-        public async Task Providing_an_invalid_query_to_execute_throws_an_exception(string userName, string userEmail)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task Providing_an_invalid_query_to_execute_throws_an_exception(string userEmail)
         {
             Task<AuthenticateUserDto> function()
             {
                 var handler = new GetSingleAuthenticateUserHandler(Fixture.Dummy);
 
-                return handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = userName });
+                return handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = userEmail });
             }
             var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
 
@@ -72,7 +68,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         public async Task Successfully_executing_a_query_returns_the_expected_result()
         {
             var handler = new GetSingleAuthenticateUserHandler(Fixture.Dummy);
-            var result = await handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserName = UserName, UserEmail = UserName }).ConfigureAwait(false);
+            var result = await handler.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = UserEmail }).ConfigureAwait(false);
 
             result.Should().NotBeNull();
         }

@@ -21,11 +21,11 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         public AuthenticateUserRepository(ICommonRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public async Task<AuthenticateUser> GetAsync(string userName, string userEmail)
+        public async Task<AuthenticateUser> GetAsync(string userEmail)
         {
             using (var context = Repository.InstanciateContext())
             {
-                Task<UserDao> function() => GetAsync(context, userName, userEmail);
+                Task<UserDao> function() => GetAsync(context, userEmail);
                 var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return Transform(result);
@@ -34,7 +34,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         #region Private methods
 
-        private async Task<UserDao> GetAsync(BaseDbContext context, string userName, string userEmail) => await Repository.GetQuery<UserDao>(context)
+        private async Task<UserDao> GetAsync(BaseDbContext context, string userEmail) => await Repository.GetQuery<UserDao>(context)
             .Include(e => e.UserClaims)
             .Include(e => e.UserRoles)
             .ThenInclude(e => e.Role)
@@ -49,7 +49,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             .ThenInclude(e => e.RolePermissions)
             .ThenInclude(e => e.Permission)
             .ThenInclude(e => e.Resource)
-            .SingleOrDefaultAsync(e => e.UserName == userName && e.Email == userEmail)
+            .SingleOrDefaultAsync(e => e.Email == userEmail)
             .ConfigureAwait(false);
 
         private static AuthenticateUser Transform(UserDao user)
