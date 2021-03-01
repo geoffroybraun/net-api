@@ -70,6 +70,15 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Person &apos;{0} {1}&apos; (born {2}) already exists..
+        /// </summary>
+        internal static string ExistingPerson {
+            get {
+                return ResourceManager.GetString("ExistingPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à ID &apos;{0}&apos; does not exist..
         /// </summary>
         internal static string InexistingID {

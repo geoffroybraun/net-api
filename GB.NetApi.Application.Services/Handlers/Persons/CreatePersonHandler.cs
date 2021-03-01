@@ -1,5 +1,4 @@
-﻿using GB.NetApi.Application.Services.Collectors;
-using GB.NetApi.Application.Services.Commands.Persons;
+﻿using GB.NetApi.Application.Services.Commands.Persons;
 using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
@@ -18,19 +17,15 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         #region Fields
 
         private readonly IPersonRepository Repository;
-        private readonly ITranslator Translator;
-        private readonly MessagesCollector Collector;
         private readonly PersonValidator Validator;
 
         #endregion
 
-        public CreatePersonHandler(IPersonRepository repository, ITranslator translator)
+        public CreatePersonHandler(IPersonRepository repository, ITranslator translator) : base(translator)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            Translator = translator ?? throw new ArgumentNullException(nameof(translator));
-            Collector = new MessagesCollector();
             Validator = new PersonValidator();
-            Validator.SendErrorMessageEvent += Translate;
+            Validator.SendErrorMessageEvent += TranslateAndCollect;
         }
 
         public override async Task<bool> RunAsync(CreatePersonCommand command)
@@ -48,19 +43,23 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
 
         #region Private methods
 
-        private void Translate(string message, object[] parameters)
-        {
-            message = Translator.GetString(message, parameters);
-            Collector.Collect(message);
-        }
-
         private async Task<bool> IsValidForCreateAsync(Person person, DateTime maxBirthdate)
         {
             var result = true;
             result &= Validator.IsValid(person, maxBirthdate);
-            result &= !await Repository.ExistAsync(person).ConfigureAwait(false);
+            result &= !await ExistAsync(person).ConfigureAwait(false);
 
             return result;
+        }
+
+        private async Task<bool> ExistAsync(Person person)
+        {
+            if (await Repository.ExistAsync(person).ConfigureAwait(false))
+                return true;
+
+            TranslateAndCollect("ExistingPerson", new[] { person.Firstname, person.Lastname, person.Birthdate.ToString("yyyy-MM-dd") });
+
+            return false;
         }
 
         #endregion

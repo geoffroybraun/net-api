@@ -27,7 +27,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public FilterPersonHandlerTest(PersonDataFixture fixture) => Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
         [Fact]
-        public async Task Throwing_an_exception_when_filtering_persons_let_it_be_thrown()
+        public async Task Throwing_an_exception_let_it_be_thrown()
         {
             Task<IEnumerable<PersonDto>> function()
             {
@@ -41,7 +41,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Not_filtering_persons_returns_a_default_value()
+        public async Task Not_executing_a_query_returns_a_default_value()
         {
             var handler = new FilterPersonHandler(Fixture.Null);
             var result = await handler.ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
@@ -50,7 +50,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_filtering_persons_without_any_value_returns_them_all()
+        public async Task Successfully_executing_a_query_without_any_value_returns_them_all()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
@@ -59,7 +59,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_filtering_persons_by_firstname_returns_the_expected_result()
+        public async Task Successfully_executing_a_query_while_filtering_by_firstname_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new FilterPersonQuery() { Firstname = Firstname }).ConfigureAwait(false);
@@ -68,7 +68,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_filtering_persons_by_lastname_returns_the_expected_result()
+        public async Task Successfully_executing_a_query_while_filtering_by_lastname_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new FilterPersonQuery() { Lastname = Lastname }).ConfigureAwait(false);
@@ -77,7 +77,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_filtering_persons_by_birth_year_returns_the_expected_result()
+        public async Task Successfully_executing_a_query_while_filtering_by_birth_year_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthYear = BirthYear }).ConfigureAwait(false);
@@ -86,7 +86,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_filtering_persons_by_birth_month_returns_the_expected_result()
+        public async Task Successfully_executing_a_query_while_filtering_by_birth_month_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthMonth = BirthMonth }).ConfigureAwait(false);
@@ -95,7 +95,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_filtering_persons_by_birth_day_returns_the_expected_result()
+        public async Task Successfully_executing_a_query_while_filtering_by_birth_day_returns_the_expected_result()
         {
             var handler = new FilterPersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new FilterPersonQuery() { BirthDay = BirthDay }).ConfigureAwait(false);

@@ -120,6 +120,9 @@
   <data name="DateTimeMustBeInferiorOrEqualTo" xml:space="preserve">
     <value>'{0}' must be inferior or equal to '{1}'.</value>
   </data>
+  <data name="ExistingPerson" xml:space="preserve">
+    <value>Person '{0} {1}' (born {2}) already exists.</value>
+  </data>
   <data name="InexistingID" xml:space="preserve">
     <value>ID '{0}' does not exist.</value>
   </data>

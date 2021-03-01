@@ -1,5 +1,4 @@
-﻿using GB.NetApi.Application.Services.Collectors;
-using GB.NetApi.Application.Services.Commands.Persons;
+﻿using GB.NetApi.Application.Services.Commands.Persons;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Domain.Models.Interfaces.Services;
@@ -17,16 +16,12 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         #region Fields
 
         private readonly IPersonRepository Repository;
-        private readonly ITranslator Translator;
-        private readonly MessagesCollector Collector;
 
         #endregion
 
-        public DeletePersonHandler(IPersonRepository repository, ITranslator translator)
+        public DeletePersonHandler(IPersonRepository repository, ITranslator translator) : base(translator)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            Translator = translator ?? throw new ArgumentNullException(nameof(translator));
-            Collector = new MessagesCollector();
         }
 
         public override async Task<bool> RunAsync(DeletePersonCommand command)
@@ -56,8 +51,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             if (id.IsSuperiorTo(0))
                 return true;
 
-            var message = Translator.GetString("IntegerMustBeSuperiorTo", new object[] { "ID", id });
-            Collector.Collect(message);
+            TranslateAndCollect("IntegerMustBeSuperiorTo", new object[] { "ID", id });
 
             return false;
         }
@@ -67,8 +61,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             if (await Repository.ExistAsync(ID).ConfigureAwait(false))
                 return true;
 
-            var message = Translator.GetString("InexistingID", new[] { ID });
-            Collector.Collect(message);
+            TranslateAndCollect("InexistingID", new[] { ID });
 
             return false;
         }
