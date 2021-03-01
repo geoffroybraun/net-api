@@ -8,10 +8,11 @@ using GB.NetApi.Infrastructure.Database.Interfaces;
 using GB.NetApi.Infrastructure.Database.Repositories;
 using GB.NetApi.Infrastructure.Database.Repositories.Commons;
 using GB.NetApi.Infrastructure.Libraries.Handlers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
-using System.Globalization;
 
 namespace GB.NetApi.Application.WebApi.Configurations
 {
@@ -31,7 +32,12 @@ namespace GB.NetApi.Application.WebApi.Configurations
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ITranslator>((provider) => new ResourceTranslator(new CultureInfo("en")));
+            services.AddScoped<ITranslator>((provider) =>
+            {
+                var languageProvider = provider.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+
+                return new ResourceTranslator(languageProvider.Value.DefaultRequestCulture.Culture);
+            });
         }
 
         private static void ConfigureLibraries(IServiceCollection services)
