@@ -59,5 +59,14 @@ namespace GB.NetApi.Domain.Models.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Email &apos;{0}&apos; is not valid..
+        /// </summary>
+        internal static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
     }
 }
