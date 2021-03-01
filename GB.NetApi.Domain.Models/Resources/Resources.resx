@@ -130,7 +130,7 @@
     <value>'{0}' must be superior to {1}.</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
-    <value>Email '{0}' is not valid.</value>
+    <value>'{0}' is not a valid email address.</value>
   </data>
   <data name="StringIsNullOrEmptyOrWhiteSpace" xml:space="preserve">
     <value>'{0}' cannot be null or empty.</value>

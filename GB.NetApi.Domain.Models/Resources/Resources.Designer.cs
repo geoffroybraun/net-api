@@ -97,7 +97,7 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Email &apos;{0}&apos; is not valid..
+        ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; is not a valid email address..
         /// </summary>
         internal static string InvalidEmail {
             get {
