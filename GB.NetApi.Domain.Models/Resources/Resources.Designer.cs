@@ -70,6 +70,15 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à ID &apos;{0}&apos; does not exist..
+        /// </summary>
+        internal static string InexistingID {
+            get {
+                return ResourceManager.GetString("InexistingID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; must be superior to {1}..
         /// </summary>
         internal static string IntegerMustBeSuperiorTo {
