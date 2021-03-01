@@ -14,7 +14,7 @@ using Xunit;
 
 namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
 {
-    public sealed class CreatePersonHandlerTest : IClassFixture<PersonDataFixture>, IClassFixture<TranslatorServiceFixture>
+    public sealed class CreatePersonHandlerTest : IClassFixture<PersonDataFixture>, IClassFixture<ResourceTranslatorServiceFixture>
     {
         #region Fields
 
@@ -22,11 +22,11 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         private const string Lastname = "Lastname";
         private static readonly DateTime Birthdate = DateTime.UtcNow.AddHours(-1);
         private readonly PersonDataFixture DataFixture;
-        private readonly TranslatorServiceFixture ServiceFixture;
+        private readonly ResourceTranslatorServiceFixture ServiceFixture;
 
         #endregion
 
-        public CreatePersonHandlerTest(PersonDataFixture dataFixture, TranslatorServiceFixture serviceFixture)
+        public CreatePersonHandlerTest(PersonDataFixture dataFixture, ResourceTranslatorServiceFixture serviceFixture)
         {
             DataFixture = dataFixture ?? throw new ArgumentNullException(nameof(dataFixture));
             ServiceFixture = serviceFixture ?? throw new ArgumentNullException(nameof(serviceFixture));
@@ -102,7 +102,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Providing_an_invalid_command_to_run_returns_all_raised_error_messages_through_the_thrown_exception()
+        public async Task Providing_an_invalid_command_returns_all_raised_error_messages_through_the_thrown_exception()
         {
             Task<bool> function()
             {
@@ -116,7 +116,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_handling_a_command_returns_true()
+        public async Task Successfully_running_a_command_returns_true()
         {
             var handler = new CreatePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
             var command = new CreatePersonCommand()

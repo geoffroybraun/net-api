@@ -12,17 +12,17 @@ using Xunit;
 
 namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
 {
-    public sealed class GetSingleAuthenticateUserHandlerTest : IClassFixture<AuthenticateUserDataFixture>, IClassFixture<TranslatorServiceFixture>
+    public sealed class GetSingleAuthenticateUserHandlerTest : IClassFixture<AuthenticateUserDataFixture>, IClassFixture<ResourceTranslatorServiceFixture>
     {
         #region Fields
 
         private const string UserEmail = "UserEmail";
         private readonly AuthenticateUserDataFixture DataFixture;
-        private readonly TranslatorServiceFixture ServiceFixture;
+        private readonly ResourceTranslatorServiceFixture ServiceFixture;
 
         #endregion
 
-        public GetSingleAuthenticateUserHandlerTest(AuthenticateUserDataFixture dataFixture, TranslatorServiceFixture serviceFixture)
+        public GetSingleAuthenticateUserHandlerTest(AuthenticateUserDataFixture dataFixture, ResourceTranslatorServiceFixture serviceFixture)
         {
             DataFixture = dataFixture ?? throw new ArgumentNullException(nameof(dataFixture));
             ServiceFixture = serviceFixture ?? throw new ArgumentNullException(nameof(serviceFixture));
@@ -47,7 +47,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         }
 
         [Fact]
-        public async Task Providing_a_null_query_to_execute_throws_an_exception()
+        public async Task Providing_a_null_query_throws_an_exception()
         {
             Task<AuthenticateUserDto> function()
             {
@@ -64,7 +64,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task Providing_an_invalid_query_to_execute_throws_an_exception(string userEmail)
+        public async Task Providing_an_invalid_query_throws_an_exception(string userEmail)
         {
             Task<AuthenticateUserDto> function()
             {
@@ -78,7 +78,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         }
 
         [Fact]
-        public async Task Providing_an_invalid_query_to_execute_returns_all_raised_error_messages_through_the_thrown_exception()
+        public async Task Providing_an_invalid_query_returns_all_raised_error_messages_through_the_thrown_exception()
         {
             Task<AuthenticateUserDto> function()
             {

@@ -6,7 +6,7 @@ namespace GB.NetApi.Application.Services.UnitTests.ServicesFixtures
     /// <summary>
     /// Represents a dummy <see cref="ITranslator"/> implementation
     /// </summary>
-    public sealed class TranslatorServiceFixture : BaseServiceFixture<ITranslator>
+    public sealed class ResourceTranslatorServiceFixture : BaseServiceFixture<ITranslator>
     {
         protected override Mock<ITranslator> InitializeDummyMock(Mock<ITranslator> mock)
         {

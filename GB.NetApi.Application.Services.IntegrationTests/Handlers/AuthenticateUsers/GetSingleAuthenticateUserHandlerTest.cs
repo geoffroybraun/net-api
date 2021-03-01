@@ -27,7 +27,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.AuthenticateU
         }
 
         [Fact]
-        public async Task Throwing_an_exception_when_executing_a_query_let_it_be_thrown()
+        public async Task Throwing_an_exception_let_it_be_thrown()
         {
             Task<AuthenticateUserDto> function()
             {
@@ -41,7 +41,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.AuthenticateU
         }
 
         [Fact]
-        public async Task Not_getting_a_result_when_executing_a_query_returns_a_default_value()
+        public async Task Not_successfully_executing_a_query_returns_a_default_value()
         {
             var handler = new GetSingleAuthenticateUserHandler(DataFixture.Null, ServiceFixture.Null);
             var result = await handler.ExecuteAsync(Query).ConfigureAwait(false);
