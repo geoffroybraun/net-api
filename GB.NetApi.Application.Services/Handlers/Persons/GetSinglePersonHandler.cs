@@ -1,6 +1,5 @@
 ﻿using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.Persons;
-using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using GB.NetApi.Domain.Services.Extensions;
 using System;
@@ -29,15 +28,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             if (query.ID.IsInferiorOrEqualTo(0))
                 throw new ArgumentOutOfRangeException(query.ID.ToString());
 
-            var result = await Repository.GetAsync(query.ID).ConfigureAwait(false);
-
-            return Transform(result);
+            return (PersonDto)await Repository.GetAsync(query.ID).ConfigureAwait(false);
         }
-
-        #region Private methods
-
-        private static PersonDto Transform(Person person) => (PersonDto)person;
-
-        #endregion
     }
 }

@@ -2,6 +2,7 @@
 using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Handlers.AuthenticateUsers;
 using GB.NetApi.Application.Services.IntegrationTests.DataFixtures;
+using GB.NetApi.Application.Services.IntegrationTests.ServicesFixtures;
 using GB.NetApi.Application.Services.Queries.AuthenticateUsers;
 using System;
 using System.Threading.Tasks;
@@ -9,26 +10,28 @@ using Xunit;
 
 namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.AuthenticateUsers
 {
-    public sealed class GetSingleAuthenticateUserHandlerTest : IClassFixture<AuthenticateUserDataFixture>
+    public sealed class GetSingleAuthenticateUserHandlerTest : IClassFixture<AuthenticateUserDataFixture>, IClassFixture<ResourceTranslatorServiceFixture>
     {
         #region Fields
 
         private static readonly GetSingleAuthenticateUserQuery Query = new GetSingleAuthenticateUserQuery() { UserEmail = "reader@localhost.com" };
-        private readonly AuthenticateUserDataFixture Fixture;
+        private readonly AuthenticateUserDataFixture DataFixture;
+        private readonly ResourceTranslatorServiceFixture ServiceFixture;
 
         #endregion
 
-        public GetSingleAuthenticateUserHandlerTest(AuthenticateUserDataFixture fixture)
+        public GetSingleAuthenticateUserHandlerTest(AuthenticateUserDataFixture dataFixture, ResourceTranslatorServiceFixture serviceFixture)
         {
-            Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+            DataFixture = dataFixture ?? throw new ArgumentNullException(nameof(dataFixture));
+            ServiceFixture = serviceFixture ?? throw new ArgumentNullException(nameof(serviceFixture));
         }
 
         [Fact]
-        public async Task Throwing_an_exception_when_executing_a_query_let_it_be_thrown()
+        public async Task Throwing_an_exception_let_it_be_thrown()
         {
             Task<AuthenticateUserDto> function()
             {
-                var handler = new GetSingleAuthenticateUserHandler(Fixture.Broken);
+                var handler = new GetSingleAuthenticateUserHandler(DataFixture.Broken, ServiceFixture.Broken);
 
                 return handler.ExecuteAsync(Query);
             }
@@ -38,9 +41,9 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.AuthenticateU
         }
 
         [Fact]
-        public async Task Not_getting_a_result_when_executing_a_query_returns_a_default_value()
+        public async Task Not_successfully_executing_a_query_returns_a_default_value()
         {
-            var handler = new GetSingleAuthenticateUserHandler(Fixture.Null);
+            var handler = new GetSingleAuthenticateUserHandler(DataFixture.Null, ServiceFixture.Null);
             var result = await handler.ExecuteAsync(Query).ConfigureAwait(false);
 
             result.Should().BeNull();
@@ -49,7 +52,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.AuthenticateU
         [Fact]
         public async Task Successfully_executing_a_query_returns_the_expected_result()
         {
-            var handler = new GetSingleAuthenticateUserHandler(Fixture.Dummy);
+            var handler = new GetSingleAuthenticateUserHandler(DataFixture.Dummy, ServiceFixture.Dummy);
             var result = await handler.ExecuteAsync(Query).ConfigureAwait(false);
 
             result.Should().NotBeNull();

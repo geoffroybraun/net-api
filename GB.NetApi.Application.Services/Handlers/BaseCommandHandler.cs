@@ -1,5 +1,9 @@
-﻿using GB.NetApi.Application.Services.Interfaces.Commands;
+﻿using GB.NetApi.Application.Services.Collectors;
+using GB.NetApi.Application.Services.Interfaces.Commands;
+using GB.NetApi.Domain.Models.Interfaces.Services;
+using GB.NetApi.Domain.Services.Extensions;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +16,24 @@ namespace GB.NetApi.Application.Services.Handlers
     /// <typeparam name="TResult">The command result type to return</typeparam>
     public abstract class BaseCommandHandler<TCommand, TResult> : IRequestHandler<TCommand, TResult> where TCommand : ICommand<TResult>
     {
+        #region Fields
+
+        private readonly ITranslator Translator;
+
+        #endregion
+
+        #region Properties
+
+        protected readonly MessagesCollector Collector;
+
+        #endregion
+
+        protected BaseCommandHandler(ITranslator translator)
+        {
+            Translator = translator ?? throw new ArgumentNullException(nameof(translator));
+            Collector = new MessagesCollector();
+        }
+
         public async Task<TResult> Handle(TCommand request, CancellationToken cancellationToken)
         {
             return await RunAsync(request).ConfigureAwait(false);
@@ -23,5 +45,16 @@ namespace GB.NetApi.Application.Services.Handlers
         /// <param name="command">The <see cref="TCommand"/> to run</param>
         /// <returns>The <see cref="TCommand"/> result</returns>
         public abstract Task<TResult> RunAsync(TCommand command);
+
+        /// <summary>
+        /// Translate the provided message using the optional parameters and collects the result
+        /// </summary>
+        /// <param name="message">The message to translate</param>
+        /// <param name="parameters">The optional parameters to format the message with</param>
+        protected void TranslateAndCollect(string message, params object[] parameters)
+        {
+            message = parameters.IsNotNullNorEmpty() ? Translator.GetString(message, parameters) : Translator.GetString(message);
+            Collector.Collect(message);
+        }
     }
 }

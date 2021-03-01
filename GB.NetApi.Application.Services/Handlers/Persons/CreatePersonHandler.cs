@@ -2,6 +2,7 @@
 using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
+using GB.NetApi.Domain.Models.Interfaces.Services;
 using GB.NetApi.Domain.Services.Validators;
 using System;
 using System.Threading.Tasks;
@@ -20,10 +21,11 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
 
         #endregion
 
-        public CreatePersonHandler(IPersonRepository repository)
+        public CreatePersonHandler(IPersonRepository repository, ITranslator translator) : base(translator)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Validator = new PersonValidator();
+            Validator.SendErrorMessageEvent += TranslateAndCollect;
         }
 
         public override async Task<bool> RunAsync(CreatePersonCommand command)
@@ -32,10 +34,9 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
                 throw new ArgumentNullException(nameof(command));
 
             var person = command.Transform();
-            var canBeCreated = await IsValidForCreateAsync(person, DateTime.Now).ConfigureAwait(false);
 
-            if (!canBeCreated)
-                throw new EntityValidationException();
+            if (!await IsValidForCreateAsync(person, DateTime.UtcNow).ConfigureAwait(false))
+                throw new EntityValidationException(Collector.Messages);
 
             return await Repository.CreateAsync(person).ConfigureAwait(false);
         }
@@ -46,9 +47,19 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         {
             var result = true;
             result &= Validator.IsValid(person, maxBirthdate);
-            result &= !await Repository.ExistAsync(person).ConfigureAwait(false);
+            result &= !await ExistAsync(person).ConfigureAwait(false);
 
             return result;
+        }
+
+        private async Task<bool> ExistAsync(Person person)
+        {
+            if (await Repository.ExistAsync(person).ConfigureAwait(false))
+                return true;
+
+            TranslateAndCollect("ExistingPerson", new[] { person.Firstname, person.Lastname, person.Birthdate.ToString("yyyy-MM-dd") });
+
+            return false;
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         public GetSinglePersonHandlerTest(PersonDataFixture fixture) => Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
         [Fact]
-        public async Task Throwing_an_exception_when_getting_a_person_let_it_be_thrown()
+        public async Task Throwing_an_exception_let_it_be_thrown()
         {
             Task<PersonDto> function()
             {
@@ -35,7 +35,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Not_getting_a_person_returns_a_default_value()
+        public async Task Not_successfully_executing_a_query_returns_a_default_value()
         {
             var handler = new GetSinglePersonHandler(Fixture.Null);
             var result = await handler.ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
@@ -44,7 +44,7 @@ namespace GB.NetApi.Application.Services.IntegrationTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_getting_a_person_returns_the_expected_result()
+        public async Task Successfully_executing_a_query_returns_the_expected_result()
         {
             var handler = new GetSinglePersonHandler(Fixture.Dummy);
             var result = await handler.ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);

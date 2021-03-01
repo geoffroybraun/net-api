@@ -2,6 +2,7 @@
 using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
+using GB.NetApi.Domain.Models.Interfaces.Services;
 using GB.NetApi.Domain.Services.Validators;
 using System;
 using System.Threading.Tasks;
@@ -20,10 +21,11 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
 
         #endregion
 
-        public UpdatePersonHandler(IPersonRepository repository)
+        public UpdatePersonHandler(IPersonRepository repository, ITranslator translator) : base(translator)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Validator = new PersonValidator();
+            Validator.SendErrorMessageEvent += TranslateAndCollect;
         }
 
         public override async Task<bool> RunAsync(UpdatePersonCommand command)
@@ -32,10 +34,9 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
                 throw new ArgumentNullException(nameof(command));
 
             var person = command.Transform();
-            var canBeUpdated = await IsValidForUpdateAsync(person).ConfigureAwait(false);
 
-            if (!canBeUpdated)
-                throw new EntityValidationException();
+            if (!await IsValidForUpdateAsync(person).ConfigureAwait(false))
+                throw new EntityValidationException(Collector.Messages);
 
             return await Repository.UpdateAsync(person).ConfigureAwait(false);
         }
@@ -46,10 +47,32 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         {
             var result = true;
             result &= Validator.IsValidWithID(person, DateTime.UtcNow);
-            result &= await Repository.ExistAsync(person.ID).ConfigureAwait(false);
-            result &= !await Repository.ExistAsync(person).ConfigureAwait(false);
+            result &= await ExistAsync(person.ID).ConfigureAwait(false);
+            result &= !await ExistAsync(person).ConfigureAwait(false);
 
             return result;
+        }
+
+        private async Task<bool> ExistAsync(int ID)
+        {
+            if (await Repository.ExistAsync(ID).ConfigureAwait(false))
+                return true;
+
+            TranslateAndCollect("InexistingID", new[] { ID });
+
+            return false;
+        }
+
+        private async Task<bool> ExistAsync(Person person)
+        {
+            if (await Repository.ExistAsync(person).ConfigureAwait(false))
+            {
+                TranslateAndCollect("ExistingPerson", new[] { person.Firstname, person.Lastname, person.Birthdate.ToString("yyyy-MM-dd") });
+
+                return true;
+            }
+
+            return false;
         }
 
         #endregion

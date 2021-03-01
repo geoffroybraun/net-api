@@ -44,6 +44,7 @@ namespace GB.NetApi.Application.WebApi
             }
 
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
