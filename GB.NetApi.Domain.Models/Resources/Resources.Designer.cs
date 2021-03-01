@@ -61,11 +61,38 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; must be inferior or equal to &apos;{1}&apos;..
+        /// </summary>
+        internal static string DateTimeMustBeInferiorOrEqualTo {
+            get {
+                return ResourceManager.GetString("DateTimeMustBeInferiorOrEqualTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; must be superior to {1}..
+        /// </summary>
+        internal static string IntegerMustBeSuperiorTo {
+            get {
+                return ResourceManager.GetString("IntegerMustBeSuperiorTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Email &apos;{0}&apos; is not valid..
         /// </summary>
         internal static string InvalidEmail {
             get {
                 return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; cannot be null or empty..
+        /// </summary>
+        internal static string StringIsNullOrEmptyOrWhiteSpace {
+            get {
+                return ResourceManager.GetString("StringIsNullOrEmptyOrWhiteSpace", resourceCulture);
             }
         }
     }

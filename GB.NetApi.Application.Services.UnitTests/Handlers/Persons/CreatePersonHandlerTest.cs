@@ -2,33 +2,50 @@
 using GB.NetApi.Application.Services.Commands.Persons;
 using GB.NetApi.Application.Services.Handlers.Persons;
 using GB.NetApi.Application.Services.UnitTests.DataFixtures;
+using GB.NetApi.Application.Services.UnitTests.ServicesFixtures;
 using GB.NetApi.Domain.Models.Entities;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using Moq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
 {
-    public sealed class CreatePersonHandlerTest : IClassFixture<PersonDataFixture>
+    public sealed class CreatePersonHandlerTest : IClassFixture<PersonDataFixture>, IClassFixture<TranslatorServiceFixture>
     {
         #region Fields
 
         private const string Firstname = "Firstname";
         private const string Lastname = "Lastname";
-        private static readonly DateTime Birthdate = DateTime.Now;
-        private readonly PersonDataFixture Fixture;
+        private static readonly DateTime Birthdate = DateTime.UtcNow.AddHours(-1);
+        private readonly PersonDataFixture DataFixture;
+        private readonly TranslatorServiceFixture ServiceFixture;
 
         #endregion
 
-        public CreatePersonHandlerTest(PersonDataFixture fixture) => Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+        public CreatePersonHandlerTest(PersonDataFixture dataFixture, TranslatorServiceFixture serviceFixture)
+        {
+            DataFixture = dataFixture ?? throw new ArgumentNullException(nameof(dataFixture));
+            ServiceFixture = serviceFixture ?? throw new ArgumentNullException(nameof(serviceFixture));
+        }
 
         [Fact]
-        public void Providing_a_null_repository_implementation_in_constructor_throws_an_exception()
+        public void Providing_a_null_repository_in_constructor_throws_an_exception()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new CreatePersonHandler(null));
+            void action() => _ = new CreatePersonHandler(null, ServiceFixture.Dummy);
+            var exception = Assert.Throws<ArgumentNullException>(action);
+
+            exception.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Providing_a_null_translator_in_constructor_throws_an_exception()
+        {
+            void action() => _ = new CreatePersonHandler(DataFixture.Dummy, null);
+            var exception = Assert.Throws<ArgumentNullException>(action);
 
             exception.Should().NotBeNull();
         }
@@ -36,8 +53,13 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         [Fact]
         public async Task Providing_a_null_command_throws_an_exception()
         {
-            var handler = new CreatePersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => handler.RunAsync(null)).ConfigureAwait(false);
+            Task<bool> function()
+            {
+                var handler = new CreatePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
+
+                return handler.RunAsync(null);
+            }
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(function).ConfigureAwait(false);
 
             exception.Should().NotBeNull();
         }
@@ -45,8 +67,13 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         [Fact]
         public async Task Providing_an_invalid_command_throws_an_exception()
         {
-            var handler = new CreatePersonHandler(Fixture.Dummy);
-            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(new CreatePersonCommand())).ConfigureAwait(false);
+            Task<bool> function()
+            {
+                var handler = new CreatePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
+
+                return handler.RunAsync(new CreatePersonCommand());
+            }
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
 
             exception.Should().NotBeNull();
         }
@@ -54,25 +81,44 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         [Fact]
         public async Task Providing_valid_but_existing_command_values_throws_an_exception()
         {
-            var mock = new Mock<IPersonRepository>();
-            mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ReturnsAsync(true);
-            var handler = new CreatePersonHandler(mock.Object);
-
-            var command = new CreatePersonCommand()
+            Task<bool> function()
             {
-                Birthdate = Birthdate,
-                Firstname = Firstname,
-                Lastname = Lastname
-            };
-            var exception = await Assert.ThrowsAsync<EntityValidationException>(() => handler.RunAsync(command)).ConfigureAwait(false);
+                var mock = new Mock<IPersonRepository>();
+                mock.Setup(m => m.ExistAsync(It.IsAny<Person>())).ReturnsAsync(true);
+                var handler = new CreatePersonHandler(mock.Object, ServiceFixture.Dummy);
+
+                var command = new CreatePersonCommand()
+                {
+                    Birthdate = Birthdate,
+                    Firstname = Firstname,
+                    Lastname = Lastname
+                };
+
+                return handler.RunAsync(command);
+            }
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
 
             exception.Should().NotBeNull();
         }
 
         [Fact]
+        public async Task Providing_an_invalid_command_to_run_returns_all_raised_error_messages_through_the_thrown_exception()
+        {
+            Task<bool> function()
+            {
+                var handler = new CreatePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
+
+                return handler.RunAsync(new CreatePersonCommand());
+            }
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
+
+            exception.Errors.Count().Should().Be(3);
+        }
+
+        [Fact]
         public async Task Successfully_handling_a_command_returns_true()
         {
-            var handler = new CreatePersonHandler(Fixture.Dummy);
+            var handler = new CreatePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
             var command = new CreatePersonCommand()
             {
                 Birthdate = Birthdate,

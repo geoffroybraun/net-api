@@ -78,7 +78,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.AuthenticateUsers
         }
 
         [Fact]
-        public async Task Providing_an_invalid_query_when_getting_a_user_returns_all_raised_error_messages_through_the_thrown_exception()
+        public async Task Providing_an_invalid_query_to_execute_returns_all_raised_error_messages_through_the_thrown_exception()
         {
             Task<AuthenticateUserDto> function()
             {

@@ -17,7 +17,7 @@ namespace GB.NetApi.Application.Services.Commands.Persons
 
         public string Lastname { get; init; }
 
-        public DateTime Birthdate { get; init; }
+        public DateTime Birthdate { get; init; } = DateTime.MaxValue;
 
         #endregion
 

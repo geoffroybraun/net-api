@@ -25,7 +25,7 @@ namespace GB.NetApi.Domain.Services.Validators
         {
             if (value.IsInferiorOrEqualTo(other))
             {
-                SendErrorMessageEvent("IntegerIsSuperiorTo", new object[] { propertyName, other });
+                SendErrorMessageEvent("IntegerMustBeSuperiorTo", new object[] { propertyName, other });
 
                 return false;
             }
@@ -62,7 +62,7 @@ namespace GB.NetApi.Domain.Services.Validators
         {
             if (value.IsSuperiorTo(other))
             {
-                SendErrorMessageEvent("DateTimeIsSuperiorTo", new object[] { propertyName, other });
+                SendErrorMessageEvent("DateTimeMustBeInferiorOrEqualTo", new object[] { propertyName, other });
 
                 return false;
             }
