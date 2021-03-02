@@ -40,7 +40,8 @@ namespace GB.NetApi.Application.WebApi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI((options) => options.SwaggerEndpoint("/swagger/v1/swagger.json", ".Net Api"));
             }
 
             app.UseHttpsRedirection();

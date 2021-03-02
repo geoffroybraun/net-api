@@ -55,8 +55,7 @@ namespace GB.NetApi.Infrastructure.Libraries.Handlers
             var maxRetriesCount = configuration.MaxRetriesCount;
             static TimeSpan retryAttemptFunction(int retryAttempt) => TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt));
 
-            return Policy<TResult>.Handle<Exception>()
-                .WaitAndRetryAsync(maxRetriesCount, retryAttemptFunction);
+            return Policy<TResult>.Handle<Exception>().WaitAndRetryAsync(maxRetriesCount, retryAttemptFunction);
         }
 
         private static IAsyncPolicy<TResult> GetCircuitBreakPolicy<TResult>(TaskHandlerConfiguration configuration)
@@ -64,8 +63,7 @@ namespace GB.NetApi.Infrastructure.Libraries.Handlers
             var maxExceptionsCount = configuration.MaxExceptionsCount;
             var timeBetweenExceptionsTimeSpan = TimeSpan.FromMilliseconds(configuration.TimeBetweenBreaksInMilliseconds);
 
-            return Policy<TResult>.Handle<Exception>()
-                .CircuitBreakerAsync(maxExceptionsCount, timeBetweenExceptionsTimeSpan);
+            return Policy<TResult>.Handle<Exception>().CircuitBreakerAsync(maxExceptionsCount, timeBetweenExceptionsTimeSpan);
         }
 
         private static IAsyncPolicy<TResult> GetTimeoutPolicy<TResult>(TaskHandlerConfiguration configuration)

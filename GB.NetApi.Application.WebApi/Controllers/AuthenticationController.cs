@@ -5,6 +5,7 @@ using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Infrastructure.Database.DAOs.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,12 @@ namespace GB.NetApi.Application.WebApi.Controllers
 
         #endregion
 
+        /// <summary>
+        /// Instanciates a new <see cref="AuthenticationController"/>
+        /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> implementation to use</param>
+        /// <param name="manager">THe <see cref="UserManager{UserDao}"/> to use when authenticating</param>
+        /// <param name="configuration">The <see cref="JwtTokenConfiguration"/> to use when generating a token</param>
         public AuthenticationController(IMediator mediator, UserManager<UserDao> manager, JwtTokenConfiguration configuration) : base(mediator)
         {
             Manager = manager ?? throw new ArgumentNullException(nameof(manager));
@@ -45,6 +52,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <returns>The generated token</returns>
         [Route("login")]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> LoginAsync([FromBody] LoginRequest request)
         {
             if (!await IsValidAsync(request))

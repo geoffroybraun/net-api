@@ -3,6 +3,7 @@ using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.Persons;
 using GB.NetApi.Application.WebApi.Authorizations;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -14,8 +15,13 @@ namespace GB.NetApi.Application.WebApi.Controllers
     [Route("persons")]
     [ApiController]
     [Permission("ReadPerson")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public sealed class PersonController : BaseController
     {
+        /// <summary>
+        /// Instanciate a new <see cref="PersonController"/>
+        /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> implementation to use</param>
         public PersonController(IMediator mediator) : base(mediator) { }
 
         /// <summary>
@@ -25,6 +31,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <returns>True if the <see cref="PersonDto"/> has been successfully created, otherwise false</returns>
         [HttpPut]
         [Permission("WritePerson")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> CreateAsync(CreatePersonCommand command)
         {
             var result = await RunAsync(command).ConfigureAwait(false);
@@ -38,8 +46,10 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="ID">The <see cref="PersonDto"/> ID to delete</param>
         /// <returns></returns>
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{ID}")]
         [Permission("WritePerson")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteAsync(int ID)
         {
             var result = await RunAsync(new DeletePersonCommand() { ID = ID }).ConfigureAwait(false);
@@ -53,6 +63,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="query">The query to execute</param>
         /// <returns>All filtered <see cref="PersonDto"/></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> FilterAsync(FilterPersonQuery query)
         {
             var result = await ExecuteAsync(query).ConfigureAwait(false);
@@ -63,10 +75,13 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <summary>
         /// Retrieve a <see cref="PersonDto"/> using its ID
         /// </summary>
-        /// <param name="query">The <see cref="PersonDto"/> ID to look for</param>
+        /// w<param name="ID">The <see cref="PersonDto"/> ID to look for</param>
         /// <returns>The found <see cref="PersonDto"/></returns>
         [HttpGet]
-        [Route("{id}")]
+        [Route("{ID}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetAsync(int ID)
         {
             var result = await ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
@@ -79,6 +94,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// </summary>
         /// <returns>All stored <see cref="PersonDto"/></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> ListAsync()
         {
             var result = await ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
@@ -93,8 +110,10 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// <param name="command">The command to run</param>
         /// <returns>True if the <see cref="PersonDto"/> has been successfully updated, otherwise false</returns>
         [HttpPut]
-        [Route("{id}")]
+        [Route("{ID}")]
         [Permission("WritePerson")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateAsync(int ID, [FromBody] UpdatePersonCommand command)
         {
             if (ID != command.ID)

@@ -13,6 +13,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
     /// Represents an abstract controller which provides useful methods to deriving classes
     /// </summary>
     [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public abstract class BaseController : ControllerBase
     {
         #region Fields
@@ -21,6 +22,10 @@ namespace GB.NetApi.Application.WebApi.Controllers
 
         #endregion
 
+        /// <summary>
+        /// Instanciates a deriving class
+        /// </summary>
+        /// <param name="mediator">The <see cref="IMediator"/> implementation to use</param>
         protected BaseController(IMediator mediator) => Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         /// <summary>
