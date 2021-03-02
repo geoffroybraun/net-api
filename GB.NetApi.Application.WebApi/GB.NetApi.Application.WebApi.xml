@@ -74,11 +74,12 @@
             Executes an action related to the authentication process
             </summary>
         </member>
-        <member name="M:GB.NetApi.Application.WebApi.Controllers.AuthenticationController.#ctor(MediatR.IMediator,Microsoft.AspNetCore.Identity.UserManager{GB.NetApi.Infrastructure.Database.DAOs.Identity.UserDao},GB.NetApi.Application.WebApi.Models.JwtTokenConfiguration)">
+        <member name="M:GB.NetApi.Application.WebApi.Controllers.AuthenticationController.#ctor(MediatR.IMediator,GB.NetApi.Domain.Models.Interfaces.Services.ITranslator,Microsoft.AspNetCore.Identity.UserManager{GB.NetApi.Infrastructure.Database.DAOs.Identity.UserDao},GB.NetApi.Application.WebApi.Models.JwtTokenConfiguration)">
             <summary>
             Instanciates a new <see cref="T:GB.NetApi.Application.WebApi.Controllers.AuthenticationController"/>
             </summary>
             <param name="mediator">The <see cref="T:MediatR.IMediator"/> implementation to use</param>
+            <param name="translator">The <see cref="T:GB.NetApi.Domain.Models.Interfaces.Services.ITranslator"/> implementation to use</param>
             <param name="manager">THe <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/> to use when authenticating</param>
             <param name="configuration">The <see cref="T:GB.NetApi.Application.WebApi.Models.JwtTokenConfiguration"/> to use when generating a token</param>
         </member>
@@ -94,11 +95,12 @@
             Represents an abstract controller which provides useful methods to deriving classes
             </summary>
         </member>
-        <member name="M:GB.NetApi.Application.WebApi.Controllers.BaseController.#ctor(MediatR.IMediator)">
+        <member name="M:GB.NetApi.Application.WebApi.Controllers.BaseController.#ctor(MediatR.IMediator,GB.NetApi.Domain.Models.Interfaces.Services.ITranslator)">
             <summary>
             Instanciates a deriving class
             </summary>
             <param name="mediator">The <see cref="T:MediatR.IMediator"/> implementation to use</param>
+            <param name="translator">The <see cref="T:GB.NetApi.Domain.Models.Interfaces.Services.ITranslator"/> implementation to use</param>
         </member>
         <member name="M:GB.NetApi.Application.WebApi.Controllers.BaseController.InternalServerError">
             <summary>
@@ -127,11 +129,12 @@
             Execute an action related to the <see cref="T:GB.NetApi.Application.Services.DTOs.PersonDto"/>
             </summary>
         </member>
-        <member name="M:GB.NetApi.Application.WebApi.Controllers.PersonController.#ctor(MediatR.IMediator)">
+        <member name="M:GB.NetApi.Application.WebApi.Controllers.PersonController.#ctor(MediatR.IMediator,GB.NetApi.Domain.Models.Interfaces.Services.ITranslator)">
             <summary>
             Instanciate a new <see cref="T:GB.NetApi.Application.WebApi.Controllers.PersonController"/>
             </summary>
             <param name="mediator">The <see cref="T:MediatR.IMediator"/> implementation to use</param>
+            <param name="translator">The <see cref="T:GB.NetApi.Domain.Models.Interfaces.Services.ITranslator"/> implementation to use</param>
         </member>
         <member name="M:GB.NetApi.Application.WebApi.Controllers.PersonController.CreateAsync(GB.NetApi.Application.Services.Commands.Persons.CreatePersonCommand)">
             <summary>

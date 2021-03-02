@@ -2,6 +2,7 @@
 using GB.NetApi.Application.Services.Queries.AuthenticateUsers;
 using GB.NetApi.Application.WebApi.Models;
 using GB.NetApi.Domain.Models.Exceptions;
+using GB.NetApi.Domain.Models.Interfaces.Services;
 using GB.NetApi.Infrastructure.Database.DAOs.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -37,9 +38,10 @@ namespace GB.NetApi.Application.WebApi.Controllers
         /// Instanciates a new <see cref="AuthenticationController"/>
         /// </summary>
         /// <param name="mediator">The <see cref="IMediator"/> implementation to use</param>
+        /// <param name="translator">The <see cref="ITranslator"/> implementation to use</param>
         /// <param name="manager">THe <see cref="UserManager{UserDao}"/> to use when authenticating</param>
         /// <param name="configuration">The <see cref="JwtTokenConfiguration"/> to use when generating a token</param>
-        public AuthenticationController(IMediator mediator, UserManager<UserDao> manager, JwtTokenConfiguration configuration) : base(mediator)
+        public AuthenticationController(IMediator mediator, ITranslator translator, UserManager<UserDao> manager, JwtTokenConfiguration configuration) : base(mediator, translator)
         {
             Manager = manager ?? throw new ArgumentNullException(nameof(manager));
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -57,7 +59,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         public async Task<ActionResult> LoginAsync([FromBody] LoginRequest request)
         {
             if (!await IsValidAsync(request))
-                throw new EntityValidationException(new[] { $"Request invalid" });
+                throw new EntityValidationException(new[] { Translator.GetString("InvalidRequest") });
 
             var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
             var token = GenerateToken(GetClaimsFromUser(user));

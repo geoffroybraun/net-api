@@ -132,7 +132,19 @@
   <data name="InvalidEmail" xml:space="preserve">
     <value>'{0}' is not a valid email address.</value>
   </data>
+  <data name="InvalidRequest" xml:space="preserve">
+    <value>Invalid request.</value>
+  </data>
+  <data name="NoPersonFound" xml:space="preserve">
+    <value>No person found.</value>
+  </data>
+  <data name="NoPersonWithIDFound" xml:space="preserve">
+    <value>No person with ID {0} found.</value>
+  </data>
   <data name="StringIsNullOrEmptyOrWhiteSpace" xml:space="preserve">
     <value>'{0}' cannot be null or empty.</value>
+  </data>
+  <data name="UnmatchingUpdateCommandID" xml:space="preserve">
+    <value>Command ID should be {0}.</value>
   </data>
 </root>

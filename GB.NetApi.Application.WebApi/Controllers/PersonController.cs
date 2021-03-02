@@ -2,6 +2,7 @@
 using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.Persons;
 using GB.NetApi.Application.WebApi.Authorizations;
+using GB.NetApi.Domain.Models.Interfaces.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,14 @@ namespace GB.NetApi.Application.WebApi.Controllers
     [Route("persons")]
     [ApiController]
     [Permission("ReadPerson")]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public sealed class PersonController : BaseController
     {
         /// <summary>
         /// Instanciate a new <see cref="PersonController"/>
         /// </summary>
         /// <param name="mediator">The <see cref="IMediator"/> implementation to use</param>
-        public PersonController(IMediator mediator) : base(mediator) { }
+        /// <param name="translator">The <see cref="ITranslator"/> implementation to use</param>
+        public PersonController(IMediator mediator, ITranslator translator) : base(mediator, translator) { }
 
         /// <summary>
         /// Create a <see cref="PersonDto"/>
@@ -69,7 +70,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         {
             var result = await ExecuteAsync(query).ConfigureAwait(false);
 
-            return result is not null ? Ok(result) : NotFound("No person found");
+            return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonFound"));
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         {
             var result = await ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
 
-            return result is not null ? Ok(result) : NotFound($"No person with ID {ID} found.");
+            return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonWithIDFound", new[] { ID }));
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         {
             var result = await ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
 
-            return result is not null ? Ok(result) : NotFound("No person found");
+            return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonFound"));
         }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         public async Task<ActionResult> UpdateAsync(int ID, [FromBody] UpdatePersonCommand command)
         {
             if (ID != command.ID)
-                return BadRequest("Command ID does not match the URI");
+                return BadRequest(Translator.GetString("UnmatchingUpdateCommandID", new[] { ID }));
 
             var result = await RunAsync(command).ConfigureAwait(false);
 

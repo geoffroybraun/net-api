@@ -106,11 +106,47 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Invalid request..
+        /// </summary>
+        internal static string InvalidRequest {
+            get {
+                return ResourceManager.GetString("InvalidRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à No person found..
+        /// </summary>
+        internal static string NoPersonFound {
+            get {
+                return ResourceManager.GetString("NoPersonFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à No person with ID {0} found..
+        /// </summary>
+        internal static string NoPersonWithIDFound {
+            get {
+                return ResourceManager.GetString("NoPersonWithIDFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; cannot be null or empty..
         /// </summary>
         internal static string StringIsNullOrEmptyOrWhiteSpace {
             get {
                 return ResourceManager.GetString("StringIsNullOrEmptyOrWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Command ID should be {0}..
+        /// </summary>
+        internal static string UnmatchingUpdateCommandID {
+            get {
+                return ResourceManager.GetString("UnmatchingUpdateCommandID", resourceCulture);
             }
         }
     }

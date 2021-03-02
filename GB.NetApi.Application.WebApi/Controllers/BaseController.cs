@@ -1,6 +1,7 @@
 ﻿using GB.NetApi.Application.Services.Interfaces.Commands;
 using GB.NetApi.Application.Services.Interfaces.Queries;
 using GB.NetApi.Application.WebApi.Models.ObjectResults;
+using GB.NetApi.Domain.Models.Interfaces.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,11 +23,22 @@ namespace GB.NetApi.Application.WebApi.Controllers
 
         #endregion
 
+        #region Properties
+
+        protected readonly ITranslator Translator;
+
+        #endregion
+
         /// <summary>
         /// Instanciates a deriving class
         /// </summary>
         /// <param name="mediator">The <see cref="IMediator"/> implementation to use</param>
-        protected BaseController(IMediator mediator) => Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        /// <param name="translator">The <see cref="ITranslator"/> implementation to use</param>
+        protected BaseController(IMediator mediator, ITranslator translator)
+        {
+            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            Translator = translator ?? throw new ArgumentNullException(nameof(translator));
+        }
 
         /// <summary>
         /// Creates a <see cref="InternalServerErrorResult"/> object that produces a <see cref="StatusCodes.Status500InternalServerError"/> response
