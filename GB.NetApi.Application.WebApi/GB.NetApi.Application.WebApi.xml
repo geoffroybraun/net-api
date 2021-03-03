@@ -183,17 +183,36 @@
             <param name="command">The command to run</param>
             <returns>True if the <see cref="T:GB.NetApi.Application.Services.DTOs.PersonDto"/> has been successfully updated, otherwise false</returns>
         </member>
-        <member name="T:GB.NetApi.Application.WebApi.Extensions.IServicesCollectionExtension">
+        <member name="T:GB.NetApi.Application.WebApi.Extensions.IServiceCollectionExtension">
             <summary>
             Extends an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> implementation
             </summary>
         </member>
-        <member name="M:GB.NetApi.Application.WebApi.Extensions.IServicesCollectionExtension.ConfigureWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:GB.NetApi.Application.WebApi.Extensions.IServiceCollectionExtension.ConfigureWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Call all <see cref="T:GB.NetApi.Application.WebApi.Interfaces.IWebApiConfiguration"/> implementation within the assembly
             </summary>
             <param name="services">The extended <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> implementation</param>
             <param name="configuration">The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> implementation</param>
+        </member>
+        <member name="T:GB.NetApi.Application.WebApi.Extensions.IServiceProviderExtension">
+            <summary>
+            Extends a <see cref="T:System.IServiceProvider"/> implementation
+            </summary>
+        </member>
+        <member name="M:GB.NetApi.Application.WebApi.Extensions.IServiceProviderExtension.TryGetService``1(System.IServiceProvider,``0@)">
+            <summary>
+            Try getting a service from the extended <see cref="T:System.IServiceProvider"/> implementation
+            </summary>
+            <typeparam name="TService">The service type to look for</typeparam>
+            <param name="provider">The extended <see cref="T:System.IServiceProvider"/> implementation where to look for the service</param>
+            <param name="service">The found service if any</param>
+            <returns>True if a service has been found, otherwise false</returns>
+        </member>
+        <member name="T:GB.NetApi.Application.WebApi.Filters.ActionLogFilter">
+            <summary>
+            Represents a filter which logs a message for every called controller action
+            </summary>
         </member>
         <member name="T:GB.NetApi.Application.WebApi.Filters.ExceptionFilter">
             <summary>
