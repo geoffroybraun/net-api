@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace GB.NetApi.Application.WebApi
 {
@@ -7,10 +8,11 @@ namespace GB.NetApi.Application.WebApi
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Host.CreateDefaultBuilder(args)
+                .ConfigureLogging((builder) => builder.ClearProviders())
+                .ConfigureWebHostDefaults((builder) => builder.UseStartup<Startup>())
+                .Build()
+                .Run();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }
