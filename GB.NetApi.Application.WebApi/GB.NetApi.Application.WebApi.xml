@@ -34,6 +34,11 @@
             Configure the authorization process for the application
             </summary>
         </member>
+        <member name="T:GB.NetApi.Application.WebApi.Configurations.CorsPolicyConfiguration">
+            <summary>
+            COnfigure the CORS policy for the application
+            </summary>
+        </member>
         <member name="T:GB.NetApi.Application.WebApi.Configurations.FiltersConfiguration">
             <summary>
             Configure all required filters
@@ -226,6 +231,11 @@
             </summary>
             <param name="services">The current <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> implementation</param>
             <param name="configuration">The current <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> implementation</param>
+        </member>
+        <member name="T:GB.NetApi.Application.WebApi.Models.CorsConfiguration">
+            <summary>
+            Represents the required configuration for the CORS policy
+            </summary>
         </member>
         <member name="T:GB.NetApi.Application.WebApi.Models.JwtTokenConfiguration">
             <summary>

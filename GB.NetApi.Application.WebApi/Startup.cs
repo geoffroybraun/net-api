@@ -44,6 +44,7 @@ namespace GB.NetApi.Application.WebApi
                 app.UseSwaggerUI((options) => options.SwaggerEndpoint("/swagger/v1/swagger.json", ".Net Api"));
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseRequestLocalization();
             app.UseRouting();
