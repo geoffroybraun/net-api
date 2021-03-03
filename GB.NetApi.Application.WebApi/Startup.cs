@@ -1,5 +1,6 @@
 using GB.NetApi.Application.Services.Handlers.Persons;
 using GB.NetApi.Application.WebApi.Extensions;
+using GB.NetApi.Application.WebApi.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,8 @@ namespace GB.NetApi.Application.WebApi
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseExceptionHandler((options) => options.Run(ExceptionMiddleware.RequestDelegate));
+
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
