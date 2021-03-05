@@ -15,7 +15,7 @@ namespace GB.NetApi.Application.WebApi.Filters
         #region Fields
 
         private const string ActionLogFilterWatch = "ActionLogFilterWatch";
-        private const string DefaultMessage = "Controller: '{0}' | Action: '{1}' [{2}ms]";
+        private const string MessageLayout = "Controller: '{0}' | Action: '{1}' [{2}ms]";
 
         #endregion
 
@@ -30,7 +30,7 @@ namespace GB.NetApi.Application.WebApi.Filters
             var elapsed = watch.Elapsed.TotalMilliseconds;
             var controllerName = context.Controller.GetType().FullName;
             var methodName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName;
-            var message = string.Format(DefaultMessage, controllerName, methodName, elapsed);
+            var message = string.Format(MessageLayout, controllerName, methodName, elapsed);
 
             logger.Log(ELogLevel.Information, message);
         }
