@@ -11,6 +11,8 @@ namespace GB.NetApi.Application.WebApi.Controllers
     /// Represents an abstract controller which provides useful methods to deriving classes
     /// </summary>
     [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public abstract class BaseController : ControllerBase
     {
