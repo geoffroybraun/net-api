@@ -1,5 +1,5 @@
 ﻿using GB.NetApi.Domain.Models.Enums;
-using System;
+using System.Runtime.CompilerServices;
 
 namespace GB.NetApi.Domain.Models.Interfaces.Libraries
 {
@@ -11,9 +11,10 @@ namespace GB.NetApi.Domain.Models.Interfaces.Libraries
         /// <summary>
         /// Writes a message linked to a level
         /// </summary>
-        /// <param name="callingClassType">The type of the class logging a message</param>
         /// <param name="logLevel">The <see cref="ELogLevel"/> to link the message to</param>
         /// <param name="message">The message to write</param>
-        void Log(Type callingClassType, ELogLevel logLevel, string message);
+        /// <param name="callerFilePath">The file path of the calling class</param>
+        /// <param name="callerMemberName">The name of the calling class method</param>
+        void Log(ELogLevel logLevel, string message, [CallerFilePath] string callerFilePath = null, [CallerMemberName] string callerMemberName = null);
     }
 }

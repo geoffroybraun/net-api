@@ -1,1 +1,0 @@
-2021-03-03 22:24:56.1903|GB.NetApi.Application.WebApi.Controllers.AuthenticationController|4612|4|INFO > Action 'Login' called [1,4347ms]

@@ -1,7 +1,9 @@
 ﻿using GB.NetApi.Application.WebApi.Formatters;
 using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
 using GB.NetApi.Application.WebApi.Models;
+using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Infrastructure.Database.Contexts;
+using GB.NetApi.Infrastructure.Libraries.Loggers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -156,6 +158,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
                     {
                         services.RemoveAll(typeof(Func<BaseDbContext>));
                         services.AddScoped<Func<BaseDbContext>>((provider) => () => new DummyDbContext());
+
+                        services.RemoveAll(typeof(ILogger));
+                        services.AddSingleton<ILogger, DebugLogger>();
 
                         services.RemoveAll(typeof(T));
                         services.AddScoped((provider) => mock);

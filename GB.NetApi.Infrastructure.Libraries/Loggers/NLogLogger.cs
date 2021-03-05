@@ -3,8 +3,9 @@ using NLog;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
-using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace GB.NetApi.Infrastructure.Libraries.Loggers
 {
@@ -15,47 +16,41 @@ namespace GB.NetApi.Infrastructure.Libraries.Loggers
     {
         #region Fields
 
-        private const string DefaultLayout = "${longdate}|${logger}|${processid}|${threadid}|${uppercase:${level}} > ${message}${exception:format=tostring}";
+        private const string DefaultLayout = "${longdate}|${processid}|${threadid}|${logger:shortname=true}|${uppercase:${level}} > ${message}${exception:format=tostring}";
         private const string DefaultDirectory = @".\Logs\";
         private static readonly string ArchivesDirectory = $@"{DefaultDirectory}\Archives\";
-        private static readonly IDictionary<Type, Logger> Loggers = new Dictionary<Type, Logger>();
+        private static readonly IDictionary<string, Logger> Loggers = new Dictionary<string, Logger>();
+        private static readonly IDictionary<ELogLevel, LogLevel> MatchingLevels = new Dictionary<ELogLevel, LogLevel>
+        {
+            { ELogLevel.Error, LogLevel.Error },
+            { ELogLevel.Fatal, LogLevel.Fatal },
+            { ELogLevel.Information, LogLevel.Info },
+            { ELogLevel.Warning, LogLevel.Warn },
+        };
 
         #endregion
 
         public NLogLogger() => LogManager.Setup().LoadConfiguration(Configure);
 
-        public void Log(Type callingClassType, ELogLevel logLevel, string message)
+        public void Log(ELogLevel logLevel, string message, [CallerFilePath] string callerFilePath = null, [CallerMemberName] string callerMemberName = null)
         {
-            var logger = GetLogger(callingClassType);
-
-            switch (logLevel)
-            {
-                case ELogLevel.Information:
-                    logger.Info(message);
-                    break;
-                case ELogLevel.Warning:
-                    logger.Warn(message);
-                    break;
-                case ELogLevel.Error:
-                    logger.Error(message);
-                    break;
-                case ELogLevel.Fatal:
-                    logger.Fatal(message);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(logLevel));
-            }
+            var logger = GetLogger(callerFilePath, callerMemberName);
+            var logEvent = new LogEventInfo(MatchingLevels[logLevel], logger.Name, message);
+            logger.Log(GetType(), logEvent);
         }
 
         #region Private methods
 
-        private static Logger GetLogger(Type callingClassType)
+        private static Logger GetLogger(string callerFilePath, string callerMemberName)
         {
-            if (Loggers.TryGetValue(callingClassType, out Logger logger))
+            var callerTypeName = Path.GetFileNameWithoutExtension(callerFilePath);
+            var loggerName = $"{callerTypeName}|{callerMemberName}";
+
+            if (Loggers.TryGetValue(loggerName, out Logger logger))
                 return logger;
 
-            logger = LogManager.GetLogger(callingClassType.FullName);
-            Loggers.Add(callingClassType, logger);
+            logger = LogManager.GetLogger(loggerName);
+            Loggers.Add(loggerName, logger);
 
             return logger;
         }
