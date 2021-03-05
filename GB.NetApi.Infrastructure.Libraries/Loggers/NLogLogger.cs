@@ -13,7 +13,7 @@ namespace GB.NetApi.Infrastructure.Libraries.Loggers
     /// <summary>
     /// Represents a logger which encapsulates the NLog Nuget package
     /// </summary>
-    public sealed class NLogLogger : Domain.Models.Interfaces.Libraries.ILogger
+    public sealed class NLogLogger : Domain.Models.Interfaces.Libraries.ILogger, IDisposable
     {
         #region Fields
 
@@ -28,10 +28,30 @@ namespace GB.NetApi.Infrastructure.Libraries.Loggers
             { ELogLevel.Information, LogLevel.Info },
             { ELogLevel.Warning, LogLevel.Warn },
         };
+        private bool HasDisposed;
 
         #endregion
 
-        public NLogLogger() => LogManager.Setup().LoadConfiguration(Configure);
+        public NLogLogger()
+        {
+            LogManager.Setup().LoadConfiguration(Configure);
+            HasDisposed = false;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Dispose(bool isDisposing)
+        {
+            if (!isDisposing || HasDisposed)
+                return;
+
+            LogManager.Shutdown();
+            HasDisposed = true;
+        }
 
         public void Log(ELogLevel logLevel, string message, [CallerFilePath] string callerFilePath = null, [CallerMemberName] string callerMemberName = null)
         {
