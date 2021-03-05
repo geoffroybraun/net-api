@@ -1,7 +1,9 @@
-﻿using GB.NetApi.Application.WebApi.Models.ObjectResults;
-using GB.NetApi.Domain.Models.Enums;
+﻿using GB.NetApi.Application.Services.Commands.Logs;
+using GB.NetApi.Application.WebApi.Extensions;
+using GB.NetApi.Application.WebApi.Models.ObjectResults;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Libraries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -14,23 +16,17 @@ namespace GB.NetApi.Application.WebApi.Filters
     /// </summary>
     public sealed class ExceptionFilter : IAsyncExceptionFilter, IExceptionFilter
     {
-        #region Fields
+        public void OnException(ExceptionContext context) => Task.Run(() => OnExceptionAsync(context));
 
-        private const string BadRequestMessageLayout = "Bad request in action '{0}' of controller '{1}': {2}";
-
-        #endregion
-
-        public void OnException(ExceptionContext context)
+        public async Task OnExceptionAsync(ExceptionContext context)
         {
-            context.Result = GetResultFromContextException(context);
+            context.Result = await GetResultFromContextException(context).ConfigureAwait(false);
             context.ExceptionHandled = true;
         }
 
-        public async Task OnExceptionAsync(ExceptionContext context) => await Task.Run(() => OnException(context)).ConfigureAwait(false);
-
         #region Priate methods
 
-        private static ObjectResult GetResultFromContextException(ExceptionContext context)
+        private static async Task<ObjectResult> GetResultFromContextException(ExceptionContext context)
         {
             var logger = context.HttpContext.RequestServices.GetService(typeof(ILogger)) as ILogger;
 
@@ -38,13 +34,15 @@ namespace GB.NetApi.Application.WebApi.Filters
             {
                 var validationException = context.Exception as EntityValidationException;
 
-                if (logger is not null)
+                if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
                 {
-                    var actionName = context.HttpContext.Request.RouteValues["action"];
-                    var controllerName = context.HttpContext.Request.RouteValues["controller"];
-                    var message = string.Format(BadRequestMessageLayout, actionName, controllerName, string.Join(" | ", validationException.Errors));
-
-                    logger.Log(ELogLevel.Warning, message);
+                    var command = new CreateBadRequestLogCommand()
+                    {
+                        ActionName = context.HttpContext.Request.RouteValues["action"].ToString(),
+                        ControllerName = context.HttpContext.Request.RouteValues["controller"].ToString(),
+                        Errors = validationException.Errors
+                    };
+                    _ = await mediator.Send(command).ConfigureAwait(false);
                 }
 
                 return new BadRequestObjectResult(validationException.Errors);

@@ -3,26 +3,26 @@
 namespace GB.NetApi.Application.Services.UnitTests.ServicesFixtures
 {
     /// <summary>
-    /// Represents an abstract <see cref="T"/> dummy implementation
+    /// Represents an abstract <see cref="TService"/> dummy implementation
     /// </summary>
-    /// <typeparam name="T">The type to mock</typeparam>
-    public abstract class BaseServiceFixture<T> where T : class
+    /// <typeparam name="TService">The type to mock</typeparam>
+    public abstract class BaseServiceFixture<TService> where TService : class
     {
         #region Fields
 
-        private readonly Mock<T> DummyMock;
+        private readonly Mock<TService> DummyMock;
 
         #endregion
 
         #region Properties
 
-        public T Dummy => DummyMock.Object;
+        public TService Dummy => DummyMock.Object;
 
         #endregion
 
         protected BaseServiceFixture()
         {
-            DummyMock = InitializeDummyMock(new Mock<T>());
+            DummyMock = InitializeDummyMock(new Mock<TService>());
         }
 
         /// <summary>
@@ -30,6 +30,6 @@ namespace GB.NetApi.Application.Services.UnitTests.ServicesFixtures
         /// </summary>
         /// <param name="mock">The mock to set up</param>
         /// <returns>The set up mock</returns>
-        protected abstract Mock<T> InitializeDummyMock(Mock<T> mock);
+        protected abstract Mock<TService> InitializeDummyMock(Mock<TService> mock);
     }
 }

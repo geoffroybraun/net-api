@@ -16,14 +16,9 @@ namespace GB.NetApi.Application.Services.Handlers
     /// <typeparam name="TResult">The command result type to return</typeparam>
     public abstract class BaseCommandHandler<TCommand, TResult> : IRequestHandler<TCommand, TResult> where TCommand : ICommand<TResult>
     {
-        #region Fields
-
-        private readonly ITranslator Translator;
-
-        #endregion
-
         #region Properties
 
+        protected readonly ITranslator Translator;
         protected readonly MessagesCollector Collector;
 
         #endregion

@@ -1,6 +1,6 @@
-﻿using GB.NetApi.Application.WebApi.Extensions;
-using GB.NetApi.Domain.Models.Enums;
-using GB.NetApi.Domain.Models.Interfaces.Libraries;
+﻿using GB.NetApi.Application.Services.Commands.Logs;
+using GB.NetApi.Application.WebApi.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
@@ -13,12 +13,6 @@ namespace GB.NetApi.Application.WebApi.Filters
     /// </summary>
     public sealed class ValidationFilter : IAsyncActionFilter
     {
-        #region Fields
-
-        private const string MessageLayout = "Bad request in action '{0}' of controller '{1}': {2}";
-
-        #endregion
-
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (!context.ModelState.IsValid)
@@ -26,13 +20,15 @@ namespace GB.NetApi.Application.WebApi.Filters
                 var errors = context.ModelState.SelectMany(e => e.Value.Errors.Select(e => e.ErrorMessage));
                 context.Result = new BadRequestObjectResult(errors);
 
-                if (context.HttpContext.RequestServices.TryGetService(out ILogger logger))
+                if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
                 {
-                    var controllerName = context.Controller.GetType().Name;
-                    var actionName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName;
-                    var message = string.Format(MessageLayout, actionName, controllerName, string.Join(" | ", errors));
-
-                    logger.Log(ELogLevel.Warning, message);
+                    var command = new CreateBadRequestLogCommand()
+                    {
+                        ActionName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName,
+                        ControllerName = context.Controller.GetType().Name,
+                        Errors = errors
+                    };
+                    _ = await mediator.Send(command).ConfigureAwait(false);
                 }
 
                 return;
