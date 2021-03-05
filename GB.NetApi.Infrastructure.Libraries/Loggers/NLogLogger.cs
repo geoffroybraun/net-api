@@ -3,6 +3,7 @@ using NLog;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -37,6 +38,15 @@ namespace GB.NetApi.Infrastructure.Libraries.Loggers
             var logger = GetLogger(callerFilePath, callerMemberName);
             var logEvent = new LogEventInfo(MatchingLevels[logLevel], logger.Name, message);
             logger.Log(GetType(), logEvent);
+        }
+
+        public void Log(Exception exception, [CallerFilePath] string callerFilePath = null, [CallerMemberName] string callerMemberName = null)
+        {
+            if (exception.InnerException is not null)
+                Log(exception.InnerException, callerFilePath, callerMemberName);
+
+            var logger = GetLogger(callerFilePath, callerMemberName);
+            logger.Error(exception);
         }
 
         #region Private methods

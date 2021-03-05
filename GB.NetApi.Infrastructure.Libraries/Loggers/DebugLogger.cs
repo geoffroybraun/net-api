@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace GB.NetApi.Infrastructure.Libraries.Loggers
 {
@@ -27,6 +28,19 @@ namespace GB.NetApi.Infrastructure.Libraries.Loggers
                 message);
 
             Debug.WriteLine(message);
+        }
+
+        public void Log(Exception exception, [CallerFilePath] string callerFilePath = null, [CallerMemberName] string callerMemberName = null)
+        {
+            if (exception.InnerException is not null)
+                Log(exception.InnerException, callerFilePath, callerMemberName);
+
+            var builder = new StringBuilder();
+            builder.AppendLine(exception.Message);
+            builder.AppendLine(exception.Source);
+            builder.AppendLine(exception.StackTrace);
+            
+            Log(ELogLevel.Error, builder.ToString(), callerFilePath, callerMemberName);
         }
     }
 }

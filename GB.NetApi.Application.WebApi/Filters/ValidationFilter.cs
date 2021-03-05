@@ -28,7 +28,7 @@ namespace GB.NetApi.Application.WebApi.Filters
 
                 if (context.HttpContext.RequestServices.TryGetService(out ILogger logger))
                 {
-                    var controllerName = context.Controller.GetType().FullName;
+                    var controllerName = context.Controller.GetType().Name;
                     var actionName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName;
                     var message = string.Format(MessageLayout, actionName, controllerName, string.Join(" | ", errors));
 

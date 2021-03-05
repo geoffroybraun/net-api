@@ -28,7 +28,7 @@ namespace GB.NetApi.Application.WebApi.Filters
                 return;
 
             var elapsed = watch.Elapsed.TotalMilliseconds;
-            var controllerName = context.Controller.GetType().FullName;
+            var controllerName = context.Controller.GetType().Name;
             var methodName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName;
             var message = string.Format(MessageLayout, controllerName, methodName, elapsed);
 
