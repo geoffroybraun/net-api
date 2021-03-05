@@ -1,45 +1,37 @@
-﻿using GB.NetApi.Application.WebApi.Extensions;
-using GB.NetApi.Domain.Models.Enums;
-using GB.NetApi.Domain.Models.Interfaces.Libraries;
+﻿using GB.NetApi.Application.Services.Commands.Logs;
+using GB.NetApi.Application.WebApi.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.WebApi.Filters
 {
     /// <summary>
     /// Represents a filter which logs a message for every called controller action
     /// </summary>
-    public sealed class ActionLogFilter : IActionFilter
+    public sealed class ActionLogFilter : IAsyncActionFilter
     {
-        #region Fields
-
-        private const string ActionLogFilterWatch = "ActionLogFilterWatch";
-        private const string MessageLayout = "Controller: '{0}' | Action: '{1}' [{2}ms]";
-
-        #endregion
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            var watch = context.HttpContext.Items[ActionLogFilterWatch] as Stopwatch;
-            watch.Stop();
-
-            if (!context.HttpContext.RequestServices.TryGetService(out ILogger logger))
-                return;
-
-            var elapsed = watch.Elapsed.TotalMilliseconds;
-            var controllerName = context.Controller.GetType().Name;
-            var methodName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName;
-            var message = string.Format(MessageLayout, controllerName, methodName, elapsed);
-
-            logger.Log(ELogLevel.Information, message);
-        }
-
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var watch = new Stopwatch();
             watch.Start();
-            context.HttpContext.Items.Add(ActionLogFilterWatch, watch);
+
+            await next();
+
+            watch.Stop();
+
+            if (!context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
+                return;
+
+            var command = new CreateActionLogCommand()
+            {
+                ActionName = (context.Controller as ControllerBase).ControllerContext.ActionDescriptor.ActionName,
+                ControllerName = context.Controller.GetType().Name,
+                ExecutionTime = watch.Elapsed.TotalMilliseconds
+            };
+            _ = await mediator.Send(command).ConfigureAwait(false);
         }
     }
 }
