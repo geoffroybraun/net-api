@@ -31,7 +31,7 @@ namespace GB.NetApi.Application.WebApi.Filters
                 ControllerName = context.Controller.GetType().Name,
                 ExecutionTime = watch.Elapsed.TotalMilliseconds
             };
-            _ = await mediator.Send(command).ConfigureAwait(false);
+            _ = await mediator.RunAsync(command).ConfigureAwait(false);
         }
     }
 }

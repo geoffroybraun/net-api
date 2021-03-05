@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.WebApi.Filters
@@ -33,17 +34,7 @@ namespace GB.NetApi.Application.WebApi.Filters
             if (context.Exception is EntityValidationException)
             {
                 var validationException = context.Exception as EntityValidationException;
-
-                if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
-                {
-                    var command = new CreateBadRequestLogCommand()
-                    {
-                        ActionName = context.HttpContext.Request.RouteValues["action"].ToString(),
-                        ControllerName = context.HttpContext.Request.RouteValues["controller"].ToString(),
-                        Errors = validationException.Errors
-                    };
-                    _ = await mediator.Send(command).ConfigureAwait(false);
-                }
+                await LogBadRequestAsync(context, validationException.Errors).ConfigureAwait(false);                
 
                 return new BadRequestObjectResult(validationException.Errors);
             }
@@ -52,6 +43,20 @@ namespace GB.NetApi.Application.WebApi.Filters
                 logger.Log(context.Exception);
 
             return new InternalServerErrorObjectResult(GetMessageFromInnerException(context.Exception));
+        }
+
+        private static async Task LogBadRequestAsync(ExceptionContext context, IEnumerable<string> errors)
+        {
+            if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
+            {
+                var command = new CreateBadRequestLogCommand()
+                {
+                    ActionName = context.HttpContext.Request.RouteValues["action"].ToString(),
+                    ControllerName = context.HttpContext.Request.RouteValues["controller"].ToString(),
+                    Errors = errors
+                };
+                _ = await mediator.RunAsync(command).ConfigureAwait(false);
+            }
         }
 
         private static string GetMessageFromInnerException(Exception exception)
