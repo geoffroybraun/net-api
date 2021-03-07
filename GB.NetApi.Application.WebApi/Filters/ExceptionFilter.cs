@@ -2,7 +2,6 @@
 using GB.NetApi.Application.WebApi.Extensions;
 using GB.NetApi.Application.WebApi.Models.ObjectResults;
 using GB.NetApi.Domain.Models.Exceptions;
-using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -29,8 +28,6 @@ namespace GB.NetApi.Application.WebApi.Filters
 
         private static async Task<ObjectResult> GetResultFromContextException(ExceptionContext context)
         {
-            var logger = context.HttpContext.RequestServices.GetService(typeof(ILogger)) as ILogger;
-
             if (context.Exception is EntityValidationException)
             {
                 var validationException = context.Exception as EntityValidationException;
@@ -39,8 +36,7 @@ namespace GB.NetApi.Application.WebApi.Filters
                 return new BadRequestObjectResult(validationException.Errors);
             }
 
-            if (logger is not null)
-                logger.Log(context.Exception);
+            await LogExceptionAsync(context).ConfigureAwait(false);
 
             return new InternalServerErrorObjectResult(GetMessageFromInnerException(context.Exception));
         }
@@ -55,6 +51,15 @@ namespace GB.NetApi.Application.WebApi.Filters
                     ControllerName = context.HttpContext.Request.RouteValues["controller"].ToString(),
                     Errors = errors
                 };
+                _ = await mediator.RunAsync(command).ConfigureAwait(false);
+            }
+        }
+
+        private static async Task LogExceptionAsync(ExceptionContext context)
+        {
+            if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
+            {
+                var command = new CreateExceptionLogCommand() { Exception = context.Exception };
                 _ = await mediator.RunAsync(command).ConfigureAwait(false);
             }
         }

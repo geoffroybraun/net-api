@@ -23,6 +23,8 @@ namespace GB.NetApi.Application.Services.Handlers
 
         #endregion
 
+        protected BaseCommandHandler() { }
+
         protected BaseCommandHandler(ITranslator translator)
         {
             Translator = translator ?? throw new ArgumentNullException(nameof(translator));
