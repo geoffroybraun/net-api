@@ -54,6 +54,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
         {
             new ResourceDao() { ID = 1, Name = "Application" },
             new ResourceDao() { ID = 2, Name = "Person" },
+            new ResourceDao() { ID = 3, Name = "HealthCheck" },
         };
 
         private static IEnumerable<PermissionDao> PermissionDaos => new[]
@@ -62,6 +63,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new PermissionDao() { ID = 2, ResourceID = 2, OperationID = 2 },
             new PermissionDao() { ID = 3, ResourceID = 2, OperationID = 3 },
             new PermissionDao() { ID = 4, ResourceID = 2, OperationID = 4 },
+            new PermissionDao() { ID = 5, ResourceID = 3, OperationID = 2 },
         };
 
         private static IEnumerable<RoleDao> RoleDaos => new[]
@@ -69,6 +71,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new RoleDao() { Id = "guests", Name = "Guests", NormalizedName = "GUESTS" },
             new RoleDao() { Id = "readers", Name = "Readers", NormalizedName = "READERS" },
             new RoleDao() { Id = "writers", Name = "Writers", NormalizedName = "WRITERS" },
+            new RoleDao() { Id = "supervisers", Name = "Supervisers", NormalizedName = "SUPERVISERS" },
         };
 
         private static IEnumerable<RoleClaimDao> RoleClaimDaos => new[]
@@ -76,14 +79,16 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new RoleClaimDao() { Id = 1, ClaimType = ClaimTypes.Role, ClaimValue = "Guests", RoleId = "guests" },
             new RoleClaimDao() { Id = 2, ClaimType = ClaimTypes.Role, ClaimValue = "Readers", RoleId = "readers" },
             new RoleClaimDao() { Id = 3, ClaimType = ClaimTypes.Role, ClaimValue = "Writers", RoleId = "writers" },
+            new RoleClaimDao() { Id = 4, ClaimType = ClaimTypes.Role, ClaimValue = "Supervisers", RoleId = "supervisers" },
         };
 
         private static IEnumerable<RolePermissionDao> RolePermissionDaos => new[]
         {
             new RolePermissionDao() { ID = 1, RoleID = "guests", PermissionID = 1 },
             new RolePermissionDao() { ID = 2, RoleID = "readers", PermissionID = 2 },
-            new RolePermissionDao() { ID = 5, RoleID = "writers", PermissionID = 3 },
-            new RolePermissionDao() { ID = 6, RoleID = "writers", PermissionID = 4 },
+            new RolePermissionDao() { ID = 3, RoleID = "writers", PermissionID = 3 },
+            new RolePermissionDao() { ID = 4, RoleID = "writers", PermissionID = 4 },
+            new RolePermissionDao() { ID = 5, RoleID = "supervisers", PermissionID = 5 },
         };
 
         private static IEnumerable<UserDao> UserDaos => new[]
@@ -118,6 +123,16 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
                 NormalizedEmail = "WRITER@LOCALHOST.COM",
                 EmailConfirmed = true
             },
+            new UserDao()
+            {
+                Id = "superviser",
+                UserName = "Superviser",
+                NormalizedUserName = "SUPERVISER",
+                PasswordHash = PasswordHasher.HashPassword(null, "superviser"),
+                Email = "superviser@localhost.com",
+                NormalizedEmail = "SUPERVISER@LOCALHOST.COM",
+                EmailConfirmed = true
+            },
         };
 
         private static IEnumerable<UserRoleDao> UserRoleDaos => new[]
@@ -128,6 +143,8 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new UserRoleDao() { UserId = "writer", RoleId = "guests" },
             new UserRoleDao() { UserId = "writer", RoleId = "readers" },
             new UserRoleDao() { UserId = "writer", RoleId = "writers" },
+            new UserRoleDao() { UserId = "superviser", RoleId = "guest" },
+            new UserRoleDao() { UserId = "superviser", RoleId = "supervisers" },
         };
 
         private static IEnumerable<UserClaimDao> UserClaimDaos => new[]
@@ -138,6 +155,8 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             new UserClaimDao() { ClaimType = ClaimTypes.Email, ClaimValue = "reader@localhost.com", UserId = "reader" },
             new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Writer", UserId = "writer" },
             new UserClaimDao() { ClaimType = ClaimTypes.Email, ClaimValue = "writer@localhost.com", UserId = "writer" },
+            new UserClaimDao() { ClaimType = ClaimTypes.Name, ClaimValue = "Superviser", UserId = "superviser" },
+            new UserClaimDao() { ClaimType = ClaimTypes.Email, ClaimValue = "superviser@localhost.com", UserId = "superviser" },
         };
 
         private static IEnumerable<PersonDao> GetPersons()
