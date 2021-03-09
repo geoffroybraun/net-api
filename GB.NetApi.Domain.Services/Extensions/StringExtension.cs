@@ -3,7 +3,7 @@
     /// <summary>
     /// Extends the <see cref="string"/> value type
     /// </summary>
-    public static class StringExtension
+    internal static class StringExtension
     {
         /// <summary>
         /// Indicates if the extended <see cref="string"/> value is not null, nor empty, nor white space

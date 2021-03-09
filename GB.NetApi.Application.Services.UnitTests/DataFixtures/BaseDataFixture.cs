@@ -3,26 +3,26 @@
 namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
 {
     /// <summary>
-    /// Represents an abstract <see cref="T"/> dummy implementation
+    /// Represents an abstract <see cref="TRepository"/> dummy implementation
     /// </summary>
-    /// <typeparam name="T">The type to mock</typeparam>
-    public abstract class BaseDataFixture<T> where T : class
+    /// <typeparam name="TRepository">The type to mock</typeparam>
+    public abstract class BaseDataFixture<TRepository> where TRepository : class
     {
         #region Fields
 
-        private readonly Mock<T> DummyMock;
+        private readonly Mock<TRepository> DummyMock;
 
         #endregion
 
         #region Properties
 
-        public T Dummy => DummyMock.Object;
+        public TRepository Dummy => DummyMock.Object;
 
         #endregion
 
         protected BaseDataFixture()
         {
-            DummyMock = InitializeDummyMock(new Mock<T>());
+            DummyMock = InitializeDummyMock(new Mock<TRepository>());
         }
 
         /// <summary>
@@ -30,6 +30,6 @@ namespace GB.NetApi.Application.Services.UnitTests.DataFixtures
         /// </summary>
         /// <param name="mock">The mock to set up</param>
         /// <returns>The set up mock</returns>
-        protected abstract Mock<T> InitializeDummyMock(Mock<T> mock);
+        protected abstract Mock<TRepository> InitializeDummyMock(Mock<TRepository> mock);
     }
 }

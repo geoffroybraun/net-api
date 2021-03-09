@@ -2,6 +2,7 @@
 using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.Persons;
 using GB.NetApi.Application.WebApi.Authorizations;
+using GB.NetApi.Application.WebApi.Extensions;
 using GB.NetApi.Domain.Models.Interfaces.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -36,7 +37,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> CreateAsync(CreatePersonCommand command)
         {
-            var result = await RunAsync(command).ConfigureAwait(false);
+            var result = await Mediator.RunAsync(command).ConfigureAwait(false);
 
             return result ? NoContent() : InternalServerError();
         }
@@ -53,7 +54,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteAsync(int ID)
         {
-            var result = await RunAsync(new DeletePersonCommand() { ID = ID }).ConfigureAwait(false);
+            var result = await Mediator.RunAsync(new DeletePersonCommand() { ID = ID }).ConfigureAwait(false);
 
             return result ? NoContent() : InternalServerError();
         }
@@ -68,7 +69,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> FilterAsync(FilterPersonQuery query)
         {
-            var result = await ExecuteAsync(query).ConfigureAwait(false);
+            var result = await Mediator.ExecuteAsync(query).ConfigureAwait(false);
 
             return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonFound"));
         }
@@ -85,7 +86,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetAsync(int ID)
         {
-            var result = await ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
+            var result = await Mediator.ExecuteAsync(new GetSinglePersonQuery() { ID = ID }).ConfigureAwait(false);
 
             return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonWithIDFound", new[] { ID }));
         }
@@ -99,7 +100,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> ListAsync()
         {
-            var result = await ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
+            var result = await Mediator.ExecuteAsync(new FilterPersonQuery()).ConfigureAwait(false);
 
             return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonFound"));
         }
@@ -120,7 +121,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
             if (ID != command.ID)
                 return BadRequest(Translator.GetString("UnmatchingUpdateCommandID", new[] { ID }));
 
-            var result = await RunAsync(command).ConfigureAwait(false);
+            var result = await Mediator.RunAsync(command).ConfigureAwait(false);
 
             return result ? NoContent() : InternalServerError();
         }

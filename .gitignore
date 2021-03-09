@@ -271,3 +271,4 @@ FakesAssemblies/
 **/[Oo]bj/**/*.targets
 !**/[Bb]in/**/*.refresh
 **/[Bb]in/**
+*.txt

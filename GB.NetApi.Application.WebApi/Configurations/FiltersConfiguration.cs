@@ -14,6 +14,7 @@ namespace GB.NetApi.Application.WebApi.Configurations
         {
             services.AddMvc((options) =>
             {
+                options.Filters.Add(new ActionLogFilter());
                 options.Filters.Add(new ExceptionFilter());
                 options.Filters.Add(new ValidationFilter());
             });

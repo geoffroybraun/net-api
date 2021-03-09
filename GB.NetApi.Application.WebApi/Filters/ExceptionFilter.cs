@@ -1,8 +1,12 @@
-﻿using GB.NetApi.Application.WebApi.Models.ObjectResults;
+﻿using GB.NetApi.Application.Services.Commands.Logs;
+using GB.NetApi.Application.WebApi.Extensions;
+using GB.NetApi.Application.WebApi.Models.ObjectResults;
 using GB.NetApi.Domain.Models.Exceptions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GB.NetApi.Application.WebApi.Filters
@@ -12,26 +16,52 @@ namespace GB.NetApi.Application.WebApi.Filters
     /// </summary>
     public sealed class ExceptionFilter : IAsyncExceptionFilter, IExceptionFilter
     {
-        public void OnException(ExceptionContext context)
+        public void OnException(ExceptionContext context) => Task.Run(() => OnExceptionAsync(context));
+
+        public async Task OnExceptionAsync(ExceptionContext context)
         {
-            context.Result = GetResultFromContextException(context.Exception);
+            context.Result = await GetResultFromContextException(context).ConfigureAwait(false);
             context.ExceptionHandled = true;
         }
 
-        public async Task OnExceptionAsync(ExceptionContext context) => await Task.Run(() => OnException(context)).ConfigureAwait(false);
-
         #region Priate methods
 
-        private static ObjectResult GetResultFromContextException(Exception exception)
+        private static async Task<ObjectResult> GetResultFromContextException(ExceptionContext context)
         {
-            if (exception is EntityValidationException)
+            if (context.Exception is EntityValidationException)
             {
-                var validationException = exception as EntityValidationException;
+                var validationException = context.Exception as EntityValidationException;
+                await LogBadRequestAsync(context, validationException.Errors).ConfigureAwait(false);                
 
                 return new BadRequestObjectResult(validationException.Errors);
             }
 
-            return new InternalServerErrorObjectResult(GetMessageFromInnerException(exception));
+            await LogExceptionAsync(context).ConfigureAwait(false);
+
+            return new InternalServerErrorObjectResult(GetMessageFromInnerException(context.Exception));
+        }
+
+        private static async Task LogBadRequestAsync(ExceptionContext context, IEnumerable<string> errors)
+        {
+            if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
+            {
+                var command = new CreateBadRequestLogCommand()
+                {
+                    ActionName = context.HttpContext.Request.RouteValues["action"].ToString(),
+                    ControllerName = context.HttpContext.Request.RouteValues["controller"].ToString(),
+                    Errors = errors
+                };
+                _ = await mediator.RunAsync(command).ConfigureAwait(false);
+            }
+        }
+
+        private static async Task LogExceptionAsync(ExceptionContext context)
+        {
+            if (context.HttpContext.RequestServices.TryGetService(out IMediator mediator))
+            {
+                var command = new CreateExceptionLogCommand() { Exception = context.Exception };
+                _ = await mediator.RunAsync(command).ConfigureAwait(false);
+            }
         }
 
         private static string GetMessageFromInnerException(Exception exception)

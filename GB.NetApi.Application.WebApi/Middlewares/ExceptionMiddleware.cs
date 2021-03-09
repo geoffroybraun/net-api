@@ -1,5 +1,8 @@
-﻿using GB.NetApi.Application.WebApi.Formatters;
+﻿using GB.NetApi.Application.Services.Commands.Logs;
+using GB.NetApi.Application.WebApi.Extensions;
+using GB.NetApi.Application.WebApi.Formatters;
 using GB.NetApi.Application.WebApi.Models.ObjectResults;
+using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +27,10 @@ namespace GB.NetApi.Application.WebApi.Middlewares
         public static async Task RequestDelegate(HttpContext context)
         {
             var feature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+            if (context.RequestServices.TryGetService(out IMediator mediator))
+                await mediator.RunAsync(new CreateExceptionLogCommand() { Exception = feature.Error }).ConfigureAwait(false);
+
             var result = new InternalServerErrorObjectResult(feature.Error.Message);
             var encodingName = context.Request.Headers[HeaderNames.AcceptEncoding].ToString();
             await WriteResultInResponseAsync(result, context.Response, context.Request.ContentType, SafelyGetEncoding(encodingName)).ConfigureAwait(false);

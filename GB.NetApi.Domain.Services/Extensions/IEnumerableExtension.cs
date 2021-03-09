@@ -6,7 +6,7 @@ namespace GB.NetApi.Domain.Services.Extensions
     /// <summary>
     /// Extends an <see cref="IEnumerable{T}"/> implementation
     /// </summary>
-    public static class IEnumerableExtension
+    internal static class IEnumerableExtension
     {
         /// <summary>
         /// Indicates if the extended <see cref="IEnumerable{T}"/> implementation is not null nor empty

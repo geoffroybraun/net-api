@@ -6,7 +6,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;CS1591</NoWarn>
-    <DocumentationFile>D:\Documents\Visual Studio 2019\Source\Repos\geoffroybraun\net-api\GB.NetApi.Application.WebApi\GB.NetApi.Application.WebApi.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net5.0\GB.NetApi.Application.WebApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

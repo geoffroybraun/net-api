@@ -61,6 +61,24 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Controller: &apos;{0}&apos; | Action: &apos;{1}&apos; [{2}ms].
+        /// </summary>
+        internal static string ActionLogMessage {
+            get {
+                return ResourceManager.GetString("ActionLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Bad request in action &apos;{0}&apos; of controller &apos;{1}&apos;: {2}..
+        /// </summary>
+        internal static string BadRequestLogMessage {
+            get {
+                return ResourceManager.GetString("BadRequestLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à &apos;{0}&apos; must be inferior or equal to &apos;{1}&apos;..
         /// </summary>
         internal static string DateTimeMustBeInferiorOrEqualTo {

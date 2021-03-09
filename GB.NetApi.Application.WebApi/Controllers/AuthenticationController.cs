@@ -1,5 +1,6 @@
 ﻿using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Queries.AuthenticateUsers;
+using GB.NetApi.Application.WebApi.Extensions;
 using GB.NetApi.Application.WebApi.Models;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Services;
@@ -61,7 +62,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
             if (!await IsValidAsync(request))
                 throw new EntityValidationException(new[] { Translator.GetString("InvalidRequest") });
 
-            var user = await ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
+            var user = await Mediator.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
             var token = GenerateToken(GetClaimsFromUser(user));
 
             return Ok(token);
