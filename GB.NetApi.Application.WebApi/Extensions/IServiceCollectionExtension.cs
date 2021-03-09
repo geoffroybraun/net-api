@@ -9,7 +9,7 @@ namespace GB.NetApi.Application.WebApi.Extensions
     /// <summary>
     /// Extends an <see cref="IServiceCollection"/> implementation
     /// </summary>
-    public static class IServicesCollectionExtension
+    public static class IServiceCollectionExtension
     {
         /// <summary>
         /// Call all <see cref="IWebApiConfiguration"/> implementation within the assembly

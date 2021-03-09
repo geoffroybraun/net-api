@@ -9,7 +9,7 @@ namespace GB.NetApi.Infrastructure.Database.Extensions
     /// <summary>
     /// Extends an <see cref="IEnumerable{RoleClaimDao}"/> implementation
     /// </summary>
-    public static class IEnumerableRoleClaimDaoExtension
+    public static class RoleClaimDaoExtension
     {
         /// <summary>
         /// Retrieve the extended <see cref="IEnumerable{RoleClaimDao}"/> implementation as <see cref="IEnumerable{Claim}"/>

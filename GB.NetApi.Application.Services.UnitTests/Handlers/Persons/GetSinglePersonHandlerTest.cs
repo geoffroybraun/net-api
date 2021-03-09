@@ -29,7 +29,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Providing_a_null_query_to_execute_throws_an_exception()
+        public async Task Providing_a_null_query_throws_an_exception()
         {
             Task<PersonDto> function()
             {
@@ -46,7 +46,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         [InlineData(int.MinValue)]
         [InlineData(-1)]
         [InlineData(0)]
-        public async Task Providing_an_invalid_query_to_execute_throws_an_exception(int id)
+        public async Task Providing_an_invalid_query_throws_an_exception(int id)
         {
             Task<PersonDto> function()
             {

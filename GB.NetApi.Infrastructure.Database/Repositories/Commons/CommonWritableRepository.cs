@@ -26,7 +26,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
         {
             using (var context = Repository.InstanciateContext())
             {
-                Task<int> function() => AddAsync<TEntity, TDao>(context, entity);
+                Task<int> function() => CreateAsync<TEntity, TDao>(context, entity);
                 var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return result == expectedSavedChangesCount;
@@ -67,7 +67,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         #region Private methods
 
-        private async Task<int> AddAsync<TEntity, TDao>(BaseDbContext context, TEntity entity) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        private async Task<int> CreateAsync<TEntity, TDao>(BaseDbContext context, TEntity entity) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
         {
             var dao = new TDao();
             dao.Fill(entity);

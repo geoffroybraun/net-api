@@ -5,7 +5,7 @@ namespace GB.NetApi.Domain.Services.Extensions
     /// <summary>
     /// Extends the <see cref="DateTime"/> value type
     /// </summary>
-    public static class DateTimeExtension
+    internal static class DateTimeExtension
     {
         /// <summary>
         /// Indicates if the extended <see cref="DateTime"/> value is superior to the other one

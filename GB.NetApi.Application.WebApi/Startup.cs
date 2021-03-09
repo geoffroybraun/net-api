@@ -1,5 +1,6 @@
-using GB.NetApi.Application.Services.Handlers.Persons;
+using GB.NetApi.Application.Services.Handlers;
 using GB.NetApi.Application.WebApi.Extensions;
+using GB.NetApi.Application.WebApi.Middlewares;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +29,7 @@ namespace GB.NetApi.Application.WebApi
         {
             services.AddControllers();
             services.ConfigureWebApi(Configuration);
-            services.AddMediatR(typeof(CreatePersonHandler));
+            services.AddMediatR(typeof(BaseCommandHandler<,>));
         }
 
         /// <summary>
@@ -38,16 +39,21 @@ namespace GB.NetApi.Application.WebApi
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseExceptionHandler((options) => options.Run(ExceptionMiddleware.RequestDelegate));
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI((options) => options.SwaggerEndpoint("/swagger/v1/swagger.json", ".Net Api"));
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+            app.UseEndpoints((builder) => builder.MapHealthChecksAndControllers());
         }
     }
 }

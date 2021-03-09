@@ -52,17 +52,7 @@ namespace GB.NetApi.Infrastructure.Database.Contexts
             if (builder is null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.OnOperationDaoCreating();
-            builder.OnPermissionDaoCreating();
-            builder.OnResourceDaoCreating();
-            builder.OnRoleClaimDaoCreating();
-            builder.OnRoleDaoCreating();
-            builder.OnRolePermissionDaoCreating();
-            builder.OnUserClaimDaoCreating();
-            builder.OnUserDaoCreating();
-            builder.OnUserLoginDaoCreating();
-            builder.OnUserRoleDaoCreating();
-            builder.OnUserTokenDaoCreating();
+            builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
             builder.DeactivateDeleteBehavior();
         }
 

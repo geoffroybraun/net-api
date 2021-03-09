@@ -2,41 +2,57 @@
 using GB.NetApi.Application.Services.Commands.Persons;
 using GB.NetApi.Application.Services.Handlers.Persons;
 using GB.NetApi.Application.Services.UnitTests.DataFixtures;
+using GB.NetApi.Application.Services.UnitTests.ServicesFixtures;
 using GB.NetApi.Domain.Models.Exceptions;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
 using Moq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
 {
-    public sealed class DeletePersonHandlerTest : IClassFixture<PersonDataFixture>
+    public sealed class DeletePersonHandlerTest : IClassFixture<PersonDataFixture>, IClassFixture<ResourceTranslatorServiceFixture>
     {
         #region Fields
 
         private const int ID = 1;
-        private readonly PersonDataFixture Fixture;
+        private readonly PersonDataFixture DataFixture;
+        private readonly ResourceTranslatorServiceFixture ServiceFixture;
 
         #endregion
 
-        public DeletePersonHandlerTest(PersonDataFixture fixture) => Fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+        public DeletePersonHandlerTest(PersonDataFixture dataFixture, ResourceTranslatorServiceFixture serviceFixture)
+        {
+            DataFixture = dataFixture ?? throw new ArgumentNullException(nameof(dataFixture));
+            ServiceFixture = serviceFixture ?? throw new ArgumentNullException(nameof(serviceFixture));
+        }
 
         [Fact]
         public void Providing_a_null_repository_in_constructor_throws_an_exception()
         {
-            static void action() => _ = new DeletePersonHandler(null);
+            void action() => _ = new DeletePersonHandler(null, ServiceFixture.Dummy);
             var exception = Assert.Throws<ArgumentNullException>(action);
 
             exception.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task Providing_a_null_command_to_handle_throws_an_exception()
+        public void Providing_a_null_translator_in_constructor_throws_an_exception()
+        {
+            void action() => _ = new DeletePersonHandler(DataFixture.Dummy, null);
+            var exception = Assert.Throws<ArgumentNullException>(action);
+
+            exception.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task Providing_a_null_command_throws_an_exception()
         {
             Task<bool> function()
             {
-                var handler = new DeletePersonHandler(Fixture.Dummy);
+                var handler = new DeletePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
 
                 return handler.RunAsync(null);
             }
@@ -49,11 +65,11 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         [InlineData(int.MinValue)]
         [InlineData(-1)]
         [InlineData(0)]
-        public async Task Providing_a_commd_with_an_invalid_ID_throws_an_exception(int id)
+        public async Task Providing_a_command_with_an_invalid_ID_throws_an_exception(int id)
         {
             Task<bool> function()
             {
-                var handler = new DeletePersonHandler(Fixture.Dummy);
+                var handler = new DeletePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
 
                 return handler.RunAsync(new DeletePersonCommand() { ID = id });
             }
@@ -63,13 +79,13 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Providing_a_command_with_an_inexisting_person_ID_throws_an_exception()
+        public async Task Providing_a_command_with_an_inexisting_ID_throws_an_exception()
         {
             Task<bool> function()
             {
                 var mock = new Mock<IPersonRepository>();
                 mock.Setup(m => m.ExistAsync(It.IsAny<int>())).ReturnsAsync(false);
-                var handler = new DeletePersonHandler(mock.Object);
+                var handler = new DeletePersonHandler(mock.Object, ServiceFixture.Dummy);
 
                 return handler.RunAsync(new DeletePersonCommand() { ID = ID });
             }
@@ -79,9 +95,23 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
         }
 
         [Fact]
-        public async Task Successfully_handling_a_command_returns_true()
+        public async Task Providing_an_invalid_command_returns_all_raised_error_messages_through_the_thrown_exception()
         {
-            var handler = new DeletePersonHandler(Fixture.Dummy);
+            Task<bool> function()
+            {
+                var handler = new DeletePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
+
+                return handler.RunAsync(new DeletePersonCommand());
+            }
+            var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
+
+            exception.Errors.Count().Should().Be(1);
+        }
+
+        [Fact]
+        public async Task Successfully_running_a_command_returns_true()
+        {
+            var handler = new DeletePersonHandler(DataFixture.Dummy, ServiceFixture.Dummy);
             var result = await handler.RunAsync(new DeletePersonCommand() { ID = ID }).ConfigureAwait(false);
 
             result.Should().BeTrue();

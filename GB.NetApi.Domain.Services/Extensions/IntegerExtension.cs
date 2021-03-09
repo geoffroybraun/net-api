@@ -3,7 +3,7 @@
     /// <summary>
     /// Extends the <see cref="int"/> value type
     /// </summary>
-    public static class IntegerExtension
+    internal static class IntegerExtension
     {
         /// <summary>
         /// Indicates if the extended <see cref="int"/> value is inferior or equal to the other one

@@ -1,7 +1,9 @@
 ﻿using GB.NetApi.Application.WebApi.Formatters;
 using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
 using GB.NetApi.Application.WebApi.Models;
+using GB.NetApi.Domain.Models.Interfaces.Libraries;
 using GB.NetApi.Infrastructure.Database.Contexts;
+using GB.NetApi.Infrastructure.Libraries.Loggers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +35,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         protected static readonly LoginRequest GuestRequest = new LoginRequest() { Email = "guest@localhost.com", Password = "guest" };
         protected static readonly LoginRequest ReaderRequest = new LoginRequest() { Email = "reader@localhost.com", Password = "reader" };
         protected static readonly LoginRequest WriterRequest = new LoginRequest() { Email = "writer@localhost.com", Password = "writer" };
+        protected static readonly LoginRequest SuperviserRequest = new LoginRequest() { Email = "superviser@localhost.com", Password = "superviser" };
         protected readonly HttpClient BrokenClient;
         protected readonly HttpClient NullClient;
         protected readonly HttpClient Client;
@@ -156,6 +159,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
                     {
                         services.RemoveAll(typeof(Func<BaseDbContext>));
                         services.AddScoped<Func<BaseDbContext>>((provider) => () => new DummyDbContext());
+
+                        services.RemoveAll(typeof(ILogger));
+                        services.AddSingleton<ILogger, DebugLogger>();
 
                         services.RemoveAll(typeof(T));
                         services.AddScoped((provider) => mock);

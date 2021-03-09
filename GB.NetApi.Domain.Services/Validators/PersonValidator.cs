@@ -3,7 +3,10 @@ using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("GB.NetApi.Domain.Services.UnitTests", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("GB.NetApi.Infrastructure.Database", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("GB.NetApi.Infrastructure.Libraries", AllInternalsVisible = true)]
 [assembly: InternalsVisibleTo("GB.NetApi.Application.Services", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("GB.NetApi.Application.Services.UnitTests", AllInternalsVisible = true)]
 namespace GB.NetApi.Domain.Services.Validators
 {
     /// <summary>
