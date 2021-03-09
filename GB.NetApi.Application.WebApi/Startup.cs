@@ -1,4 +1,4 @@
-using GB.NetApi.Application.Services.Handlers.Persons;
+using GB.NetApi.Application.Services.Handlers;
 using GB.NetApi.Application.WebApi.Extensions;
 using GB.NetApi.Application.WebApi.Middlewares;
 using MediatR;
@@ -29,7 +29,7 @@ namespace GB.NetApi.Application.WebApi
         {
             services.AddControllers();
             services.ConfigureWebApi(Configuration);
-            services.AddMediatR(typeof(CreatePersonHandler));
+            services.AddMediatR(typeof(BaseCommandHandler<,>));
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace GB.NetApi.Application.WebApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+            app.UseEndpoints((builder) => builder.MapHealthChecksAndControllers());
         }
     }
 }
