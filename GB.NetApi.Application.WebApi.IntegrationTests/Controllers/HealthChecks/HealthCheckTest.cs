@@ -18,24 +18,26 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.HealthChecks
         public HealthCheckTest(AuthenticateUserDataFixture fixture) : base(fixture) { }
 
         [Fact]
-        public async Task Throwing_an_exception_returns_an_service_unavailable_status_code()
+        public async Task Checking_health_without_being_authentified_returns_an_unauthorized_status_code()
         {
-            var result = await GetAsync(BrokenClient, Endpoint).ConfigureAwait(false);
+            var result = await GetAsync(Client, Endpoint).ConfigureAwait(false);
 
-            result.StatusCode.Should().Be(StatusCodes.Status503ServiceUnavailable);
+            result.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
         }
 
         [Fact]
-        public async Task Not_successfully_checking_the_database_availability_returns_a_service_unavailable_status_code()
+        public async Task Checking_health_without_being_being_allowed_to_returns_a_forbidden_status_code()
         {
-            var result = await GetAsync(NullClient, Endpoint).ConfigureAwait(false);
+            await AuthenticateAsync(Client, GuestRequest).ConfigureAwait(false);
+            var result = await GetAsync(Client, Endpoint).ConfigureAwait(false);
 
-            result.StatusCode.Should().Be(StatusCodes.Status503ServiceUnavailable);
+            result.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
         }
 
         [Fact]
         public async Task Successfully_checking_a_database_availability_returns_a_no_content_status_code()
         {
+            await AuthenticateAsync(Client, SuperviserRequest).ConfigureAwait(false);
             var result = await GetAsync(Client, Endpoint).ConfigureAwait(false);
 
             result.StatusCode.Should().Be(StatusCodes.Status204NoContent);

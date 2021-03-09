@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using GB.NetApi.Application.WebApi.Authorizations;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -27,7 +28,7 @@ namespace GB.NetApi.Application.WebApi.Extensions
                     [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
                     [HealthStatus.Degraded] = StatusCodes.Status503ServiceUnavailable,
                 }
-            });
+            }).RequireAuthorization(new PermissionAttribute("ReadHealthCheck"));
 
             builder.MapControllers();
         }
