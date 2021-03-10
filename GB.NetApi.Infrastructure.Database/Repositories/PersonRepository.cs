@@ -66,9 +66,41 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         public async Task<IEnumerable<Person>> ListAsync() => await Read.ToListAsync<PersonDao, Person>().ConfigureAwait(false);
 
-        public async Task<bool> CreateAsync(Person person) => await Write.CreateAsync<Person, PersonDao>(person).ConfigureAwait(false);
+        public async Task<bool> CreateAsync(Person person)
+        {
+            var model = new CreateModel<Person, PersonDao>()
+            {
+                SetPropertiesBeforeCreate = (dao) =>
+                {
+                    dao.Firstname = person.Firstname;
+                    dao.Lastname = person.Lastname;
+                    dao.Birthdate = person.Birthdate;
+                }
+            };
 
-        public async Task<bool> UpdateAsync(Person person) => await Write.UpdateAsync<Person, PersonDao>(person).ConfigureAwait(false);
+            return await Write.CreateAsync(model).ConfigureAwait(false);
+        }
+
+        public async Task<bool> UpdateAsync(Person person)
+        {
+            var model = new UpdateModel<Person, PersonDao>()
+            {
+                ID = person.ID,
+                SetPropertiesBeforeUpdate = (dao) =>
+                {
+                    if (dao.Firstname.IsNotEqualTo(person.Firstname))
+                        dao.Firstname = person.Firstname;
+
+                    if (dao.Lastname.IsNotEqualTo(person.Lastname))
+                        dao.Lastname = person.Lastname;
+
+                    if (dao.Birthdate.IsNotEqualTo(person.Birthdate))
+                        dao.Birthdate = person.Birthdate;
+                }
+            };
+
+            return await Write.UpdateAsync(model).ConfigureAwait(false);
+        }
 
         public async Task<bool> DeleteAsync(int ID) => await Write.DeleteAsync<Person, PersonDao>(ID).ConfigureAwait(false);
 

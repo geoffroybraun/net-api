@@ -1,10 +1,20 @@
-﻿namespace GB.NetApi.Domain.Services.Extensions
+﻿using System;
+
+namespace GB.NetApi.Domain.Services.Extensions
 {
     /// <summary>
     /// Extends the <see cref="string"/> value type
     /// </summary>
     internal static class StringExtension
     {
+        /// <summary>
+        /// Indicates if the extended <see cref="string"/> value is not equal to the other one
+        /// </summary>
+        /// <param name="value">The extended <see cref="string"/> value to compare to the other one</param>
+        /// <param name="other">The other <see cref="string"/> value to compare to the extended one</param>
+        /// <returns>True if the extended <see cref="string"/> value is not equal to the other one, otherwise false</returns>
+        public static bool IsNotEqualTo(this string value, string other) => !string.Equals(value, other, StringComparison.Ordinal);
+
         /// <summary>
         /// Indicates if the extended <see cref="string"/> value is not null, nor empty, nor white space
         /// </summary>

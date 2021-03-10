@@ -2,6 +2,7 @@
 using GB.NetApi.Infrastructure.Database.Contexts;
 using GB.NetApi.Infrastructure.Database.DAOs;
 using GB.NetApi.Infrastructure.Database.Interfaces;
+using GB.NetApi.Infrastructure.Database.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -17,16 +18,19 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public CommonWritableRepository(ICommonRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public async Task<bool> CreateAsync<TEntity, TDao>(TEntity entity) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        public async Task<bool> CreateAsync<TEntity, TDao>(CreateModel<TEntity, TDao> model) where TEntity : BaseStorableEntity where TDao : BaseWritableDao<TEntity>, new()
         {
-            return await CreateAsync<TEntity, TDao>(entity, 1).ConfigureAwait(false);
+            return await CreateAsync(model, 1).ConfigureAwait(false);
         }
 
-        public async Task<bool> CreateAsync<TEntity, TDao>(TEntity entity, int expectedSavedChangesCount) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        public async Task<bool> CreateAsync<TEntity, TDao>(CreateModel<TEntity, TDao> model, int expectedSavedChangesCount) where TEntity : BaseStorableEntity where TDao : BaseWritableDao<TEntity>, new()
         {
+            var dao = new TDao();
+            model.SetPropertiesBeforeCreate(dao);
+
             using (var context = Repository.InstanciateContext())
             {
-                Task<int> function() => CreateAsync<TEntity, TDao>(context, entity);
+                Task<int> function() => CreateAsync<TEntity, TDao>(context, dao);
                 var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return result == expectedSavedChangesCount;
@@ -49,16 +53,16 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
             }
         }
 
-        public async Task<bool> UpdateAsync<TEntity, TDao>(TEntity entity) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        public async Task<bool> UpdateAsync<TEntity, TDao>(UpdateModel<TEntity, TDao> model) where TEntity : BaseStorableEntity where TDao : BaseWritableDao<TEntity>, new()
         {
-            return await UpdateAsync<TEntity, TDao>(entity, 1).ConfigureAwait(false);
+            return await UpdateAsync(model, 1).ConfigureAwait(false);
         }
 
-        public async Task<bool> UpdateAsync<TEntity, TDao>(TEntity entity, int expectedSavedChangesCount) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        public async Task<bool> UpdateAsync<TEntity, TDao>(UpdateModel<TEntity, TDao> model, int expectedSavedChangesCount) where TEntity : BaseStorableEntity where TDao : BaseWritableDao<TEntity>, new()
         {
             using (var context = Repository.InstanciateContext())
             {
-                Task<int> function() => UpdateAsync<TEntity, TDao>(context, entity);
+                Task<int> function() => UpdateAsync(context, model);
                 var result = await Repository.ExecuteAsync(function).ConfigureAwait(false);
 
                 return result == expectedSavedChangesCount;
@@ -67,11 +71,8 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         #region Private methods
 
-        private async Task<int> CreateAsync<TEntity, TDao>(BaseDbContext context, TEntity entity) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        private async Task<int> CreateAsync<TEntity, TDao>(BaseDbContext context, TDao dao) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
         {
-            var dao = new TDao();
-            dao.Fill(entity);
-
             var dbSet = Repository.GetDbSet<TDao>(context);
             _ = dbSet.Add(dao);
 
@@ -87,14 +88,11 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
             return await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private async Task<int> UpdateAsync<TEntity, TDao>(BaseDbContext context, TEntity entity) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
+        private async Task<int> UpdateAsync<TEntity, TDao>(BaseDbContext context, UpdateModel<TEntity, TDao> model) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity
         {
-            var dao = new TDao();
-            dao.Fill(entity);
-
             var dbSet = Repository.GetDbSet<TDao>(context);
-            var entry = await dbSet.FindAsync(entity.ID).ConfigureAwait(false);
-            context.Entry(entry).CurrentValues.SetValues(dao);
+            var dao = await dbSet.FindAsync(model.ID).ConfigureAwait(false);
+            model.SetPropertiesBeforeUpdate(dao);
 
             return await context.SaveChangesAsync().ConfigureAwait(false);
         }
