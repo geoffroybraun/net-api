@@ -7,6 +7,21 @@ namespace GB.NetApi.Domain.Services.UnitTests.Extensions
     public sealed class StringExtensionTest
     {
         [Theory]
+        [InlineData(null, "Value", true)]
+        [InlineData("", "Value", true)]
+        [InlineData(" ", "Value", true)]
+        [InlineData("Value", null, true)]
+        [InlineData("Value", "", true)]
+        [InlineData("Value", " ", true)]
+        [InlineData("Value", "value", true)]
+        [InlineData("Value", "VALUE", true)]
+        [InlineData("Value", "Value", false)]
+        public void Checking_if_a_string_value_is_not_equal_to_another_one_returns_the_expected_result(string value, string other, bool expectedResult)
+        {
+            value.IsNotEqualTo(other).Should().Be(expectedResult);
+        }
+
+        [Theory]
         [InlineData(null, true)]
         [InlineData("", true)]
         [InlineData(" ", true)]

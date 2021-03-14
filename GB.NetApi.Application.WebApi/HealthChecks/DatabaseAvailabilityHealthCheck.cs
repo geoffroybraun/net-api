@@ -1,4 +1,4 @@
-﻿using GB.NetApi.Application.Services.Queries.AuthenticateUsers;
+﻿using GB.NetApi.Application.Services.Queries.Persons;
 using GB.NetApi.Application.WebApi.Extensions;
 using MediatR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -23,9 +23,9 @@ namespace GB.NetApi.Application.WebApi.HealthChecks
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var user = await Mediator.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = "guest@localhost.com" }).ConfigureAwait(false);
+            var person = await Mediator.ExecuteAsync(new GetSinglePersonQuery() { ID = 1 }).ConfigureAwait(false);
 
-            return user is not null ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy();
+            return person is not null ? HealthCheckResult.Healthy() : HealthCheckResult.Degraded();
         }
     }
 }
