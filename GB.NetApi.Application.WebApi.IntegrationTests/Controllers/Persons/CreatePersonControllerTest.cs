@@ -12,7 +12,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
     {
         #region Fields
 
-        private static readonly CreatePersonCommand Command = new CreatePersonCommand()
+        private static readonly CreatePersonCommand Command = new()
         {
             Birthdate = DateTime.UtcNow,
             Firstname = "New firstname",

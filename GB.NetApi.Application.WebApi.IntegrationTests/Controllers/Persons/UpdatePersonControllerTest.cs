@@ -13,7 +13,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         #region Fields
 
         private static readonly string UpdatePersonEndpoint = $"{Endpoint}/{ID}";
-        private static readonly UpdatePersonCommand Command = new UpdatePersonCommand()
+        private static readonly UpdatePersonCommand Command = new()
         {
             Birthdate = DateTime.UtcNow,
             Firstname = "Updated firstname",

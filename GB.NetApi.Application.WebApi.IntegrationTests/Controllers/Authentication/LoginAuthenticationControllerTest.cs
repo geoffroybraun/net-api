@@ -2,7 +2,6 @@
 using GB.NetApi.Application.WebApi.IntegrationTests.DataFixtures;
 using GB.NetApi.Application.WebApi.Models;
 using GB.NetApi.Domain.Models.Interfaces.Repositories;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -61,7 +60,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Authenticati
             var response = await PostAsync(Client, Endpoint, new LoginRequest()).ConfigureAwait(false);
             var result = await DeserializeContentAsync<string[]>(response.Content).ConfigureAwait(false);
 
-            result.Count().Should().Be(2);
+            result.Length.Should().Be(2);
         }
 
         [Fact]

@@ -25,8 +25,8 @@ namespace GB.NetApi.Application.WebApi.Extensions
                 ResultStatusCodes =
                 {
                     [HealthStatus.Healthy] = StatusCodes.Status204NoContent,
+                    [HealthStatus.Degraded] = StatusCodes.Status204NoContent,
                     [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
-                    [HealthStatus.Degraded] = StatusCodes.Status503ServiceUnavailable,
                 }
             }).RequireAuthorization(new PermissionAttribute("ReadHealthCheck"));
 
