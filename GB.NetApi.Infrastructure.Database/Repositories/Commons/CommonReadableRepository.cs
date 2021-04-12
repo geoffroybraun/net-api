@@ -24,12 +24,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public CommonReadableRepository(ICommonRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
+        public async Task<bool> AnyAsync<TDao>(AnyModel<TDao> model) where TDao : BaseDao
         {
-             return await AnyAsync<TDao, TEntity>(model, ETracking.Disabled).ConfigureAwait(false);
+             return await AnyAsync(model, ETracking.Disabled).ConfigureAwait(false);
         }
 
-        public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
+        public async Task<bool> AnyAsync<TDao>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseDao
         {
             using (var context = Repository.InstanciateContext())
             {

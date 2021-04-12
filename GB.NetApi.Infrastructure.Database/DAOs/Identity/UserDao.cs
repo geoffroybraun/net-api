@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GB.NetApi.Domain.Models.Entities.Identity;
+using GB.NetApi.Infrastructure.Database.Extensions;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
 {
@@ -12,6 +15,8 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
     [Table("USERS")]
     public sealed class UserDao : IdentityUser
     {
+        #region Properties
+
         [Column("access_failed_count")]
         public override int AccessFailedCount { get => base.AccessFailedCount; set => base.AccessFailedCount = value; }
 
@@ -65,5 +70,24 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
         public ICollection<UserRoleDao> UserRoles { get; set; }
 
         public ICollection<UserTokenDao> UserTokens { get; set; }
+
+        #endregion
+
+        public static explicit operator AuthenticateUser(UserDao user)
+        {
+            if (user is null)
+                return default;
+
+            var claims = user.UserRoles.ToRoleClaims().Union(user.UserClaims.ToClaims());
+            var permissions = user.UserRoles.GetPermissionNames();
+
+            return new AuthenticateUser()
+            {
+                ID = user.Id,
+                Name = user.UserName,
+                Claims = claims,
+                PermissionNames = permissions
+            };
+        }
     }
 }
