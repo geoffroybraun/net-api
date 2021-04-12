@@ -116,12 +116,16 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [Permission("WritePerson")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> UpdateAsync(int ID, [FromBody] UpdatePersonCommand command)
+        public async Task<ActionResult> UpdateAsync(int ID, [FromBody] CreatePersonCommand command)
         {
-            if (ID != command.ID)
-                return BadRequest(Translator.GetString("UnmatchingUpdateCommandID", new[] { ID }));
-
-            var result = await Mediator.RunAsync(command).ConfigureAwait(false);
+            var updateCommand = new UpdatePersonCommand()
+            {
+                Birthdate = command.Birthdate,
+                Firstname = command.Firstname,
+                ID = ID,
+                Lastname = command.Lastname
+            };
+            var result = await Mediator.RunAsync(updateCommand).ConfigureAwait(false);
 
             return result ? NoContent() : InternalServerError();
         }

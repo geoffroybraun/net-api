@@ -1,7 +1,6 @@
 ﻿using GB.NetApi.Application.Services.DTOs;
 using GB.NetApi.Application.Services.Interfaces.Queries;
 using GB.NetApi.Domain.Models.Entities.Filters;
-using GB.NetApi.Domain.Models.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +10,7 @@ namespace GB.NetApi.Application.Services.Queries.Persons
     /// Represents a query to retrieve filtered <see cref="PersonDto"/>
     /// </summary>
     [Serializable]
-    public sealed class FilterPersonQuery : IQuery<IEnumerable<PersonDto>>, ITransformable<PersonFilter>
+    public sealed class FilterPersonQuery : IQuery<IEnumerable<PersonDto>>
     {
         #region Properties
 
@@ -27,13 +26,13 @@ namespace GB.NetApi.Application.Services.Queries.Persons
 
         #endregion
 
-        public PersonFilter Transform() => new PersonFilter()
+        public static implicit operator PersonFilter(FilterPersonQuery query) => new PersonFilter()
         {
-            BirthDay = BirthDay,
-            BirthMonth = BirthMonth,
-            BirthYear = BirthYear,
-            Firstname = Firstname,
-            Lastname = Lastname
+            BirthDay = query.BirthDay,
+            BirthMonth = query.BirthMonth,
+            BirthYear = query.BirthYear,
+            Firstname = query.Firstname,
+            Lastname = query.Lastname
         };
     }
 }

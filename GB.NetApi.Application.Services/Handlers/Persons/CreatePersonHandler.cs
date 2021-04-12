@@ -33,12 +33,10 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             if (command is null)
                 throw new ArgumentNullException(nameof(command));
 
-            var person = command.Transform();
-
-            if (!await IsValidForCreateAsync(person, DateTime.UtcNow).ConfigureAwait(false))
+            if (!await IsValidForCreateAsync(command, DateTime.UtcNow).ConfigureAwait(false))
                 throw new EntityValidationException(Collector.Messages);
 
-            return await Repository.CreateAsync(person).ConfigureAwait(false);
+            return await Repository.CreateAsync(command).ConfigureAwait(false);
         }
 
         #region Private methods

@@ -1,6 +1,5 @@
 ﻿using GB.NetApi.Application.Services.Interfaces.Commands;
 using GB.NetApi.Domain.Models.Entities;
-using GB.NetApi.Domain.Models.Interfaces.Entities;
 using System;
 
 namespace GB.NetApi.Application.Services.Commands.Persons
@@ -9,7 +8,7 @@ namespace GB.NetApi.Application.Services.Commands.Persons
     /// Represents a command to create a new <see cref="Person"/> entity
     /// </summary>
     [Serializable]
-    public sealed record CreatePersonCommand : ICommand<bool>, ITransformable<Person>
+    public sealed record CreatePersonCommand : ICommand<bool>
     {
         #region Properties
 
@@ -21,11 +20,11 @@ namespace GB.NetApi.Application.Services.Commands.Persons
 
         #endregion
 
-        public Person Transform() => new Person()
+        public static implicit operator Person(CreatePersonCommand command) => new Person()
         {
-            Birthdate = Birthdate,
-            Firstname = Firstname,
-            Lastname = Lastname
+            Birthdate = command.Birthdate,
+            Firstname = command.Firstname,
+            Lastname = command.Lastname
         };
     }
 }
