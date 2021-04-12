@@ -29,6 +29,6 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
 
         #endregion
 
-        public Claim Transform() => new Claim(ClaimType, ClaimValue);
+        public Claim Transform() => new(ClaimType, ClaimValue);
     }
 }

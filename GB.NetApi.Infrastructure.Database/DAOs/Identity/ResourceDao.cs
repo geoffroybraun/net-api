@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
@@ -8,13 +7,8 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
     /// Represents a resource as stored within a database
     /// </summary>
     [Table("RESOURCES")]
-    public sealed class ResourceDao
+    public sealed class ResourceDao : BaseDao
     {
-        [Column("id")]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-
         [Column("name")]
         public string Name { get; set; }
 

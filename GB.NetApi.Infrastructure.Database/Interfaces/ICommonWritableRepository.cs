@@ -13,58 +13,52 @@ namespace GB.NetApi.Infrastructure.Database.Interfaces
         /// <summary>
         /// Create a new entity
         /// </summary>
-        /// <typeparam name="TEntity">The entity type to add</typeparam>
         /// <typeparam name="TDao">The DAO type to create</typeparam>
-        /// <param name="model">The <see cref="CreateModel{TEntity, TDao}"/> to use when setting the DAO properties</param>
+        /// <param name="model">The <see cref="CreateModel{TDao}"/> to use when setting the DAO properties</param>
         /// <returns>True if all expected saved changes have been successfully counted, otherwise false</returns>
-        Task<bool> CreateAsync<TEntity, TDao>(CreateModel<TEntity, TDao> model) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity;
+        Task<bool> CreateAsync<TDao>(CreateModel<TDao> model) where TDao : BaseDao, new();
 
         /// <summary>
         /// Create a new entity
         /// </summary>
-        /// <typeparam name="TEntity">The entity type to add</typeparam>
         /// <typeparam name="TDao">The DAO type to create</typeparam>
-        /// <param name="model">The <see cref="CreateModel{TEntity, TDao}"/> to use when setting the DAO properties</param>
+        /// <param name="model">The <see cref="CreateModel{TDao}"/> to use when setting the DAO properties</param>
         /// <param name="expectedSavedChangesCount">The expected saved changes count to measure when adding</param>
         /// <returns>True if all expected saved changes have been successfully counted, otherwise false</returns>
-        Task<bool> CreateAsync<TEntity, TDao>(CreateModel<TEntity, TDao> model, int expectedSavedChangesCount) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity;
+        Task<bool> CreateAsync<TDao>(CreateModel<TDao> model, int expectedSavedChangesCount) where TDao : BaseDao, new();
 
         /// <summary>
-        /// Delete an entity using its ID
+        /// Delete a DAO
         /// </summary>
-        /// <typeparam name="TEntity">The entity type to delete</typeparam>
         /// <typeparam name="TDao">The DAO type to remove</typeparam>
-        /// <param name="ID">The entity ID to use when looking for the entity to delete</param>
-        /// <returns>True if the targeted entity has been successfully deleted, otherwise false</returns>
-        Task<bool> DeleteAsync<TEntity, TDao>(int ID) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity;
+        /// <param name="model">The <see cref="DeleteModel{TDao}"/> to use when deleting the DAO</param>
+        /// <returns>True if the targeted DAO has been successfully deleted, otherwise false</returns>
+        Task<bool> DeleteAsync<TDao>(DeleteModel<TDao> model) where TDao : BaseDao;
 
         /// <summary>
-        /// Delete an entity using its ID
+        /// Delete a DAO
         /// </summary>
-        /// <typeparam name="TEntity">The entity type to delete</typeparam>
         /// <typeparam name="TDao">The DAO type to remove</typeparam>
-        /// <param name="ID">The entity ID to use when looking for the entity to delete</param>
+        /// <param name="model">The <see cref="DeleteModel{TDao}"/> to use when deleting the DAO</param>
         /// <param name="expectedSavedChangesCount">The expected saved changes count to measure when deleting</param>
-        /// <returns>True if the targeted entity has been successfully deleted, otherwise false</returns>
-        Task<bool> DeleteAsync<TEntity, TDao>(int ID, int expectedSavedChangesCount) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity;
+        /// <returns>True if the targeted DAO has been successfully deleted, otherwise false</returns>
+        Task<bool> DeleteAsync<TDao>(DeleteModel<TDao> model, int expectedSavedChangesCount) where TDao : BaseDao;
 
         /// <summary>
         /// Update an existing entity
         /// </summary>
-        /// <typeparam name="TEntity">The entity type to add</typeparam>
         /// <typeparam name="TDao">The DAO type to create</typeparam>
-        /// <param name="model">The <see cref="UpdateModel{TEntity, TDao}"/> to use when setting the DAO properties</param>
+        /// <param name="model">The <see cref="UpdateModel{TDao}"/> to use when setting the DAO properties</param>
         /// <returns>True if all expected saved changes have been successfully counted, otherwise false</returns>
-        Task<bool> UpdateAsync<TEntity, TDao>(UpdateModel<TEntity, TDao> model) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity;
+        Task<bool> UpdateAsync<TDao>(UpdateModel<TDao> model) where TDao : BaseDao;
 
         /// <summary>
         /// Update an existing entity
         /// </summary>
-        /// <typeparam name="TEntity">The entity type to add</typeparam>
         /// <typeparam name="TDao">The DAO type to create</typeparam>
-        /// <param name="model">The <see cref="UpdateModel{TEntity, TDao}"/> to use when setting the DAO properties</param>
-        /// <param name="expectedSavedChangesCount">The expected saved changes count to measure when adding</param>
+        /// <param name="model">The <see cref="UpdateModel{TDao}"/> to use when setting the DAO properties</param>
+        /// <param name="expectedSavedChangesCount">The expected saved changes count to measure when updating</param>
         /// <returns>True if all expected saved changes have been successfully counted, otherwise false</returns>
-        Task<bool> UpdateAsync<TEntity, TDao>(UpdateModel<TEntity, TDao> model, int expectedSavedChangesCount) where TDao : BaseWritableDao<TEntity>, new() where TEntity : BaseStorableEntity;
+        Task<bool> UpdateAsync<TDao>(UpdateModel<TDao> model, int expectedSavedChangesCount) where TDao : BaseDao;
     }
 }

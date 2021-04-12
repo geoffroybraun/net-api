@@ -68,9 +68,9 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         public async Task<bool> CreateAsync(Person person)
         {
-            var model = new CreateModel<Person, PersonDao>()
+            var model = new CreateModel<PersonDao>()
             {
-                SetPropertiesBeforeCreate = (dao) =>
+                SetDaoProperties = (dao) =>
                 {
                     dao.Firstname = person.Firstname;
                     dao.Lastname = person.Lastname;
@@ -83,10 +83,10 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
 
         public async Task<bool> UpdateAsync(Person person)
         {
-            var model = new UpdateModel<Person, PersonDao>()
+            var model = new UpdateModel<PersonDao>()
             {
                 ID = person.ID,
-                SetPropertiesBeforeUpdate = (dao) =>
+                UpdateDaoProperties = (dao) =>
                 {
                     if (dao.Firstname.IsNotEqualTo(person.Firstname))
                         dao.Firstname = person.Firstname;
@@ -102,7 +102,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
             return await Write.UpdateAsync(model).ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteAsync(int ID) => await Write.DeleteAsync<Person, PersonDao>(ID).ConfigureAwait(false);
+        public async Task<bool> DeleteAsync(int ID)
+        {
+            var model = new DeleteModel<PersonDao>() { ID = ID };
+
+            return await Write.DeleteAsync(model).ConfigureAwait(false);
+        }
 
         #region Private methods
 

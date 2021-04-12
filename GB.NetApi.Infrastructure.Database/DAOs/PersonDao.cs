@@ -1,4 +1,5 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
+using GB.NetApi.Domain.Models.Interfaces.Entities;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,7 @@ namespace GB.NetApi.Infrastructure.Database.DAOs
     /// Represents a <see cref="Person"/> entity as stored within a database
     /// </summary>
     [Table("PERSONS")]
-    public sealed class PersonDao : BaseWritableDao<Person>
+    public sealed class PersonDao : BaseDao, ITransformable<Person>
     {
         #region Properties
 
@@ -23,15 +24,7 @@ namespace GB.NetApi.Infrastructure.Database.DAOs
 
         #endregion
 
-        public override void Fill(Person entity)
-        {
-            base.Fill(entity);
-            Birthdate = entity.Birthdate;
-            Firstname = entity.Firstname;
-            Lastname = entity.Lastname;
-        }
-
-        public override Person Transform() => new Person()
+        public Person Transform() => new()
         {
             Birthdate = Birthdate,
             Firstname = Firstname,
