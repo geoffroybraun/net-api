@@ -34,7 +34,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                 Any = (dao) => dao.Birthdate == person.Birthdate && dao.Firstname == person.Firstname && dao.Lastname == person.Lastname
             };
 
-            return await Read.AnyAsync<PersonDao, Person>(model).ConfigureAwait(false);
+            return await Read.AnyAsync(model).ConfigureAwait(false);
         }
 
         public async Task<bool> ExistAsync(int ID)
@@ -44,7 +44,7 @@ namespace GB.NetApi.Infrastructure.Database.Repositories
                 Any = (dao) => dao.ID == ID
             };
 
-            return await Read.AnyAsync<PersonDao, Person>(model).ConfigureAwait(false);
+            return await Read.AnyAsync(model).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Person>> FilterAsync(PersonFilter filter)

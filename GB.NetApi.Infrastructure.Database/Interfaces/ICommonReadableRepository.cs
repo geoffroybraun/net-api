@@ -17,20 +17,18 @@ namespace GB.NetApi.Infrastructure.Database.Interfaces
         /// Indicates if at least one DAO matches the provided function
         /// </summary>
         /// <typeparam name="TDao">The DAO to query</typeparam>
-        /// <typeparam name="TEntity">The entity type the DAO is coupled to</typeparam>
         /// <param name="model">The <see cref="AnyModel{TDao}"/> model to use when querying</param>
         /// <returns>True if at least one DAO matches the provided function, otherwise false</returns>
-        Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity;
+        Task<bool> AnyAsync<TDao>(AnyModel<TDao> model) where TDao : BaseDao;
 
         /// <summary>
         /// Indicates if at least one DAO matches the provided function
         /// </summary>
         /// <typeparam name="TDao">The DAO to query</typeparam>
-        /// <typeparam name="TEntity">The entity type the DAO is coupled to</typeparam>
         /// <param name="model">The <see cref="AnyModel{TDao}"/> model to use when querying</param>
         /// <param name="tracking">The tracking mode to use when querying</param>
         /// <returns>True if at least one DAO matches the provided function, otherwise false</returns>
-        Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity;
+        Task<bool> AnyAsync<TDao>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseDao;
 
         /// <summary>
         /// Retrieve an entity using the provided matching function
