@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
@@ -8,13 +7,8 @@ namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
     /// Represents an operation as stored within a database
     /// </summary>
     [Table("OPERATIONS")]
-    public sealed class OperationDao
+    public sealed class OperationDao : BaseDao
     {
-        [Column("id")]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-
         [Column("name")]
         public string Name { get; set; }
 

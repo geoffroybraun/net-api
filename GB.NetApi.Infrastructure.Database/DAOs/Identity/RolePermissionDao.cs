@@ -1,18 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GB.NetApi.Infrastructure.Database.DAOs.Identity
 {
     /// <summary>
     /// Represents a relationship between a <see cref="RoleDao"/> and a <see cref="PermissionDao"/> as stored within a database
     /// </summary>
-    public sealed class RolePermissionDao
+    public sealed class RolePermissionDao : BaseDao
     {
-        [Column("id")]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-
         [Column("role_id")]
         public string RoleID { get; set; }
 

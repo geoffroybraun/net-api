@@ -25,17 +25,17 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
 
         private const string ContentType = "application/json";
         private static readonly Encoding Encoding = Encoding.UTF8;
-        private static readonly JsonTextFormatter Formatter = new JsonTextFormatter();
+        private static readonly JsonTextFormatter Formatter = new();
         private bool HasDisposed = false;
 
         #endregion
 
         #region Properties
 
-        protected static readonly LoginRequest GuestRequest = new LoginRequest() { Email = "guest@localhost.com", Password = "guest" };
-        protected static readonly LoginRequest ReaderRequest = new LoginRequest() { Email = "reader@localhost.com", Password = "reader" };
-        protected static readonly LoginRequest WriterRequest = new LoginRequest() { Email = "writer@localhost.com", Password = "writer" };
-        protected static readonly LoginRequest SuperviserRequest = new LoginRequest() { Email = "superviser@localhost.com", Password = "superviser" };
+        protected static readonly LoginRequest GuestRequest = new() { Email = "guest@localhost.com", Password = "guest" };
+        protected static readonly LoginRequest ReaderRequest = new() { Email = "reader@localhost.com", Password = "reader" };
+        protected static readonly LoginRequest WriterRequest = new() { Email = "writer@localhost.com", Password = "writer" };
+        protected static readonly LoginRequest SuperviserRequest = new() { Email = "superviser@localhost.com", Password = "superviser" };
         protected readonly HttpClient BrokenClient;
         protected readonly HttpClient NullClient;
         protected readonly HttpClient Client;
@@ -99,15 +99,15 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Deserialize a response content to a <see cref="T"/> type
         /// </summary>
-        /// <typeparam name="T">The type to deserialize the content to</typeparam>
+        /// <typeparam name="TResult">The type to deserialize the content to</typeparam>
         /// <param name="content">The response content to deserialize</param>
         /// <returns>The deserialized content</returns>
-        protected static async Task<T> DeserializeContentAsync<T>(HttpContent content) where T : class
+        protected static async Task<TResult> DeserializeContentAsync<TResult>(HttpContent content) where TResult : class
         {
             using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-            var result = await Formatter.DeserializeAsync(stream, typeof(T)).ConfigureAwait(false);
+            var result = await Formatter.DeserializeAsync(stream, typeof(TResult)).ConfigureAwait(false);
 
-            return result as T;
+            return result as TResult;
         }
 
         /// <summary>
@@ -123,11 +123,11 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Executes a <see cref="HttpMethod.Post"/> request to the provided endpoint
         /// </summary>
-        /// <typeparam name="T">The value type to serialize</typeparam>
+        /// <typeparam name="TContent">The value type to serialize</typeparam>
         /// <param name="endpoint">The endpoint to request</param>
         /// <param name="value">The value to serialize</param>
         /// <returns>The API response</returns>
-        protected static async Task<HttpResponseMessage> PostAsync<T>(HttpClient client, string endpoint, T value)
+        protected static async Task<HttpResponseMessage> PostAsync<TContent>(HttpClient client, string endpoint, TContent value)
         {
             var content = await GetStringContentAsync(value).ConfigureAwait(false);
             
@@ -137,11 +137,11 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Executes a <see cref="HttpMethod.Put"/> request to the provided endpoint
         /// </summary>
-        /// <typeparam name="T">The value type to serialize</typeparam>
+        /// <typeparam name="TContent">The value type to serialize</typeparam>
         /// <param name="endpoint">The endpoint to request</param>
         /// <param name="value">The value to serialize</param>
         /// <returns>The API response</returns>
-        protected static async Task<HttpResponseMessage> PutAsync<T>(HttpClient client, string endpoint, T value)
+        protected static async Task<HttpResponseMessage> PutAsync<TContent>(HttpClient client, string endpoint, TContent value)
         {
             var content = await GetStringContentAsync(value).ConfigureAwait(false);
             
@@ -171,9 +171,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
             return applicationFactory.CreateClient();
         }
 
-        private static async Task<StringContent> GetStringContentAsync<T>(T value)
+        private static async Task<StringContent> GetStringContentAsync<TContent>(TContent value)
         {
-            var serialiedValue = await Formatter.SerializeAsync(value, typeof(T)).ConfigureAwait(false);
+            var serialiedValue = await Formatter.SerializeAsync(value, typeof(TContent)).ConfigureAwait(false);
 
             return new StringContent(serialiedValue, Encoding, ContentType);
         }

@@ -1,4 +1,5 @@
 ﻿using GB.NetApi.Domain.Models.Entities;
+using GB.NetApi.Domain.Models.Interfaces.Entities;
 using GB.NetApi.Domain.Services.Extensions;
 using GB.NetApi.Infrastructure.Database.DAOs;
 using GB.NetApi.Infrastructure.Database.Enums;
@@ -23,12 +24,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         public CommonReadableRepository(ICommonRepository repository) => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
              return await AnyAsync<TDao, TEntity>(model, ETracking.Disabled).ConfigureAwait(false);
         }
 
-        public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<bool> AnyAsync<TDao, TEntity>(AnyModel<TDao> model, ETracking tracking) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             using (var context = Repository.InstanciateContext())
             {
@@ -38,12 +39,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
             }
         }
 
-        public async Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             return await SingleAsync<TDao, TEntity>(model, ETracking.Disabled).ConfigureAwait(false);
         }
 
-        public async Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<TEntity> SingleAsync<TDao, TEntity>(SingleModel<TDao> model, ETracking tracking) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             using (var context = Repository.InstanciateContext())
             {
@@ -54,12 +55,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
             }
         }
 
-        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>() where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>() where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             return await ToListAsync<TDao, TEntity>(ETracking.Disabled).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(ETracking tracking) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             using (var context = Repository.InstanciateContext())
             {
@@ -70,12 +71,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
             }
         }
 
-        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             return await ToListAsync<TDao, TEntity>(model, ETracking.Disabled).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model, ETracking tracking) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        public async Task<IEnumerable<TEntity>> ToListAsync<TDao, TEntity>(WhereManyModel<TDao> model, ETracking tracking) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             using (var context = Repository.InstanciateContext())
             {
@@ -90,12 +91,12 @@ namespace GB.NetApi.Infrastructure.Database.Repositories.Commons
 
         #region Private methods
 
-        private static IEnumerable<TEntity> Transform<TDao, TEntity>(IEnumerable<TDao> daos) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        private static IEnumerable<TEntity> Transform<TDao, TEntity>(IEnumerable<TDao> daos) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             return daos.IsNotNullNorEmpty() ? daos.Select(d => Transform<TDao, TEntity>(d)) : default;
         }
 
-        private static TEntity Transform<TDao, TEntity>(TDao dao) where TDao : BaseReadableDao<TEntity> where TEntity : BaseStorableEntity
+        private static TEntity Transform<TDao, TEntity>(TDao dao) where TDao : BaseDao, ITransformable<TEntity> where TEntity : BaseStorableEntity
         {
             return dao is not null ? dao.Transform() : default;
         }

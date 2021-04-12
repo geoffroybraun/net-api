@@ -30,7 +30,7 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
 
-            var result = await FilterAsync(query.Transform()).ConfigureAwait(false);
+            var result = await FilterAsync(query).ConfigureAwait(false);
 
             return Transform(result);
         }

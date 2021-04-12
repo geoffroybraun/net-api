@@ -13,8 +13,8 @@ namespace GB.NetApi.Domain.Services.UnitTests.Validators
         private const int ID = 1;
         private const string Firstname = "Firstname";
         private const string Lastname = "Lastname";
-        private static readonly DateTime Birthdate = DateTime.Now.AddHours(-1);
-        private static readonly PersonValidator Validator = new PersonValidator();
+        private static readonly DateTime Birthdate = DateTime.UtcNow.AddHours(-1);
+        private static readonly PersonValidator Validator = new();
 
         #endregion
 

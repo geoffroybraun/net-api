@@ -13,11 +13,10 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         #region Fields
 
         private static readonly string UpdatePersonEndpoint = $"{Endpoint}/{ID}";
-        private static readonly UpdatePersonCommand Command = new()
+        private static readonly CreatePersonCommand Command = new()
         {
             Birthdate = DateTime.UtcNow,
             Firstname = "Updated firstname",
-            ID = ID,
             Lastname = "Updated lastname"
         };
 
@@ -49,22 +48,6 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
             var result = await PutAsync(BrokenClient, UpdatePersonEndpoint, Command).ConfigureAwait(false);
 
             result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-        }
-
-        [Fact]
-        public async Task Trying_to_update_a_person_with_unmatching_URI_and_command_IDs_returns_a_bad_request_status_code()
-        {
-            await AuthenticateAsync(Client, WriterRequest).ConfigureAwait(false);
-            var command = new UpdatePersonCommand()
-            {
-                Birthdate = DateTime.UtcNow,
-                Firstname = "Updated firstname",
-                ID = int.MaxValue,
-                Lastname = "Updated lastname"
-            };
-            var result = await PutAsync(Client, UpdatePersonEndpoint, command).ConfigureAwait(false);
-
-            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
