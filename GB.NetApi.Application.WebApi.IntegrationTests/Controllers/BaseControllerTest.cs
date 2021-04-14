@@ -80,9 +80,9 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers
         {
             var content = await GetStringContentAsync(request).ConfigureAwait(false);
             var response = await client.PostAsync("login", content).ConfigureAwait(false);
-            var token = await DeserializeContentAsync<string>(response.Content).ConfigureAwait(false);
+            var loginResponse = await DeserializeContentAsync<LoginResponse>(response.Content).ConfigureAwait(false);
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, loginResponse.Token);
         }
 
         /// <summary>
