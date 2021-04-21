@@ -160,15 +160,6 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Command ID should be {0}..
-        /// </summary>
-        internal static string UnmatchingUpdateCommandID {
-            get {
-                return ResourceManager.GetString("UnmatchingUpdateCommandID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à User &apos;{0}&apos; has not been found..
         /// </summary>
         internal static string UserNotFound {
