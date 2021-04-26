@@ -53,10 +53,14 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> LoginAsync([FromBody] LoginRequest request)
         {
-            var user = await Mediator.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
-            var token = GenerateToken(GetClaimsFromUser(user));
+            if (request is null)
+                return new BadRequestResult();
 
-            return Ok(token);
+            var user = await Mediator.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
+            var claims = GetClaimsFromUser(user);
+            var token = GenerateToken(claims);
+
+            return Ok(new LoginResponse() { Permissions = claims.Where((c) => c.Type == "Permission").Select((c) => c.Value), Token = token });
         }
 
         #region Private methods

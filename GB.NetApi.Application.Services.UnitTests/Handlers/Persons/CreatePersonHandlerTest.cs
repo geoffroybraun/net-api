@@ -112,7 +112,7 @@ namespace GB.NetApi.Application.Services.UnitTests.Handlers.Persons
             }
             var exception = await Assert.ThrowsAsync<EntityValidationException>(function).ConfigureAwait(false);
 
-            exception.Errors.Count().Should().Be(4);
+            exception.Errors.Count().Should().Be(3);
         }
 
         [Fact]

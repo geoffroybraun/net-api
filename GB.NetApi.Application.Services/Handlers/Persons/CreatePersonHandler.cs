@@ -53,9 +53,11 @@ namespace GB.NetApi.Application.Services.Handlers.Persons
         private async Task<bool> ExistAsync(Person person)
         {
             if (await Repository.ExistAsync(person).ConfigureAwait(false))
-                return true;
+            {
+                TranslateAndCollect("ExistingPerson", new[] { person.Firstname, person.Lastname, person.Birthdate.ToString("yyyy-MM-dd") });
 
-            TranslateAndCollect("ExistingPerson", new[] { person.Firstname, person.Lastname, person.Birthdate.ToString("yyyy-MM-dd") });
+                return true;
+            }
 
             return false;
         }

@@ -41,7 +41,7 @@ namespace GB.NetApi.Application.WebApi
         {
             app.UseExceptionHandler((options) => options.Run(ExceptionMiddleware.RequestDelegate));
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Test"))
             {
                 app.UseSwagger();
                 app.UseSwaggerUI((options) => options.SwaggerEndpoint("/swagger/v1/swagger.json", ".Net Api"));
