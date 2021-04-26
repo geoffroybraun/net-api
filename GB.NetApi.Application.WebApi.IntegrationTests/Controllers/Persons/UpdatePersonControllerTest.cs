@@ -51,6 +51,15 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         }
 
         [Fact]
+        public async Task Providing_a_null_person_to_update_returns_a_bad_request_status_code()
+        {
+            await AuthenticateAsync(Client, WriterRequest).ConfigureAwait(false);
+            var result = await PutAsync<UpdatePersonCommand>(Client, UpdatePersonEndpoint, null).ConfigureAwait(false);
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
         public async Task Not_updating_an_existing_person_returns_an_internal_server_error_status_code()
         {
             await AuthenticateAsync(NullClient, WriterRequest).ConfigureAwait(false);

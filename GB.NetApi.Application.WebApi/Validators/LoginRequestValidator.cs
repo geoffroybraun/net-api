@@ -48,22 +48,33 @@ namespace GB.NetApi.Application.WebApi.Validators
         {
             var result = await base.ValidateAsync(context, cancellation).ConfigureAwait(false);
 
-            if (result.IsValid && !await IsValidAsync(context.InstanceToValidate))
-            {
-                var error = new ValidationFailure(nameof(LoginRequest), Translator.GetString("InvalidRequest"));
-                result.Errors.Add(error);
-            }
+            if (result.IsValid)
+                await IsValidAsync(context.InstanceToValidate, result).ConfigureAwait(false);
 
             return result;
         }
 
         #region Private methods
 
-        private async Task<bool> IsValidAsync(LoginRequest request)
+        private async Task IsValidAsync(LoginRequest request, ValidationResult result)
         {
             var user = await Manager.FindByEmailAsync(request.Email).ConfigureAwait(false);
 
-            return user is not null && await Manager.CheckPasswordAsync(user, request.Password).ConfigureAwait(false);
+            if (user is null)
+            {
+                var userNotFoundError = new ValidationFailure(nameof(LoginRequest), Translator.GetString("UserNotFound", request.Email));
+                result.Errors.Add(userNotFoundError);
+
+                return;
+            }
+
+            var isPasswordValid = await Manager.CheckPasswordAsync(user, request.Password).ConfigureAwait(false);
+
+            if (!isPasswordValid)
+            {
+                var invalidPassword = new ValidationFailure(nameof(LoginRequest), Translator.GetString("InvalidPassword"));
+                result.Errors.Add(invalidPassword);
+            }
         }
 
         #endregion

@@ -37,6 +37,9 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> CreateAsync(CreatePersonCommand command)
         {
+            if (command is null)
+                return new BadRequestResult();
+
             var result = await Mediator.RunAsync(command).ConfigureAwait(false);
 
             return result ? NoContent() : InternalServerError();
@@ -69,7 +72,7 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> FilterAsync(FilterPersonQuery query)
         {
-            var result = await Mediator.ExecuteAsync(query).ConfigureAwait(false);
+            var result = await Mediator.ExecuteAsync(query ?? new()).ConfigureAwait(false);
 
             return result is not null ? Ok(result) : NotFound(Translator.GetString("NoPersonFound"));
         }
@@ -118,6 +121,9 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateAsync(int ID, [FromBody] CreatePersonCommand command)
         {
+            if (command is null)
+                return new BadRequestResult();
+
             var updateCommand = new UpdatePersonCommand()
             {
                 Birthdate = command.Birthdate,

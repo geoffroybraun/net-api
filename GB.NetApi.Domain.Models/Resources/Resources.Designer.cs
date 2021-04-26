@@ -124,11 +124,11 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Invalid request..
+        ///   Recherche une chaîne localisée semblable à Password is invalid..
         /// </summary>
-        internal static string InvalidRequest {
+        internal static string InvalidPassword {
             get {
-                return ResourceManager.GetString("InvalidRequest", resourceCulture);
+                return ResourceManager.GetString("InvalidPassword", resourceCulture);
             }
         }
         
@@ -160,11 +160,11 @@ namespace GB.NetApi.Domain.Models.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Command ID should be {0}..
+        ///   Recherche une chaîne localisée semblable à User &apos;{0}&apos; has not been found..
         /// </summary>
-        internal static string UnmatchingUpdateCommandID {
+        internal static string UserNotFound {
             get {
-                return ResourceManager.GetString("UnmatchingUpdateCommandID", resourceCulture);
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
     }

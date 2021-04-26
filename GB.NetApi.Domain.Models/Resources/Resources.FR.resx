@@ -124,33 +124,33 @@
     <value>Bad request in action '{0}' of controller '{1}': {2}.</value>
   </data>
   <data name="DateTimeMustBeInferiorOrEqualTo" xml:space="preserve">
-    <value>'{0}' must be inferior or equal to '{1}'.</value>
+    <value>'{0}' doit être inférieur ou égal à '{1}'.</value>
   </data>
   <data name="ExistingPerson" xml:space="preserve">
-    <value>Person '{0} {1}' (born {2}) already exists.</value>
+    <value>'{0} {1}' (né(e) le {2}) existe déjà.</value>
   </data>
   <data name="InexistingID" xml:space="preserve">
-    <value>ID '{0}' does not exist.</value>
+    <value>L'identifiant '{0}' n'existe pas.</value>
   </data>
   <data name="IntegerMustBeSuperiorTo" xml:space="preserve">
-    <value>'{0}' must be superior to {1}.</value>
+    <value>'{0}' doit être supérieur à {1}.</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
-    <value>'{0}' is not a valid email address.</value>
+    <value>'{0}' n'est pas une adresse email valide.</value>
   </data>
   <data name="InvalidPassword" xml:space="preserve">
-    <value>Password is invalid.</value>
+    <value>Le mot de passe n'est pas valide.</value>
   </data>
   <data name="NoPersonFound" xml:space="preserve">
-    <value>No person found.</value>
+    <value>Aucune personne trouvée.</value>
   </data>
   <data name="NoPersonWithIDFound" xml:space="preserve">
-    <value>No person with ID {0} found.</value>
+    <value>Aucune personne avec l'identifiant {0} trouvée.</value>
   </data>
   <data name="StringIsNullOrEmptyOrWhiteSpace" xml:space="preserve">
-    <value>'{0}' cannot be null or empty.</value>
+    <value>'{0}' ne peut pas être nul ou vide.</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
-    <value>User '{0}' has not been found.</value>
+    <value>L'utilisateur '{0}' n'a pas été trouvé.</value>
   </data>
 </root>
