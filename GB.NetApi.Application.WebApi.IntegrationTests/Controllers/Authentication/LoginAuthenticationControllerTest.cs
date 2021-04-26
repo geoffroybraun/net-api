@@ -30,7 +30,15 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Authenticati
         }
 
         [Fact]
-        public async Task Providing_an_empty_request_when_loging_in_returns_a_bad_request_status_code()
+        public async Task Providing_a_null_request_when_logging_in_returns_a_bad_request_status_code()
+        {
+            var result = await PostAsync<LoginRequest>(Client, Endpoint, null).ConfigureAwait(false);
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Providing_an_empty_request_when_logging_in_returns_a_bad_request_status_code()
         {
             var result = await PostAsync(Client, Endpoint, new LoginRequest()).ConfigureAwait(false);
 

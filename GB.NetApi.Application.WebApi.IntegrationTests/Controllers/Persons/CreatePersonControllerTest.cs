@@ -58,6 +58,15 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         }
 
         [Fact]
+        public async Task Providing_a_null_person_to_create_returns_a_bad_request_status_code()
+        {
+            await AuthenticateAsync(Client, WriterRequest).ConfigureAwait(false);
+            var result = await PutAsync<CreatePersonCommand>(Client, Endpoint, null).ConfigureAwait(false);
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
         public async Task Providing_an_invalid_person_to_create_returns_a_bad_request_status_code()
         {
             await AuthenticateAsync(Client, WriterRequest).ConfigureAwait(false);

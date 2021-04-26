@@ -53,6 +53,9 @@ namespace GB.NetApi.Application.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> LoginAsync([FromBody] LoginRequest request)
         {
+            if (request is null)
+                return new BadRequestResult();
+
             var user = await Mediator.ExecuteAsync(new GetSingleAuthenticateUserQuery() { UserEmail = request.Email }).ConfigureAwait(false);
             var claims = GetClaimsFromUser(user);
             var token = GenerateToken(claims);

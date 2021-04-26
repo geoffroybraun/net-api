@@ -51,11 +51,21 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.Persons
         }
 
         [Fact]
+        public async Task Providing_a_null_filter_query_returns_all_stored_persons()
+        {
+            await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
+            var response = await PostAsync<FilterPersonQuery>(Client, Endpoint, null).ConfigureAwait(false);
+            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
+
+            result.Should().NotBeNull().And.NotBeEmpty();
+        }
+
+        [Fact]
         public async Task Providing_an_empty_filter_query_returns_all_stored_persons()
         {
             await AuthenticateAsync(Client, ReaderRequest).ConfigureAwait(false);
             var response = await PostAsync(Client, Endpoint, new FilterPersonQuery()).ConfigureAwait(false);
-            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content);
+            var result = await DeserializeContentAsync<IEnumerable<PersonDto>>(response.Content).ConfigureAwait(false);
 
             result.Should().NotBeNull().And.NotBeEmpty();
         }

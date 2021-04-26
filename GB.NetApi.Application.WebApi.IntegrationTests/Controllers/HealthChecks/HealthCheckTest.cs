@@ -44,7 +44,7 @@ namespace GB.NetApi.Application.WebApi.IntegrationTests.Controllers.HealthChecks
         }
 
         [Fact]
-        public async Task Not_scceussfully_checking_a_database_availability_still_returns_a_no_content_status_code_as_it_responded()
+        public async Task Not_successfully_checking_a_database_availability_still_returns_a_no_content_status_code_as_it_responded()
         {
             await AuthenticateAsync(NullClient, SuperviserRequest).ConfigureAwait(false);
             var result = await GetAsync(NullClient, Endpoint).ConfigureAwait(false);
